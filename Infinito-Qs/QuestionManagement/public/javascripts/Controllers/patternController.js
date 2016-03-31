@@ -24,7 +24,8 @@ QuestionManagerApp.controller('pattern',function($scope, $timeout){
   };
   $scope.removeField = function(){
     $scope.regexPatterns.pop();
-    $scope.patterns.pop();
+    if($scope.regexPatterns.length == $scope.patterns.length-1) //Pop the value only if the field is already removed
+      $scope.patterns.pop();
     i--;
   };
 
