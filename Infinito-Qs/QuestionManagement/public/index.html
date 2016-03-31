@@ -1,0 +1,62 @@
+<!doctype html>
+<html ng-app="QuestionManagerApp">
+<head>
+  <meta charset="utf-8">
+  <title>Question Manager</title>
+  <!-- Bootstrap Style Sheet -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+  <!-- Stylesheet libraries for slider and input tags-->
+  <link rel="stylesheet" href="stylesheets/lib/rzslider.min.css"/>
+  <link rel="stylesheet" href="stylesheets/lib/ng-tags-input.min.css"/>
+  <link rel="stylesheet" href="stylesheets/lib/ng-tags-input.bootstrap.min.css"/>
+
+  <!-- Custom Style sheet -->
+  <link rel="stylesheet" href="stylesheets/QuestionManager.css" />
+
+  <!-- Angular JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.2/angular.min.js" charset="utf-8"></script>
+  <!-- Angular Route JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.2/angular-route.js" charset="utf-8"></script>
+  <!-- Angular Animate for Bootstrap animation-->
+  <script src="https://code.angularjs.org/1.5.0-rc.2/angular-animate.min.js" charset="utf-8"></script>
+  <!-- Angular range slider -->
+  <script src="javascripts/lib/rzslider.min.js"></script>
+  <script src="javascripts/lib/ng-tags-input.min.js"></script>
+  <script src="javascripts/lib/ui-bootstrap-tpls-1.1.2.min.js" charset="utf-8"></script>
+  <base href="/">
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-fixed">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-content">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="/" class="navbar-brand">Infinito Q</a>
+      </div>
+      <div class="collapse navbar-collapse" id="navbar-content">
+        <ul class="nav navbar-nav">
+          <li><a href="/">Edit Questions</a></li>
+          <li><a href="/#PatternSearch">Create Search Pattern</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="signout" class="pull-right">
+              <span class="glyphicon glyphicon-log-out"></span> Log out
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div ng-view=""> </div>
+
+  <script src="javascripts/lib/paging.js" charset="utf-8"></script>
+  <script src="javascripts/angular_app.js"></script>
+  <script src="javascripts/Controllers/indexController.js"> </script>
+  <script src="javascripts/Controllers/editQuestionController.js"> </script>
+  <script src="javascripts/Controllers/patternController.js"> </script>
+</body>
+</html>
