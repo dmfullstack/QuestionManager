@@ -37,6 +37,7 @@ module.exports = function makeClaimAndPrepareArrayOfUris(req, res, next,tempFile
     var qIdForVar = req.body.data["qIdForVar"].split('Q');
     var pIdForOpt = req.body.data["pIdForOpt"].split('P');
     var questionStub = req.body.data["questionStub"];
+    var patternId = req.body.data["patternId"];
     var topicIds = req.body.data["topicIds"];
     numberOfOptionsToBeGenerated = req.body.data["numberOfOptionsToBeGenerated"];
     numberOfQuestions = req.body.data["numberOfQuestions"];
@@ -88,7 +89,7 @@ module.exports = function makeClaimAndPrepareArrayOfUris(req, res, next,tempFile
                                     console.log(resultsArray);
                                     console.log(imageArray);
 
-                                    generateQuestionsJsonToBeSentBackToClient(objectToContainVariableAndAnswer,objectToContainIfPopularOrNot, imageArray,questionStub,tempFileDescForInter)
+                                    generateQuestionsJsonToBeSentBackToClient(objectToContainVariableAndAnswer,objectToContainIfPopularOrNot, imageArray,questionStub, patternId,tempFileDescForInter)
                                         .then(function(resultsArray) {
                                           console.log(resultsArray);
                                           console.log("start... " + startIndex);
@@ -127,7 +128,7 @@ module.exports = function makeClaimAndPrepareArrayOfUris(req, res, next,tempFile
 
                                 });
                         } else {
-                            generateQuestionsJsonToBeSentBackToClient(objectToContainVariableAndAnswer,objectToContainIfPopularOrNot, imageArray,questionStub,tempFileDescForInter)
+                            generateQuestionsJsonToBeSentBackToClient(objectToContainVariableAndAnswer,objectToContainIfPopularOrNot, imageArray,questionStub, patternId, tempFileDescForInter)
                                 .then(function(resultsArray) {
                                   console.log(resultsArray);
 
@@ -410,7 +411,7 @@ function getNameForOptionPid(objectToContainVariableAndAnswer, client) {
   }
 
 
-function generateQuestionsJsonToBeSentBackToClient(objectToContainVariableAndAnswer,objectToContainIfPopularOrNot, imageArray, questionStub,tempFileDescForInter) {
+function generateQuestionsJsonToBeSentBackToClient(objectToContainVariableAndAnswer,objectToContainIfPopularOrNot, imageArray, questionStub, patternId, tempFileDescForInter) {
     var deferred = Promise.defer();
 
     console.log("in generate questions function");
@@ -425,6 +426,7 @@ function generateQuestionsJsonToBeSentBackToClient(objectToContainVariableAndAns
             tempObjForQuesAndAns["answer"] = objectToContainVariableAndAnswer[firstTempVarForKeyRunover];
             tempObjForQuesAndAns["image"] = imageLinks[firstTempVarForKeyRunover];
             tempObjForQuesAndAns["popularityDesc"]=objectToContainIfPopularOrNot[firstTempVarForKeyRunover];
+            tempObjForQuesAndAns["patternId"]=patternId;
             arrayForQuestionData[counterForQuesArray] = tempObjForQuesAndAns;
             counterForQuesArray++;
         }
@@ -578,6 +580,7 @@ function generateArrayofImageUrl(arrayOfImageUrlFromWiki) { // function to gener
                  }
                }
                tempObjToStoreQueAnsDis["correctIndex"]=correctIndex;
+               tempObjToStoreQueAnsDis["patternId"]=arrayForQuestionData[i]["patternId"];
 
                if (!ifAllHasBeenRequested) {
                  tempObjToStoreQueAnsDis["popularityDesc"]=arrayForQuestionData[i]["popularityDesc"];
