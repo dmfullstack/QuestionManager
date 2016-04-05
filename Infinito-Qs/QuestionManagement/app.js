@@ -9,7 +9,7 @@ var wagner = require('wagner-core');
 
 var questionRequestHandler = require('./routes/QuestionRequestHandler');
 var topicsRequestHandler = require('./routes/TopicsRequestHandler');
-//var patternSearchHandler = require('./routes/PatternSearchHandler');
+var patternSearchHandler = require('./routes/PatternSearchHandler');
 
 var db = require('./routes/DB.js');
 
@@ -69,7 +69,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/QuestionRequestHandler', questionRequestHandler(wagner));
 app.use('/TopicsRequestHandler', topicsRequestHandler(wagner));
-//app.use('/PatternSearchHandler', patternSearchHandler(wagner));
+app.use('/PatternSearchHandler', patternSearchHandler(wagner));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

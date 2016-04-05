@@ -13,11 +13,13 @@ module.exports.QuestionDB = {
     var Question = require('../models/question');
     var Topic = require('../models/topic');
     var Category = require('../models/category');
+    var QsetPattern = require('../models/qsetPattern');
 
     var models = {
       Question: Question,
       Topic: Topic,
-      Category: Category
+      Category: Category,
+      QsetPattern: QsetPattern
     };
 
     // To ensure DRY-ness, register factories in a loop
@@ -438,4 +440,14 @@ module.exports.CategoryDB = {
   }
 };
 
+module.exports.QsetDB = {
+  listPattern: function (QsetPattern, callback) {
+    QsetPattern.find({}, function(err,doc) {
+      callback(err, doc);
+    });
+  }
+  savePattern: function (QsetPattern, callback){
+    console.log(req.body)
+  }
+}
 module.exports.init = module.exports.QuestionDB.init;
