@@ -7,9 +7,9 @@ var mongoose = require('mongoose'),
       options: Array,
       topicId:Array,
       patternId: String,
-      wikiPageView: Number 
+      wikiPageView: Number,
+      googleResultScore : Number
     }),
     questionBank = mongoose.model('questionBank', questionSchema,'questionBank');
 
 module.exports = questionBank;
-
