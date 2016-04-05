@@ -29,7 +29,8 @@ var mongoose = require('mongoose'),
       topics: { type: String },
       topicIds: {type: String },
       categories: {type: String },
-      topicId: [{type: String, required: true, ref: 'Topics'}]
+      topicId: [{type: String, required: true, ref: 'Topics'}],
+      patternId : {type:String}
     }),
     Question = mongoose.model('Question', questionSchema,'question_bank_collection');
 
