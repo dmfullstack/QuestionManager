@@ -27,7 +27,7 @@ if (args.length < 2)
 /* Reading/Opening input files */ 
 /*********************************************************/
 /* Try to read req */
-var configLines = fs.readFileSync(args[1]).toString().split("\n");
+var configLines = fs.readFileSync(args[1]).toString().replace(/\r/g,"").split("\n");
 
 /* Get Databse Detail*/
 var dbName = configLines[0];
@@ -90,6 +90,9 @@ db.once('open', function () {
    printDebug("Connected to MongoDB :",dbName);
 
    questionBank.distinct('patternId',function(err,data) {
+     if (err) {
+       console.log(err);
+     }
      printDebug("NumberofPatterns To be Processed:", data.length);   
      numOfPatterns = data.length;
    });
@@ -187,6 +190,13 @@ var aRecursiveGetMetaDataApi = function(startIndex, docsCount) {
       }
         
     }).then(function(err) {
+
+      if (promises.length == 0) {
+         /* No Data Source Mentioned */
+         printDebug("No Valid Data Source Mentioned in Config ..");
+         mongoose.connection.close();
+         return;
+      }
 
       Promise.all(promises).then(function () {
         if (numOfVarsUpdated == numOfVars) {
