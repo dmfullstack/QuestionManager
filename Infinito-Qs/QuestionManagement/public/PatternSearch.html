@@ -1,5 +1,27 @@
-<main class="container well">
+<main class="container well" ng-init="init()">
   <div class="row">
+    <div class="col-sm-6">
+      <button class="btn btn-primary btn-block" ng-click="patternChoice(true)">Describe new pattern</button>
+    </div>
+    <div class="col-sm-6">
+      <button class="btn btn-primary btn-block" ng-click="patternChoice(false)">Run existing pattern</button>
+    </div>
+  </div><br><br>
+  <div class="row">
+    <div class="col-sm-12" ng-show="!newPattern">
+      <form class="form form-inline" action="">
+      <div class="form-group">
+        <label for="patternSelect">Select a Pattern</label>
+        <select class="form-control" name="patternSelect">
+          <option ng-repeat="pattern in patternList.data" value="{{pattern.patternName}}">
+            {{pattern.patternName}}
+          </option>
+        </select>
+      </div>
+      </form>
+    </div>
+  </div>
+  <div class="row" ng-show="newPattern">
     <div class="col-sm-12">
       <form class="form" ng-submit="submitSearch()">
         <uib-accordion close-others="false">
@@ -9,16 +31,15 @@
             </uib-accordion-heading>
             <div class="form-group">
               <label for="whitelist">Must include</label>
-              <tags-input ng-model="whitelist" name='whitelist' replace-spaces-with-dashes="false">
+              <tags-input ng-model="patternJson.whitelist" name='whitelist' replace-spaces-with-dashes="false">
                 <auto-complete source="variableList"></auto-complete>
               </tags-input>
-              {{whitelist}}
             </div>
             <div class="form-group">
               <label for="blacklist">Must exclude</label>
-              <tags-input ng-model="blacklist" name='blacklist' replace-spaces-with-dashes="false">
+              <tags-input ng-model="patternJson.blacklist" name='blacklist' replace-spaces-with-dashes="false">
                 <auto-complete source="variableList"></auto-complete>
-              </tags-input>
+                </tags-input>
             </div>
           </uib-accordion-group>
           <uib-accordion-group is-open="regexCheck.open">
@@ -28,7 +49,7 @@
             <div class="form-group">
               <div ng-repeat="item in regexFields">
                  <label>Pattern {{item.value}}</label>
-                 <input type="text" ng-model="regexPatterns[item.value]" name="pattern{{item.value}}"\>
+                 <input type="text" ng-model="patternJson.regexPatterns[item.value]" name="pattern{{item.value}}"\>
                   <span ng-show="$last">
                     <a class="btn btn-primary btn-sm" ng-click="addField()"><b>+</b></a>
                   </span>
@@ -44,7 +65,7 @@
               <span ng-click="refreshSlider(wikiCheck.open)">Wikidata PageViews <small>(in thousands)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': wikiCheck.open, 'glyphicon-chevron-right': !wikiCheck.open}"></i></span>
             </uib-accordion-heading>
             <div class="form-group">
-              <rzslider rz-slider-model="wikiRange.min" rz-slider-high="wikiRange.max" rz-slider-options="wikiRange.options"></rzslider>
+              <rzslider rz-slider-model="patternJson.wikiRange.min" rz-slider-high="patternJson.wikiRange.max" rz-slider-options="patternJson.wikiRange.options"></rzslider>
             </div>
           </uib-accordion-group>
           <uib-accordion-group is-open="gTrendsCheck.open">
@@ -52,7 +73,7 @@
               <span ng-click="refreshSlider(gTrendsCheck.open)">Google Trends <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': gTrendsCheck.open, 'glyphicon-chevron-right': !gTrendsCheck.open}"></i></span>
             </uib-accordion-heading>
             <div class="form-group">
-              <rzslider rz-slider-model="gTrendsRange.min" rz-slider-high="gTrendsRange.max" rz-slider-options="gTrendsRange.options"></rzslider>
+              <rzslider rz-slider-model="patternJson.gTrendsRange.min" rz-slider-high="patternJson.gTrendsRange.max" rz-slider-options="patternJson.gTrendsRange.options"></rzslider>
             </div>
           </uib-accordion-group>
           <uib-accordion-group is-open="usageCheck.open">
@@ -60,7 +81,7 @@
               <span ng-click="refreshSlider(usageCheck.open)">Usage <small>(Number of times this question has been asked)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': usageCheck.open, 'glyphicon-chevron-right': !usageCheck.open}"></i><span>
             </uib-accordion-heading>
             <div class="form-group">
-              <rzslider rz-slider-model="usageRange.min" rz-slider-high="usageRange.max" rz-slider-options="usageRange.options"></rzslider>
+              <rzslider rz-slider-model="patternJson.usageRange.min" rz-slider-high="patternJson.usageRange.max" rz-slider-options="patternJson.usageRange.options"></rzslider>
             </div>
           </uib-accordion-group>
           <uib-accordion-group is-open="correctCheck.open">
@@ -68,22 +89,22 @@
               <span ng-click="refreshSlider(correctCheck.open)">Correctness <small>(Number of times the players have got the answer right)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': correctCheck.open, 'glyphicon-chevron-right': !correctCheck.open}"></i></span>
             </uib-accordion-heading>
             <div class="form-group">
-              <rzslider rz-slider-model="correctRange.min" rz-slider-high="correctRange.max" rz-slider-options="correctRange.options"></rzslider>
+              <rzslider rz-slider-model="patternJson.correctRange.min" rz-slider-high="patternJson.correctRange.max" rz-slider-options="patternJson.correctRange.options"></rzslider>
             </div>
           </uib-accordion-group>
         </uib-accordion>
         <div class="checkbox">
           <label>
-            <input type="checkbox" ng-model="searchIn.all" ng-click="changeSelection(0)">All
+            <input type="checkbox" ng-model="patternJson.searchIn.all" ng-click="changeSelection(0)">All
           </label>
           <label>
-            <input type="checkbox" ng-model="searchIn.ques" ng-click="changeSelection(1)">Questions
+            <input type="checkbox" ng-model="patternJson.searchIn.ques" ng-click="changeSelection(1)">Questions
           </label>
           <label>
-            <input type="checkbox" ng-model="searchIn.top" ng-click="changeSelection(1)">Topics
+            <input type="checkbox" ng-model="patternJson.searchIn.top" ng-click="changeSelection(1)">Topics
           </label>
           <label>
-            <input type="checkbox" ng-model="searchIn.cat" ng-click="changeSelection(1)">Categories
+            <input type="checkbox" ng-model="patternJson.searchIn.cat" ng-click="changeSelection(1)">Categories
           </label>
         </div>
         <div class="form-group text-center">
@@ -91,6 +112,7 @@
         </div>
         {{patternJson | json}}
       </form>
+      <button type="button" class="btn btn-info" ng-click="onSavePattern()">Save Pattern</button>
     </div>
   </div>
 
@@ -100,7 +122,7 @@
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <input type="text" name="patternName" ng-model="patternName"/>
+        <input type="text" ng-model="patternName"/>
       </div>
     </div>
     <div class="modal-footer">
@@ -108,6 +130,4 @@
         <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
     </div>
   </script>
-  {{patternName}}
-  <button type="button" class="btn btn-default" ng-click="onSavePattern()">Save Pattern</button>
 </main>

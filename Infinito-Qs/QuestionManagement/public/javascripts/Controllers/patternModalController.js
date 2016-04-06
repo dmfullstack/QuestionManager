@@ -1,4 +1,6 @@
-QuestionManagerApp.controller('patternModal', function ($scope, $uibModalInstance) {
+QuestionManagerApp.controller('patternModal', function ($scope, $uibModalInstance, patternName) {
+
+  $scope.patternName = patternName;
 
   $scope.ok = function () {
     $uibModalInstance.close($scope.patternName);
