@@ -1,5 +1,5 @@
-QuestionManagerApp.controller('patternModal', function ($scope, $uibModalInstance) {
-  
+QuestionManagerApp.controller('patternModal', function ($scope, $uibModalInstance,$ajaxService) {
+
   $scope.ok = function () {
     $uibModalInstance.close($scope.patternName);
   };

@@ -1,4 +1,4 @@
-QuestionManagerApp.controller('pattern',function($scope, $http, $timeout, $uibModal){
+QuestionManagerApp.controller('pattern',function($scope, $http, $timeout, $uibModal, $ajaxService){
 
   /*Initialize variables for pattern search form*/
   $scope = angular.extend($scope, {
@@ -63,7 +63,14 @@ QuestionManagerApp.controller('pattern',function($scope, $http, $timeout, $uibMo
     for(var i=0; i<$scope.formFields.length; i++){
         $scope.patternJson[$scope.formFields[i]] = $scope[$scope.formFields[i]];
     }
-    var temp = $http.post('/PatternSearchHandler/PatternSearch',$scope.patternJson);
+    $ajaxService.listPattern({
+      requestType: 'listPattern'
+    }, function(err, results) {
+        if(err)
+          console.log(err);
+        console.log(results);
+    });
+
   }
 
   $scope.onSavePattern = function() {
@@ -80,6 +87,13 @@ QuestionManagerApp.controller('pattern',function($scope, $http, $timeout, $uibMo
 
     modalInstance.result.then(function (name) {
       $scope.patternName = name;
+      $ajaxService.savePattern({
+        requestType: 'savePattern'
+      }, function(err, results) {
+          if(err)
+            console.log(err);
+          console.log(results);
+      });
     });
   }
 });

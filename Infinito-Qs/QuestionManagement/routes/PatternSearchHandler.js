@@ -11,7 +11,7 @@ module.exports = function(wagner) {
     res.sendFile(path.join(__dirname, '../public', 'PatternSearch.html'));
   });*/
 
-  router.post('/PatternSearch',function (req,res,next) {
+  router.post('/',function (req,res,next) {
     console.log(req.body.requestType);
     switch(req.body.requestType){
       case 'listPattern' :
@@ -21,19 +21,16 @@ module.exports = function(wagner) {
             res.json(doc);
           }
         });
-        break;
+      break;
       case 'savePattern' :
-        wagner.invoke(db.Qset.savePattern,{
-          callback: function(err, count, ins, notIns) {
-            if(err)
-              res.json({status: 'failure', message: 'Failure : Unable to save the pattern.'});
-            else
-              res.json({status: 'success', message: 'Success : Pattern saved.', count: count, inserted: ins, notInserted: notIns});
+        wagner.invoke(db.QsetDB.savePattern,{
+          callback: function(err, doc) {
+            console.log(doc);
+            res.json(doc);
           }
         });
-        break;
-
-    });
-  }
+      break;
+    }
+  });
   return router;
-}
+};

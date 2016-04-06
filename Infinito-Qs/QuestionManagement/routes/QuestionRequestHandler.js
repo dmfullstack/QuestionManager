@@ -115,7 +115,6 @@ module.exports = function(wagner) {
         }
         break;
     }
-
   });
   return router;
 }

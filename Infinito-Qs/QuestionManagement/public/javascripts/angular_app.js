@@ -143,6 +143,19 @@ QuestionManagerApp.service('$ajaxService', function($http){
    };
 
    this.savePattern = function(data, callback) {
+     console.log('call received');
+     $http({
+       url: '/PatternSearchHandler',
+       data: data,
+       method: 'post'
+     }).then(function(results) {
+       console.log(results);
+       callback(null, results);
+     }, function errorCall(data) {
+       callback(data,null);
+     });
+   };
+   this.listPattern = function(data, callback) {
      //console.log('call received');
      $http({
        url: '/PatternSearchHandler',

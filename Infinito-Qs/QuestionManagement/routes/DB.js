@@ -445,9 +445,10 @@ module.exports.QsetDB = {
     QsetPattern.find({}, function(err,doc) {
       callback(err, doc);
     });
-  }
-  savePattern: function (QsetPattern, callback){
-    console.log(req.body)
+  },
+  savePattern: function (QsetPattern, callback) {
+    console.log("XAFDA");
+    callback(null,"Have this")
   }
 }
 module.exports.init = module.exports.QuestionDB.init;
