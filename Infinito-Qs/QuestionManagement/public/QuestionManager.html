@@ -30,7 +30,11 @@
             <input type="checkbox" ng-model="searchIn.cat" ng-click="changeSelection(1)">Categories
           </label>
         </form>
-      </div>
+
+        <!-- <button type="button" ng-click="buttonclick()" class="pull-right">More Questions</button> -->
+
+        <button type="button" ng-click="questionpaper()" class="pull-right">Questionpaper</button>
+</div>
       <div id="questionContainer" class="row">
         <table id="questionList" class="table table-bordered table-responsive table-hover">
           <div ng-if="!questions.length">
