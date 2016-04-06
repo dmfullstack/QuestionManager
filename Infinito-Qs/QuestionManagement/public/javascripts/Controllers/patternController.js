@@ -73,22 +73,19 @@ QuestionManagerApp.controller('pattern',function($scope, $http, $timeout, $uibMo
 
   }
 
+  //Save a particular pattern
   $scope.onSavePattern = function() {
     var modalInstance = $uibModal.open({
       animation: $scope.animationsEnabled,
-      templateUrl: 'tempModal.html', //Treat modal as seperate page for template purposes
-      controller: 'patternModal',
-      resolve: {
-        patternName : function (){
-          return $scope.patternName;
-        }
-      }
+      templateUrl: 'tempModal.html', //Treat modal as seperate template for syntactical purposes
+      controller: 'patternModal'
     });
 
     modalInstance.result.then(function (name) {
       $scope.patternName = name;
       $ajaxService.savePattern({
-        requestType: 'savePattern'
+        requestType: 'savePattern',
+        data: patternJson
       }, function(err, results) {
           if(err)
             console.log(err);

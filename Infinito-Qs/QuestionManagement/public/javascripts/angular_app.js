@@ -141,7 +141,7 @@ QuestionManagerApp.service('$ajaxService', function($http){
        callback(data,null);
      });
    };
-
+   /*Changes for Search Pattern starts*/
    this.savePattern = function(data, callback) {
      console.log('call received');
      $http({
@@ -168,6 +168,7 @@ QuestionManagerApp.service('$ajaxService', function($http){
        callback(data,null);
      });
    };
+   /*Changes for Search Pattern ends*/
 });
 
 QuestionManagerApp.service('signoutService', function ($window){
