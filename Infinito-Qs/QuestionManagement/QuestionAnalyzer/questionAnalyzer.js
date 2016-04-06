@@ -362,7 +362,7 @@ var getGoogleResultScores = function(obj) {
 				printDebug("Error while retreicing Data For : ", obj.variable);
 				return resolve(obj);
 			}
-			if(JSON.parse(body)["itemListElement"] != undefined)
+			if(JSON.parse(body)["itemListElement"].length > 0)
 			{
 				obj.googleResultScore =  Math.round(JSON.parse(body)["itemListElement"][0]["resultScore"]);
 			}
