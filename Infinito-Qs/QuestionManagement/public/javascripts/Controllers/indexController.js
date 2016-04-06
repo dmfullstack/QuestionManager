@@ -76,6 +76,16 @@ function($scope, $uibModal, $http, $ajaxService, $window) {
         self.getQuestionJson();
       };
 
+    self.$scope.buttonclick= function () {
+      $window.location.href='/PatternSearch.html';
+      };
+
+      self.$scope.questionpaper=function(){
+        $window.location.href='/manageQuestions.html';
+      };
+      // self.$scope.QP1=function(){
+      //   $window.location.href='models/questionpaper.js'
+      // }
       self.$scope.noOfRowChange = function(item, indexSelected) {
         var $scp = self.$scope;
         $scp.firstQuestion = 0;
@@ -240,3 +250,4 @@ function($scope, $uibModal, $http, $ajaxService, $window) {
   });
 
 }]);
+///////////////////////////////////////////////////////////////////////
