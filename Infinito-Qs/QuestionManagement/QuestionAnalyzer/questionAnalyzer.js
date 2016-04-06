@@ -2,8 +2,6 @@ var fs = require('fs');
 var mongoose = require("mongoose");
 var request = require('request');
 var underScore = require('underscore')
-/* For Wiki PageView */
-//var pageviews = require("pageviews");
 
 /* MongoDB Models */
 var questionPattern = require('./models/questionPattern');
@@ -65,7 +63,13 @@ var numOfPatternsUpdated = 0;
 
 /* Details on Number Of Variables */
 var numOfVars = 0;
-var numOfVarsUpdated = 0;
+var numOfVarsUpdated = [];
+
+/* Get Wiki,Google Index */
+var googleIndex = dataSource.indexOf('Google');
+var wikiIndex = dataSource.indexOf('Wiki');
+numOfVarsUpdated[googleIndex] = 0;
+numOfVarsUpdated[wikiIndex] = 0;
 
 /* get Data for last XX days */
 var startDate = new Date(new Date() - 16*24*60*60*1000).toISOString().substr(0,10).replace(/-/g,""),
@@ -94,6 +98,17 @@ db.once('open', function () {
 
    printDebug("Connected to MongoDB :",dbName);
 
+   /*Clear the QuestionVariable Collection */
+   db.db.dropCollection("questionVariables").then(function(result) {
+      if (result) {
+        printDebug("Cleared Variables Collection");
+      } 
+      else {
+        console.log("Error Clearing Variables Collection");
+      }
+   });
+
+   /* Get the Number of Patterns to be Processed */
    questionBank.distinct('patternId',function(err,data) {
      if (err) {
        console.log(err);
@@ -105,9 +120,6 @@ db.once('open', function () {
    var seq = Promise.resolve();
    /* Extract Varirables from the Questions */
    questionPattern.find({}, function(err, docs) {
-/*   questionPattern.find({'patternId':'P31Q6256P36'}, function(err, docs) {
-   numOfPatterns = 1; */
-
      docs.map(function(pattern) {
        seq = seq.then(function() {
           return getVarsForPattern(pattern);
@@ -182,14 +194,15 @@ var aRecursiveGetMetaDataApi = function(startIndex, docsCount) {
 
     /*Get Vars from start-end Index */
     questionVariables.find().skip(startIndex).limit(parseInt(docsCount)).then(function (data) {
+
       /*Get Input from Wiki */
-      if (dataSource.indexOf('Wiki') != -1)
+      if (wikiIndex != -1)
       {
          promises.push(updateWikiInfoForVarsAndQuestions(data));
       }
 
       /*Get Input from Google */
-      if (dataSource.indexOf('Google') != -1)
+      if (googleIndex != -1)
       {
          promises.push(updateGoogleInfoForVarsAndQuestions(data));
       }
@@ -204,16 +217,23 @@ var aRecursiveGetMetaDataApi = function(startIndex, docsCount) {
       }
 
       Promise.all(promises).then(function () {
-        if (numOfVarsUpdated == numOfVars) {
+
+        var updatedCount = numOfVarsUpdated[0];
+        numOfVarsUpdated.forEach(function (i,j) {
+          if(updatedCount != numOfVarsUpdated[j]) {
+             console.log("Error While Updating Data from Wiki/Google");
+          }
+        });
+
+        if (updatedCount == numOfVars) {
           printDebug("Meta Data update Completed for All Variables");
           mongoose.connection.close();
           return ;
         }
 
-        var endIndex = parseInt(numOfVarsUpdated) + parseInt(maxVarsProcessingLimit);
-        var docsCount = (endIndex > numOfVars) ? (numOfVars - numOfVarsUpdated) : maxVarsProcessingLimit;
-        //console.log("Chk",endIndex, docsCount);
-        aRecursiveGetMetaDataApi(numOfVarsUpdated, docsCount);
+        var endIndex = parseInt(updatedCount) + parseInt(maxVarsProcessingLimit);
+        var docsCount = (endIndex > numOfVars) ? (numOfVars - updatedCount) : maxVarsProcessingLimit;
+        aRecursiveGetMetaDataApi(updatedCount, docsCount);
       });
 
     }).catch(function(err) {
@@ -236,7 +256,6 @@ var updateWikiInfoForVarsAndQuestions = function(data)
        /*Get PageView for Obj*/
        getPageViews(varObj)
        .then(function () {
-          //console.log("Got PageView for obj",varObj.variable);
           questionVariables.update({_id: varObj._id}, varObj, {upsert:true})
           .then(function(docs) {
 
@@ -250,8 +269,8 @@ var updateWikiInfoForVarsAndQuestions = function(data)
 
              Promise.all(promises).then(function () {
                if ((++localNumOfVarsUpdated % inputLen) == 0) {
-                 numOfVarsUpdated += localNumOfVarsUpdated;
-                 printDebug("Variables updated for (", numOfVarsUpdated ,")");
+                 numOfVarsUpdated[wikiIndex] += localNumOfVarsUpdated;
+                 printDebug("[wiki] Variables updated for (", numOfVarsUpdated[wikiIndex] ,")");
                  return resolve();
                }
              }).catch(function(err) {
@@ -259,7 +278,7 @@ var updateWikiInfoForVarsAndQuestions = function(data)
              });;
 
          }).catch(function(err) {
-            console.log("Error from getPageView",err);
+            console.log("[wiki] Error from getPageView",err);
             return reject();
          });
        }).catch(function(err) {
@@ -276,19 +295,17 @@ var getPageViews = function(obj) {
 
  var uri = wikiBaseURL.replace("/replace-article-name/", "/"+obj.variable+"/");
  return new Promise(function(resolve, reject) {
-//    return resolve(obj);
-//    console.log("gonna Look for", obj.variable);
-    obj.wikiPageView = 0;
 
+    obj.wikiPageView = 0;
     request( uri , function (err, res , body) {
       if (err || (res.statusCode != 200)) {
-         printDebug("Recieved Error for", obj.variable);
+         printDebug("[wiki] Recieved Error for :", obj.variable);
          return resolve(obj);
        }
 
         var results = JSON.parse(body);
         if (results.items == undefined) {
-          printDebug("[INFO] : No Data found for Article",obj.variable);
+          printDebug("[wiki] : No Data found for Article",obj.variable);
         }
         else {
           var average = 0;
@@ -328,8 +345,8 @@ var updateGoogleInfoForVarsAndQuestions = function(data)
 
 					Promise.all(promises).then(function () {
 						if ((++localNumOfVarsUpdated % inputLen) == 0) {
-							numOfVarsUpdated += localNumOfVarsUpdated;
-							printDebug("Variables updated for (", numOfVarsUpdated ,")");
+							numOfVarsUpdated[googleIndex] += localNumOfVarsUpdated;
+							printDebug("[Google] Variables updated for (", numOfVarsUpdated[googleIndex] ,")");
 							return resolve();
 						}
 					}).catch(function(err) {
@@ -359,12 +376,16 @@ var getGoogleResultScores = function(obj) {
 
 		request( uri , function (err, res , body) {
 			if (err || (res.statusCode != 200)) {
-				printDebug("Error while retreicing Data For : ", obj.variable);
+				printDebug("[Google] Error while retreicing Data For : ", obj.variable);
 				return resolve(obj);
 			}
-			var score = JSON.parse(body)["itemListElement"][0]["resultScore"];
-
-			obj.googleResultScore = score != undefined ? Math.round(score) : 0;
+			if(JSON.parse(body)["itemListElement"].length > 0)
+			{
+				obj.googleResultScore =  Math.round(JSON.parse(body)["itemListElement"][0]["resultScore"]);
+			}
+			else {
+				obj.googleResultScore = 0;
+			}
 
 			return resolve(body);
 		});
