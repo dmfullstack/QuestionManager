@@ -1,8 +1,7 @@
 var fs = require('fs');
 var mongoose = require("mongoose");
 var request = require('request');
-var underScore = require('underscore')
-
+var underScore = require('underscore');
 /* MongoDB Models */
 var questionPattern = require('./models/questionPattern');
 var questionBank = require('./models/questionBank');
@@ -341,6 +340,15 @@ var updateGoogleInfoForVarsAndQuestions = function(data)
 						update = {'googleResultScore' : variable.googleResultScore};
 						promises.push(questionBank.update(id, update, {upsert:true}));
 					});
+					Promise.all(promises).then(function () {
+							if ((++localNumOfVarsUpdated % inputLen) == 0) {
+								numOfVarsUpdated[googleIndex] += localNumOfVarsUpdated;
+								printDebug("[Google] Variables updated for (", numOfVarsUpdated[googleIndex] ,")");
+								return resolve();
+							}
+						}).catch(function(err) {
+							console.log(err);
+						});;
 				}).catch(function(err) {
 					console.log("Error from Google API",err);
 					return reject();
@@ -355,7 +363,8 @@ var updateGoogleInfoForVarsAndQuestions = function(data)
 
 // Get Google Result Score
 var getGoogleResultScores = function(obj) {
-	var uri = googleKnowledgeGraphURL.replace("/variable-Name/", obj.variable); //replace the placeHolder with Variable Name
+
+	var uri = googleKnowledgeGraphURL.replace("/variable-Name/", encodeURIComponent(obj.variable)); //replace the placeHolder with Variable Name
 	return new Promise(function(resolve, reject) {
 		obj.googleResultScore = 0; //initialize the googleResultScore
 		request( uri , function (err, res , body) {
