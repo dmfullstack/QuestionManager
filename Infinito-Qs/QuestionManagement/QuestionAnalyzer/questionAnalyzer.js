@@ -247,81 +247,81 @@ var aRecursiveGetMetaDataApi = function(startIndex, docsCount) {
 /*********************************************************/
 var updateWikiInfoForVarsAndQuestions = function(data)
 {
-	var inputLen = data.length;
-	var localNumOfVarsUpdated = 0;
+   var inputLen = data.length;
+   var localNumOfVarsUpdated = 0;
 
-	return wikipromise = new Promise(function(resolve,reject){
+   return wikipromise = new Promise(function(resolve,reject){
 
-		data.forEach(function(varObj) {
-			/*Get PageView for Obj*/
-			getPageViews(varObj)
-			.then(function () {
-				questionVariables.update({_id: varObj._id}, varObj, {upsert:true})
-				.then(function(docs) {
+     data.forEach(function(varObj) {
+       /*Get PageView for Obj*/
+       getPageViews(varObj)
+       .then(function () {
+          questionVariables.update({_id: varObj._id}, varObj, {upsert:true})
+          .then(function(docs) {
 
-					/* Now Update Question Bank with PageViews */
-					var promises = [];
-					varObj.questionIds.forEach(function (q) {
-						var id = {'questionId' : q},
-						update = {'wikiPageView' : varObj.wikiPageView};
-						promises.push(questionBank.update(id, update, {upsert:true}));
-					});
+             /* Now Update Question Bank with PageViews */
+             var promises = [];
+             varObj.questionIds.forEach(function (q) {
+               var id = {'questionId' : q},
+               update = {'wikiPageView' : varObj.wikiPageView};
+               promises.push(questionBank.update(id, update, {upsert:true}));
+             });
 
-					Promise.all(promises).then(function () {
-						if ((++localNumOfVarsUpdated % inputLen) == 0) {
-							numOfVarsUpdated[wikiIndex] += localNumOfVarsUpdated;
-							printDebug("[wiki] Variables updated for (", numOfVarsUpdated[wikiIndex] ,")");
-							return resolve();
-						}
-					}).catch(function(err) {
-						console.log(err);
-					});;
+             Promise.all(promises).then(function () {
+               if ((++localNumOfVarsUpdated % inputLen) == 0) {
+                 numOfVarsUpdated[wikiIndex] += localNumOfVarsUpdated;
+                 printDebug("[wiki] Variables updated for (", numOfVarsUpdated[wikiIndex] ,")");
+                 return resolve();
+               }
+             }).catch(function(err) {
+               console.log(err);
+             });;
 
-				}).catch(function(err) {
-					console.log("[wiki] Error from getPageView",err);
-					return reject();
-				});
-			}).catch(function(err) {
-				console.log(err);
-				return reject();
-			});
-		});
+         }).catch(function(err) {
+            console.log("[wiki] Error from getPageView",err);
+            return reject();
+         });
+       }).catch(function(err) {
+          console.log(err);
+          return reject();
+       });
+     });
 
-	});
+   });
 };
 
 /*********************************************************/
 var getPageViews = function(obj) {
 
-	var uri = wikiBaseURL.replace("/replace-article-name/", "/"+obj.variable+"/");
-	return new Promise(function(resolve, reject) {
+ var article = encodeURIComponent(obj.variable);
+ var uri = wikiBaseURL.replace("/replace-article-name/", "/"+article+"/");
+ return new Promise(function(resolve, reject) {
 
-		obj.wikiPageView = 0;
-		request( uri , function (err, res , body) {
-			if (err || (res.statusCode != 200)) {
-				printDebug("[wiki] Recieved Error for :", obj.variable , err , res.statusCode);
-				return resolve(obj);
-			}
+    obj.wikiPageView = 0;
+    request( uri , function (err, res , body) {
+      if (err || (res.statusCode != 200)) {
+         printDebug("[wiki] Recieved Error for :", obj.variable);
+         return resolve(obj);
+       }
 
-			var results = JSON.parse(body);
-			if (results.items == undefined) {
-				printDebug("[wiki] : No Data found for Article",obj.variable);
-			}
-			else {
-				var average = 0;
-				results.items.forEach(function (b) {
-					average += b.views;
-				});
-				average /= results.items.length;
-				obj.wikiPageView = Math.round(average);
-			}
+        var results = JSON.parse(body);
+        if (results.items == undefined) {
+          printDebug("[wiki] : No Data found for Article",obj.variable);
+        }
+        else {
+          var average = 0;
+          results.items.forEach(function (b) {
+	    average += b.views;
+          });
+          average /= results.items.length;
+          obj.wikiPageView = Math.round(average);
+        }
 
-			return resolve(body);
-		});
-	});
+      return resolve(body);
+    });
+ });
 };
 /*********************************************************/
-
 var updateGoogleInfoForVarsAndQuestions = function(data)
 {
 	var inputLen = data.length;
