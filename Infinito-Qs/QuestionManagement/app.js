@@ -15,7 +15,7 @@ var db = require('./routes/DB.js');
 
 db.init(wagner, {
   //connectionURL: 'mongodb://172.23.238.253/quizRT3'
-  connectionURL: 'mongodb://localhost/quizRT3'
+  connectionURL: 'mongodb://localhost/QuizART'
 });
 
 var app = express();
