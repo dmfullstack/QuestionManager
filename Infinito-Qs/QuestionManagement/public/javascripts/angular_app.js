@@ -142,6 +142,19 @@ QuestionManagerApp.service('$ajaxService', function($http){
      });
    };
    /*Changes for Search Pattern starts*/
+   this.performSearch = function(data, callback) {
+     console.log('call received');
+     $http({
+       url: '/PatternSearchHandler',
+       data: data,
+       method: 'post'
+     }).then(function(results) {
+       console.log(results);
+       callback(null, results);
+     }, function errorCall(data) {
+       callback(data,null);
+     });
+   };
    this.savePattern = function(data, callback) {
      console.log('call received');
      $http({

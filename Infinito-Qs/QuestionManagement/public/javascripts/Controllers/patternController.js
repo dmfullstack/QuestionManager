@@ -1,7 +1,7 @@
 QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $ajaxService){
   /*Initialize variables for pattern search form*/
   $scope = angular.extend($scope, {
-    newPattern : false,
+    newPattern : true,
     patternList :[],
     variableList : ['Sachin Tendulkar','Rahul Dravid', 'Sourav Ganguly'],
     //formFields : ['whitelist','blacklist','regexPatterns','wikiRange','gTrendsRange','usageRange','correctRange','searchIn'],
@@ -21,10 +21,37 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
         cat: false
       }, //Checkbox fields
     },
-    regexFields : [{value:0}]//Array to dynamically create input boxes for regex
+    regexFields : [{value:0}],//Array to dynamically create input boxes for regex
+
+    /* Parameters for question display after search pattern is executed */
+    /* Dropdown options */
+    noOfQuestions: [50, //first one default
+                    100,
+                    150,
+                    250,
+                    500,
+                    1000],
+    selectedRowCountIndex: 0,
+    selectedRowCount: 50,
+
+    /* checkbox intialization for selection */
+    quesSelected : [],
+    deleteIds: [],
+    querydelete: false,
+
+    /* Intializing question table with empty obj Array */
+    questions: [{}],
+
+    /* Pagination Setup */
+    firstQuestion: 0,
+    currentPage: 1,
+
+    /* default sort setup*/
+    sortType: '', // set the default sort type
+    sortReverse: false,  // set the default sort order
   });
 
-  $scope.init = function(){
+  $scope.initPatternList = function(){
     $ajaxService.listPattern({ //get the existing patterns
         requestType: 'listPattern'
       }, function(err, results) {
@@ -35,14 +62,16 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     });
   }
 
-  $scope.patternChoice = function(choice){
+  $scope.isCreatePattern = function(choice){
     if(choice){
       if(!$scope.newPattern)
         $scope.newPattern = (!$scope.newPattern);
     }
     else
-      if($scope.newPattern)
+      if($scope.newPattern){
         $scope.newPattern = (!$scope.newPattern);
+        $scope.initPatternList();
+      }
   }
 
   var i = 1;
@@ -82,10 +111,24 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
   };
 
   //Search form submit handler
-  $scope.submitSearch = function () {
+  $scope.performSearch = function () {
     /*for(var i=0; i<$scope.formFields.length; i++){
         $scope.patternJson[$scope.formFields[i]] = $scope[$scope.formFields[i]];
     }*/
+    $ajaxService.performSearch({
+      requestType: 'performSearch',
+      data: $scope.patternJson
+    }, function(err, results) {
+        if(err)
+          console.log(err);
+        console.log(results);
+        var $scp = $scope;
+        var dt = results.data;
+        $scp.questions = dt.rows;
+        $scp.totalQuestions = dt.count;
+        $scp.lastQuestion = $scp.firstQuestion + $scp.selectedRowCount;
+        $scp.lastQuestion = ($scp.lastQuestion > $scp.totalQuestions)? $scp.totalQuestions : $scp.lastQuestion;
+    });
   }
 
   //Save a particular pattern

@@ -161,7 +161,6 @@ module.exports.QuestionDB = {
               }
               else /* Searching only for question */
                 query = {question : searchSettings.query};
-
             } else if (docs.length > 0 ) { // question not selected but topics exists is selected
                 categoryIds = docs.map(function(doc) { return doc._id });
                 query = {topicId: {$in: categoryIds}};
@@ -176,8 +175,23 @@ module.exports.QuestionDB = {
             } else {
               query = {};
             }
+            /*Changes for pattern search starts*/
+            if(typeof searchSettings.blacklist !='undefined' && searchSettings.blacklist !=''){
+              console.log(searchSettings.blacklist);
+              query = {
+                $and: [
+                  {question:searchSettings.query},
+                  {question:
+                    {$not: searchSettings.blacklist}
+                  }
+                ]
+            };
+              console.log(query);
+            }
+            /*Changes for pattern search starts*/
             Question.count(query).exec(function(err, doc) {
               var outputCount = doc;
+              console.log(query);
               Question.find(query)
                 .skip(searchSettings.firstQuestion)
                 .limit(searchSettings.count)
@@ -446,8 +460,14 @@ module.exports.QsetDB = {
       callback(err, doc);
     });
   },
-  savePattern: function (QsetPattern, callback) {
-    console.log("XAFDA");
+  savePattern: function (QsetPattern, pattern, callback) {
+    var newPattern = new QsetPattern(pattern);
+    newPattern.save(function (err,pattern) {
+      if(err)
+        console.log(err);
+      console.log(pattern);
+    })
+    console.log("Done");
     callback(null,"Have this")
   }
 }

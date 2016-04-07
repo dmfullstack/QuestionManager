@@ -1,6 +1,8 @@
 var express = require('express'),
     db = require('./DB'),
-    path = require('path');
+    fs = require('fs'),
+    path = require('path'),
+    _ = require('underscore');
 
 var router = express.Router();
 
@@ -23,10 +25,43 @@ module.exports = function(wagner) {
         });
       break;
       case 'savePattern' :
+        console.log(req.body.data);
         wagner.invoke(db.QsetDB.savePattern,{
+          pattern: req.body.data,
           callback: function(err, doc) {
             console.log(doc);
             res.json(doc);
+          }
+        });
+      break;
+      case 'performSearch' :
+        //console.log(req.body);
+        var displaySettings = req.body.data,
+        whitelist = "",
+        blacklist = "";
+        getRegex = function (objArray) {
+          var temp = [];
+          _.each(objArray, function (value, key) {
+            temp = _.union(temp,_.values(value));
+          });
+          var query = temp.join(",");
+          return query !=""? new RegExp('\\b(' + query.replace(/\,/g,'|') + ')','ig'): "";
+        }
+        whitelist = getRegex(displaySettings.whitelist);
+        blacklist = getRegex(displaySettings.blacklist);
+
+        wagner.invoke(db.QuestionDB.find, {
+          searchSettings : {
+            query: whitelist,
+            blacklist: blacklist,
+            searchIn: displaySettings.searchIn,
+            wagner: wagner,
+            db: db
+          },
+          callback: function(err, json) {
+            if(err)
+              console.log(err);
+            res.json(json);
           }
         });
       break;

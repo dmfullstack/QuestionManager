@@ -15,7 +15,6 @@
 
 var mongoose = require('mongoose'),
     qsetPatternSchema = mongoose.Schema({
-      _id: String,
       patternName: {type: String, required: true, unique: true},
       whitelist: Array,
       blacklist: Array,
