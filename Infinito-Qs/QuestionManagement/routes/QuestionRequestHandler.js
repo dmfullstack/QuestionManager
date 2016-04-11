@@ -24,6 +24,7 @@ module.exports = function(wagner) {
             sortType = req.body.sortType,
             sortReverse = req.body.sortReverse,
             searchIn = req.body.searchIn,
+            searchWith = req.body.searchWith,
             obj = {},
             rgexQuery = query !=""? new RegExp('\\b(' + query.replace(/\s/g,'|') + ')','ig'): "";
             console.log(req.body.patternJson);
@@ -78,7 +79,16 @@ module.exports = function(wagner) {
           searchSettings.searchWith = searchWith;
         }*/
         wagner.invoke(db.QuestionDB.find, {
-          searchSettings: searchSettings,
+          searchSettings : {
+            query: rgexQuery,
+            sortObj: obj,
+            firstQuestion: req.body.firstQuestion,
+            count: req.body.count,
+            searchIn: searchIn,
+            searchWith : searchWith,
+            wagner: wagner,
+            db: db
+          },
           callback: function(err, json) {
             res.json(json);
           }

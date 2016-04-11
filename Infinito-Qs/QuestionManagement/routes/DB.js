@@ -187,12 +187,19 @@ module.exports.QuestionDB = {
                 ]
               };
               console.log(query);
+
             }*/
+            }
+
+            console.log("So Far Before", query);
+            query = updateQueryWithMetaData(query, searchSettings.searchWith);
+            console.log("So Far After", query);
+
             /*Changes for pattern search starts*/
             console.log(query);
             Question.count(query).exec(function(err, doc) {
               var outputCount = doc;
-              console.log(query);
+              console.log(query,outputCount);
               Question.find(query)
                 .skip(searchSettings.firstQuestion)
                 .limit(searchSettings.count)
@@ -209,6 +216,7 @@ module.exports.QuestionDB = {
                     callback(err,null);
                     return;
                   }
+                  console.log(doc.length);
                   for(var i = 0, doclen = doc.length; i<doclen; i++) {
                     var topics = [],
                         categories = [],
@@ -473,3 +481,48 @@ module.exports.QsetDB = {
   }
 }
 module.exports.init = module.exports.QuestionDB.init;
+
+/* Helper Function */
+var updateQueryWithMetaData = function(query, metadataObj) {
+   /*Add Meta Data params */
+   var wiki = "";
+   var google = "";
+   var difficultyLevelChk = "";
+
+   if (metadataObj.wiki || metadataObj.google || metadataObj.difficultyLevel) {
+   var result = [];
+
+   result.push(query);
+
+   if (metadataObj.wiki == true) {
+     var min = parseInt(metadataObj.wikiRange[0]),
+         max = parseInt(metadataObj.wikiRange[1]);
+
+     wiki= {wikiPageView: {$gte:min}};
+     if (max > min) {
+       wiki= {wikiPageView: {$gte:min, $lte:max}};
+     }
+     result.push(wiki);
+   }
+
+   if (metadataObj.google == true) {
+     var min = parseInt(metadataObj.googleRange[0]),
+         max = parseInt(metadataObj.googleRange[1]);
+
+     google= {googleResultScore: {$gte:min}};
+     if (max > min) {
+       google= {googleResultScore: {$gte:min, $lte:max}};
+     }
+     result.push(google);
+   }
+
+   if(metadataObj.difficultyLevel ==  true) {
+      difficultyLevelChk = {difficultyLevel: (metadataObj.difficultyLevelValue+1)};
+      result.push(difficultyLevelChk);
+   }
+
+     query = {$and: result};
+//     console.log("So Far After", wiki,google,difficultyLevelChk,query);
+  }
+  return query;
+};

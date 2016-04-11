@@ -178,6 +178,52 @@
           <label>
             <input type="checkbox" ng-model="searchIn.cat" ng-click="changeSelection(1)">Categories
           </label>
+          <label>
+            <input type="checkbox" ng-model="searchWith.difficultyLevel" ng-click="changeSelection(1)">DifficultyLevel
+          </label>
+          <label>
+             <div id='difficultyLevelValue' uib-dropdown>
+              <button uib-dropdown-toggle class="btn btn-default" type="button" >
+               {{difficultyLevels[searchWith.difficultyLevelValue]}} 
+              <span class="caret"></span></button>
+              <ul uib-dropdown-menu >
+               <li class="noofRows" ng-repeat="x in difficultyLevels" ng-click="rangeSelected('dl', $index)">
+                <a href>{{x}}</a>
+               </li>
+              </ul>
+             </div>
+          </label>
+          <label>
+            <input type="checkbox" ng-model="searchWith.wiki" ng-click="changeSelection(1)">Wiki Rank
+          </label>
+          <label>
+             <div id='wikiRange' uib-dropdown class='actionBar'>
+              <button uib-dropdown-toggle class="btn btn-default" type="button">
+               {{wikiRange[currentSelectedWR]}}
+              <span class="caret"></span></button>
+              <ul uib-dropdown-menu >
+               <li class="noofRows" ng-repeat="x in wikiRange" ng-click="rangeSelected('wiki', $index)">
+                <a href>{{x}}</a>
+               </li>
+              </ul>
+             </div>
+          </label>
+
+          <label>
+            <input type="checkbox" ng-model="searchWith.google" ng-click="changeSelection(1)">Google Rank
+          </label>
+          <label>
+             <div id='googleRange' uib-dropdown class='actionBar'>
+              <button uib-dropdown-toggle class="btn btn-default" type="button">
+              {{googleRange[currentSelectedGR]}}
+              <span class="caret"></span></button>
+              <ul uib-dropdown-menu >
+               <li class="noofRows" ng-repeat="x in googleRange" ng-click="rangeSelected('google', $index)">
+                <a href>{{x}}</a>
+               </li>
+              </ul>
+             </div>
+          </label>
         </form>
 
         <!-- <button type="button" ng-click="buttonclick()" class="pull-right">More Questions</button> -->
@@ -224,6 +270,21 @@
                     <span ng-show="sortType == 'frequency' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </a>
                 </th>
+                <th ng-click="onSortClick('wikiPageView')">
+                  <a href="#">
+                    Wiki Pageview
+                    <span ng-show="sortType == 'wikiPageView' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'wikiPageView' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </a>
+                </th>
+                <th ng-click="onSortClick('googleResultScore')">
+                  <a href="#">
+                    Google Trend Rank
+                    <span ng-show="sortType == 'googleResultScore' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'googleResultScore' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </a>
+                </th>
+
                 <th width='9%'>
                   <a ng-click="onSortClick('lastEdited')" href="#">
                     Last Edited
@@ -249,6 +310,8 @@
                 <td>{{x.timesUsed}}</td>
                 <td>{{x.correctRatio}}</td>
                 <td>{{x.frequency}}</td>
+                <td>{{x.wikiPageView}}</td>
+                <td>{{x.googleResultScore}}</td>
                 <td>{{dateFormater(x.lastEdited) | date:'MM/dd/yyyy'}}
                   <br/> -------------- <br/>
                   {{dateFormater(x.createdOn) | date:'MM/dd/yyyy'}}</td>
