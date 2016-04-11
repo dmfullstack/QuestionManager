@@ -189,7 +189,6 @@ module.exports.QuestionDB = {
               console.log(query);
 
             }*/
-            }
 
             console.log("So Far Before", query);
             query = updateQueryWithMetaData(query, searchSettings.searchWith);
@@ -495,8 +494,8 @@ var updateQueryWithMetaData = function(query, metadataObj) {
    result.push(query);
 
    if (metadataObj.wiki == true) {
-     var min = parseInt(metadataObj.wikiRange[0]),
-         max = parseInt(metadataObj.wikiRange[1]);
+     var min = parseInt(metadataObj.wikiRange.min),
+         max = parseInt(metadataObj.wikiRange.max);
 
      wiki= {wikiPageView: {$gte:min}};
      if (max > min) {
@@ -506,8 +505,8 @@ var updateQueryWithMetaData = function(query, metadataObj) {
    }
 
    if (metadataObj.google == true) {
-     var min = parseInt(metadataObj.googleRange[0]),
-         max = parseInt(metadataObj.googleRange[1]);
+     var min = parseInt(metadataObj.googleRange.min),
+         max = parseInt(metadataObj.googleRange.max);
 
      google= {googleResultScore: {$gte:min}};
      if (max > min) {

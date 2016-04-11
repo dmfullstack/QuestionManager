@@ -43,6 +43,8 @@ module.exports = function(wagner) {
             var query = temp.join(",");
             return query !=""? new RegExp('\\b(' + query.replace(/\,/g,'|') + ')','ig'): "";
           }
+          console.log(patternSettings.whitelist);
+          console.log(patternSettings.blacklist);
           if(patternSettings.whitelist!="")
             whitelist = getRegex(patternSettings.whitelist);
             console.log('here');
@@ -51,7 +53,7 @@ module.exports = function(wagner) {
             blacklist = getRegex(patternSettings.blacklist);
           console.log(blacklist);
 
-          var searchWith = {
+          searchWith = {
             blacklist: blacklist,
             wikiRange: patternSettings.wikiRange,
             gTrendsRange: patternSettings.gTrendsRange,
@@ -75,9 +77,6 @@ module.exports = function(wagner) {
           wagner: wagner,
           db: db
         };
-        /*if(patternSettings){
-          searchSettings.searchWith = searchWith;
-        }*/
         wagner.invoke(db.QuestionDB.find, {
           searchSettings : {
             query: rgexQuery,

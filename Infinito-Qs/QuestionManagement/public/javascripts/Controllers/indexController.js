@@ -43,15 +43,15 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
       difficultyLevel : false,
       difficultyLevelValue : 0,
       wiki            : false,
-      wikiRange       : [1,100],
+      wikiRange       : {min:1, max:100},
       google          : false,
-      googleRange     : [1,100]
+      googleRange     : {min:1, max:100}
     },
     difficultyLevels : [1,2,3,4,5,6,7,8,9,10],
     wikiRange : ["1-100","100-1000","1k-10k","10k-50k","50k+"],
     currentSelectedWR : 0,
     googleRange : ["1-100","100-200","200-300","300-500","500-750","750-1000"],
-    currentSelectedGR : 0 
+    currentSelectedGR : 0
   });
   var QuestionManager = {
 
