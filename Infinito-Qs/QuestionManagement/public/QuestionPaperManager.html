@@ -1,7 +1,7 @@
 <main class="container">
   <div id="questionContainer" class="row">
     <table id="questionList" class="table table-bordered table-responsive table-hover">
-      <thead ng-hide="!questions.length">
+      <thead ng-hide="!QuestionPapers.length">
         <tr>
           <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
           <th>Name</th>
@@ -21,10 +21,12 @@
           </th>
           <th></th>
         </tr>
-        <tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="questionPaper in QuestionPapers">
           <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
           <th>
-            <a href="ManageUI.html">Questionpaper1</a>
+            <a href="ManageUI.html">{{questionPaper.Name}}</a>
           </th>
           <th>Sports</th>
           <th>
