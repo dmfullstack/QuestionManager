@@ -1,5 +1,5 @@
   <main class="container">
-    <div class="well nga-fast nga-stagger nga-slide-right" ng-hide="isPattern||isBasic">
+    <div class="well nga-fast nga-stagger-fast nga-slide-right" ng-hide="isPattern||isBasic">
       <div class="row">
         <div class="col-sm-12">
           <button class="btn btn-primary btn-block btn-landing" ng-click="selectBasic(true)">
@@ -21,7 +21,7 @@
           <button class="btn btn-success btn-block" ng-click="isCreatePattern(false)">Run existing pattern</button>
         </div>
       </div><br><br>
-      <div class="row nga-default nga-stagger nga-fade" ng-show="!newPattern">
+      <div class="row nga-fast nga-stagger nga-fade" ng-show="!newPattern">
         <div class="col-sm-12">
           <form class="form form-inline" action="">
           <div class="form-group">
@@ -186,11 +186,11 @@
     </div>
       <div class="questions nga-default nga-slide-up" ng-show="isPattern || isBasic">
         <div id="questionContainer" class="row">
-          <table id="questionList" class="table table-bordered table-responsive table-hover">
-            <div ng-if="!questions.length">
-              <h1>Sorry. No Questions to display.</h1>
-            </div>
-            <thead ng-hide="!questions.length">
+          <div ng-if="!questions.length">
+            <h1>Sorry. No Questions to display.</h1>
+          </div>
+          <table id="questionList" ng-hide="!questions.length" class="table table-hover table-responsive nga-default nga-stagger nga-slide-up">
+            <thead>
               <tr>
                 <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
                 <th>Question</th>

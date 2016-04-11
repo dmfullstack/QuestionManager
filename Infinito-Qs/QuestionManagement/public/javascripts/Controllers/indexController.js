@@ -1,5 +1,5 @@
-QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window',
-function($scope, $uibModal, $http, $ajaxService, $window) {
+QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope',
+function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $rootScope) {
 
   $scope = angular.extend($scope, {
     /* Dropdown options */
@@ -38,6 +38,7 @@ function($scope, $uibModal, $http, $ajaxService, $window) {
     },
     isPattern : false,
     isBasic : false,
+    patternJson : $patternService.getPattern()
   });
   var QuestionManager = {
 
@@ -209,17 +210,20 @@ function($scope, $uibModal, $http, $ajaxService, $window) {
     },
     getQuestionJson: function() {
       var self=this,
-          $scp = self.$scope;
+          $scp = self.$scope,
+          queryObj = {
+            requestType: 'search',
+            firstQuestion: $scp.firstQuestion,
+            count: $scp.selectedRowCount,
+            query: $scp.searchText,
+            sortType: $scp.sortType,
+            sortReverse: $scp.sortReverse,
+            searchIn: $scp.searchIn
+          };
+      if($scp.isPattern)
+        queryObj.patternJson = $scp.patternJson;
 
-      self.$ajaxService.getQuestionJson({
-        requestType: 'search',
-        firstQuestion: $scp.firstQuestion,
-        count: $scp.selectedRowCount,
-        query: $scp.searchText,
-        sortType: $scp.sortType,
-        sortReverse: $scp.sortReverse,
-        searchIn: $scp.searchIn
-      }, function(err, results) {
+      self.$ajaxService.getQuestionJson(queryObj, function(err, results) {
         if(err)
         {
           console.log(err);
@@ -249,11 +253,18 @@ function($scope, $uibModal, $http, $ajaxService, $window) {
     }
   };
 
+  $rootScope.$on("filterQuestions", function () {
+    QuestionManager.getQuestionJson();
+  });
+
   QuestionManager.init({
     $scope: $scope,
     $http: $http,
     $uibModal: $uibModal,
-    $ajaxService: $ajaxService
+    $ajaxService: $ajaxService,
+    $window:$window,
+    $patternService:$patternService,
+    $rootScope:$rootScope
   });
 
 }]);

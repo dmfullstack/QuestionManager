@@ -27,6 +27,22 @@ module.exports = function(wagner) {
             obj = {},
             rgexQuery = query !=""? new RegExp('\\b(' + query.replace(/\s/g,'|') + ')','ig'): "";
 
+        /*Changes for pattern based search starts*/
+        var displaySettings = req.body.data,
+        whitelist = "",
+        blacklist = "";
+        getRegex = function (objArray) {
+          var temp = [];
+          _.each(objArray, function (value, key) {
+            temp = _.union(temp,_.values(value));
+          });
+          var query = temp.join(",");
+          return query !=""? new RegExp('\\b(' + query.replace(/\,/g,'|') + ')','ig'): "";
+        }
+        whitelist = getRegex(displaySettings.whitelist);
+        blacklist = getRegex(displaySettings.blacklist);
+        /*Changes for pattern based search ends*/
+
         sortReverse = (sortReverse)? 1: -1;
         if(sortType!="") {
           obj[sortType] = sortReverse;

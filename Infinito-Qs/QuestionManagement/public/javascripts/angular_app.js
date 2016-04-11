@@ -137,19 +137,6 @@ QuestionManagerApp.service('$ajaxService', function($http){
      });
    };
    /*Changes for Search Pattern starts*/
-   this.performSearch = function(data, callback) {
-     console.log('call received');
-     $http({
-       url: '/PatternSearchHandler',
-       data: data,
-       method: 'post'
-     }).then(function(results) {
-       console.log(results);
-       callback(null, results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
    this.savePattern = function(data, callback) {
      console.log('call received');
      $http({
@@ -192,13 +179,7 @@ QuestionManagerApp.service('$patternService', function (){
     gTrendsRange : {min: 10, max: 70, options: {floor: 0,ceil: 100, step: 5}},
     usageRange : {min: 10, max: 400, options: {floor: 0,ceil: 1000, step: 100}},
     correctRange : {min: 100, max: 700, options: {floor: 0,ceil: 1000, step: 50}},
-    regexPatterns : [],
-    searchIn : {
-      all: true,
-      ques: false,
-      top: false,
-      cat: false
-    }//Checkbox fields
+    regexPatterns : []
   };
 
   return{

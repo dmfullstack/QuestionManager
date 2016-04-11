@@ -1,4 +1,4 @@
-QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $ajaxService, $patternService){
+QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $ajaxService, $patternService, $rootScope){
   /*Initialize variables for pattern search form*/
   $scope = angular.extend($scope, {
     newPattern : true,
@@ -73,14 +73,8 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     /*for(var i=0; i<$scope.formFields.length; i++){
         $scope.patternJson[$scope.formFields[i]] = $scope[$scope.formFields[i]];
     }*/
-    $ajaxService.performSearch({
-      requestType: 'performSearch',
-      data: $scope.patternJson
-    }, function(err, results) {
-        if(err)
-          console.log(err);
-        console.log(results);
-    });
+    $patternService.setPattern($scope.patternJson);
+    $rootScope.$emit("filterQuestions",{});
   }
 
   //Save a particular pattern
