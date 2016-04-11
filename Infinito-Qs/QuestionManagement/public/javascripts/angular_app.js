@@ -20,6 +20,11 @@ var QuestionManagerApp = angular.module("QuestionManagerApp", [
         }]
       }
     })
+    .when('/QuestionPaperManager',{
+      templateUrl: 'QuestionPaperManager.html',
+      controller: 'questionPaper',
+      controllerAs: 'questionPaperController'
+    })
     .otherwise({
       redirectTo: '/'
     });
