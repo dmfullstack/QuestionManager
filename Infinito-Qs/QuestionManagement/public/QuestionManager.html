@@ -148,7 +148,7 @@
 
     </div>
 
-    <div id="search" class="well row nga-default nga-stagger-slow nga-slide-left" ng-show="!isPattern && isBasic">
+    <div id="search" class="well row nga-default nga-stagger-slow nga-slide-left allow-overflow" ng-show="!isPattern && isBasic">
       <form id="searchForm" class="col-sm-9 col-xs-9" ng-submit="onSearch()">
         <input name="searchText" id="searchText" ng-model="searchText" class="col-sm-7 col-xs-7" placeholder="Search using Keywords, Topics, Category" type="text" />
         <button type="button" class="btn btn-success col-sm-2 col-xs-2" ng-click="onSearch()" name="button"><span class="glyphicon glyphicon-search"></span> Search</button>
