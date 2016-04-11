@@ -1,0 +1,51 @@
+<main class="container">
+  <div id="questionContainer" class="row">
+    <table id="questionList" class="table table-bordered table-responsive table-hover">
+      <thead ng-hide="!questions.length">
+        <tr>
+          <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
+          <th>Name</th>
+          <th>Topics</th>
+          <th>Picked in tournament</th>
+          <th width='9%'>
+            <a ng-click="onSortClick('lastEdited')" href="#">
+              Last Edited
+              <span ng-show="sortType == 'lastEdited' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+              <span ng-show="sortType == 'lastEdited' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+            </a> <br/> --------------- <br/>
+            <a ng-click="onSortClick('createdOn')" href="#">
+              Created On
+              <span ng-show="sortType == 'createdOn' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+              <span ng-show="sortType == 'createdOn' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+            </a>
+          </th>
+          <th></th>
+        </tr>
+        <tr>
+          <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
+          <th>
+            <a href="ManageUI.html">Questionpaper1</a>
+          </th>
+          <th>Sports</th>
+          <th>
+            <button type="button" class="btn btn-xs btn-default command-edit">
+              <span class="glyphicon glyphicon-ok"></span>yes
+            </button>
+            <button type="button" class="btn btn-xs btn-default command-edit">
+              <span class="glyphicon glyphicon-remove"></span>no
+            </button>
+          </th>
+          <th></th>
+          <td width='7%'>
+            <button type="button" class="btn btn-xs btn-default command-edit" ng-click="onEditClick($index)">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+            <button type="button" class="btn btn-xs btn-default command-delete" ng-click="onDeleteClick($index)">
+              <span class="glyphicon glyphicon-trash"></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
