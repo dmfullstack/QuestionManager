@@ -10,12 +10,13 @@ var wagner = require('wagner-core');
 var questionRequestHandler = require('./routes/QuestionRequestHandler');
 var topicsRequestHandler = require('./routes/TopicsRequestHandler');
 var patternSearchHandler = require('./routes/PatternSearchHandler');
+var questionPaperRequestHandler = require('./routes/QuestionPaperRequestHandler');
 
 var db = require('./routes/DB.js');
 
 db.init(wagner, {
   //connectionURL: 'mongodb://172.23.238.253/quizRT3'
-  connectionURL: 'mongodb://localhost/quizRT3'
+  connectionURL: 'mongodb://localhost/QuizART'
 });
 
 var app = express();
@@ -70,6 +71,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/QuestionRequestHandler', questionRequestHandler(wagner));
 app.use('/TopicsRequestHandler', topicsRequestHandler(wagner));
 app.use('/PatternSearchHandler', patternSearchHandler(wagner));
+app.use('/QuestionPaperRequestHandler',questionPaperRequestHandler);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

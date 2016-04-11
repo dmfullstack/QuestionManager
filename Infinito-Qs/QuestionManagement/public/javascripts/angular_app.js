@@ -169,6 +169,19 @@ QuestionManagerApp.service('$ajaxService', function($http){
      });
    };
    /*Changes for Search Pattern ends*/
+   this.getQuestionPapers = function(data,callback)
+   {
+     $http({
+       url: '/QuestionPaperRequestHandler',
+       data: data,
+       method: 'get'
+     }).then(function(results) {
+       console.log(results);
+       callback(null, results);
+     }, function errorCall(data) {
+       callback(data,null);
+     });
+   }
 });
 
 QuestionManagerApp.service('signoutService', function ($window){

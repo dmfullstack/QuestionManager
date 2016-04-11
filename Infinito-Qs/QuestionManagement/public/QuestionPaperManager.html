@@ -28,8 +28,8 @@
           <th>
             <a href="ManageUI.html">{{questionPaper.Name}}</a>
           </th>
-          <th>{{questionPaper.Topic}}</th>
-          <th>{{questionPaper.IsPickedInTournament}}</th>
+          <th>{{questionPaper.topics.join(', ')}}</th>
+          <th>{{questionPaper.TournamentsPicked}}</th>
           <th>{{questionPaper.LastEditOn}}</th>
           <td width='7%'>
             <button type="button" class="btn btn-xs btn-default command-edit" ng-click="onEditClick($index)">
