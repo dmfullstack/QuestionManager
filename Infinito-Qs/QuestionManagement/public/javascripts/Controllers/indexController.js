@@ -38,7 +38,20 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     },
     isPattern : false,
     isBasic : false,
-    patternJson : $patternService.getPattern()
+    patternJson : $patternService.getPattern(),
+    searchWith : {
+      difficultyLevel : false,
+      difficultyLevelValue : 0,
+      wiki            : false,
+      wikiRange       : [1,100],
+      google          : false,
+      googleRange     : [1,100]
+    },
+    difficultyLevels : [1,2,3,4,5,6,7,8,9,10],
+    wikiRange : ["1-100","100-1000","1k-10k","10k-50k","50k+"],
+    currentSelectedWR : 0,
+    googleRange : ["1-100","100-200","200-300","300-500","500-750","750-1000"],
+    currentSelectedGR : 0 
   });
   var QuestionManager = {
 
@@ -102,6 +115,25 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         $scp.selectedRowCountIndex = indexSelected;
         self.getQuestionJson();
       };
+
+      self.$scope.rangeSelected = function(option, indexSelected) {
+        var $scp = self.$scope;
+        switch(option) {
+          case 'dl':
+            $scp.searchWith.difficultyLevelValue = indexSelected;
+            break;
+          case 'wiki':
+            $scp.currentSelectedWR = indexSelected;
+            $scp.searchWith.wikiRange = $scp.wikiRange[indexSelected].replace(/k/g,"000").split("-");
+            console.log($scp.searchWith.wikiRange);
+            break;
+          case 'google':
+            $scp.currentSelectedGR = indexSelected;
+            $scp.searchWith.googleRange = $scp.googleRange[indexSelected].split("-");
+            console.log($scp.searchWith.googleRange);
+            break;
+        }
+      }
 
       self.$scope.onPageclick = function(page) {
         var $scp = self.$scope;
@@ -202,7 +234,8 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
           requestType: 'deleteSelected',
           query: query,
           deleteIds: $scp.deleteIds,
-          searchIn: $scp.searchIn
+          searchIn: $scp.searchIn,
+          searchWith: $scp.searchWith
         }, function(err, results) {
           self.getQuestionJson();
         });
@@ -218,7 +251,8 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
             query: $scp.searchText,
             sortType: $scp.sortType,
             sortReverse: $scp.sortReverse,
-            searchIn: $scp.searchIn
+            searchIn: $scp.searchIn,
+            searchWith: $scp.searchWith
           };
       if($scp.isPattern)
         queryObj.patternJson = $scp.patternJson;
