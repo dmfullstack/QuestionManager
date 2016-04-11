@@ -35,7 +35,9 @@ function($scope, $uibModal, $http, $ajaxService, $window) {
       ques: false,
       top: false,
       cat: false
-    }
+    },
+    isPattern : false,
+    isBasic : false,
   });
   var QuestionManager = {
 
@@ -76,10 +78,15 @@ function($scope, $uibModal, $http, $ajaxService, $window) {
         self.getQuestionJson();
       };
 
-    self.$scope.buttonclick= function () {
-      $window.location.href='/PatternSearch.html';
+      self.$scope.selectBasic= function (condition) {
+        if(condition){
+          self.$scope.isPattern = false;
+          self.$scope.isBasic = true;
+        }else{
+          self.$scope.isPattern = true;
+          self.$scope.isBasic = false;
+        }
       };
-
       self.$scope.questionpaper=function(){
         $window.location.href='/manageQuestions.html';
       };

@@ -13,11 +13,6 @@ var QuestionManagerApp = angular.module("QuestionManagerApp", [
       controller: 'index',
       controllerAs: 'indexController'
     })
-    .when('/PatternSearch',{
-      templateUrl: 'PatternSearch.html',
-      controller: 'pattern',
-      controllerAs: 'patternController'
-    })
     .when('/signout',{
       resolve :{
           signout: ['signoutService', function (signoutService) {
@@ -186,4 +181,32 @@ QuestionManagerApp.service('$ajaxService', function($http){
 
 QuestionManagerApp.service('signoutService', function ($window){
     $window.location.href = '/signout';
+});
+
+QuestionManagerApp.service('$patternService', function (){
+  var patternJson = {
+    patternName : "",
+    whitelist : [],
+    blacklist : [],
+    wikiRange : {min: 10, max: 70, options: {floor: 0, ceil: 100, step: 5}},
+    gTrendsRange : {min: 10, max: 70, options: {floor: 0,ceil: 100, step: 5}},
+    usageRange : {min: 10, max: 400, options: {floor: 0,ceil: 1000, step: 100}},
+    correctRange : {min: 100, max: 700, options: {floor: 0,ceil: 1000, step: 50}},
+    regexPatterns : [],
+    searchIn : {
+      all: true,
+      ques: false,
+      top: false,
+      cat: false
+    }//Checkbox fields
+  };
+
+  return{
+    getPattern: function() {
+          return patternJson;
+    },
+    setPattern: function(value) {
+       patternJson = angular.toJson(value);
+    }
+  };
 });

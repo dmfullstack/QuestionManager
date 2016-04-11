@@ -1,5 +1,154 @@
   <main class="container">
-    <div id="search" class="well row">
+    <div class="well nga-fast nga-stagger nga-slide-right" ng-hide="isPattern||isBasic">
+      <div class="row">
+        <div class="col-sm-12">
+          <button class="btn btn-primary btn-block btn-landing" ng-click="selectBasic(true)">
+            <span class="glyphicon glyphicon-search"></span> Basic search
+          </button>
+          <br>
+          <button class="btn btn-danger btn-block btn-landing" ng-click="selectBasic(false)">
+            <span class="glyphicon glyphicon-flash"></span>Pattern Search
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="well nga-default nga-stagger-slow nga-slide-left" ng-show="isPattern" ng-controller="pattern">
+      <div class="row">
+        <div class="col-sm-6">
+          <button class="btn btn-primary btn-block" ng-click="isCreatePattern(true)">Describe new pattern</button>
+        </div>
+        <div class="col-sm-6">
+          <button class="btn btn-success btn-block" ng-click="isCreatePattern(false)">Run existing pattern</button>
+        </div>
+      </div><br><br>
+      <div class="row nga-default nga-stagger nga-fade" ng-show="!newPattern">
+        <div class="col-sm-12">
+          <form class="form form-inline" action="">
+          <div class="form-group">
+            <label for="patternSelect">Select a Pattern</label>
+            <select class="form-control" name="patternSelect">
+              <option ng-repeat="pattern in patternList.data" value="{{pattern.patternName}}">
+                {{pattern.patternName}}
+              </option>
+            </select>
+          </div>
+          </form>
+        </div>
+      </div>
+      <div class="row nga-default nga-stagger nga-slide-left" ng-show="newPattern">
+        <div class="col-sm-12">
+          <form class="form" ng-submit="performSearch()">
+            <uib-accordion close-others="false">
+              <uib-accordion-group is-open="wordCheck.open">
+                <uib-accordion-heading>
+                  Word based <small>(Add words to filter out the search data)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': wordCheck.open, 'glyphicon-chevron-right': !wordCheck.open}"></i>
+                </uib-accordion-heading>
+                <div class="form-group">
+                  <label for="whitelist">Must include</label>
+                  <tags-input ng-model="patternJson.whitelist" name='whitelist' replace-spaces-with-dashes="false">
+                    <auto-complete source="variableList"></auto-complete>
+                  </tags-input>
+                </div>
+                <div class="form-group">
+                  <label for="blacklist">Must exclude</label>
+                  <tags-input ng-model="patternJson.blacklist" name='blacklist' replace-spaces-with-dashes="false">
+                    <auto-complete source="variableList"></auto-complete>
+                    </tags-input>
+                </div>
+              </uib-accordion-group>
+              <uib-accordion-group is-open="regexCheck.open">
+                <uib-accordion-heading>
+                  Match Regular Expression <small>(Add patterns to filter out the search data)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': regexCheck.open, 'glyphicon-chevron-right': !regexCheck.open}"></i>
+                </uib-accordion-heading>
+                <div class="form-group">
+                  <div ng-repeat="item in regexFields">
+                     <label>Pattern {{item.value}}</label>
+                     <input type="text" ng-model="patternJson.regexPatterns[item.value]" name="pattern{{item.value}}"\>
+                      <span ng-show="$last">
+                        <a class="btn btn-primary btn-sm" ng-click="addField()"><b>+</b></a>
+                      </span>
+                      <span ng-show="$last && regexFields.length>1">
+                        <a class="btn btn-danger btn-sm" ng-click="removeField()"><b>-</b></a>
+                      </span>
+                  </div>
+                  {{regexPatterns}}
+                </div>
+              </uib-accordion-group>
+              <uib-accordion-group is-open="wikiCheck.open">
+                <uib-accordion-heading>
+                  <span ng-click="refreshSlider(wikiCheck.open)">Wikidata PageViews <small>(in thousands)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': wikiCheck.open, 'glyphicon-chevron-right': !wikiCheck.open}"></i></span>
+                </uib-accordion-heading>
+                <div class="form-group">
+                  <rzslider rz-slider-model="patternJson.wikiRange.min" rz-slider-high="patternJson.wikiRange.max" rz-slider-options="patternJson.wikiRange.options"></rzslider>
+                </div>
+              </uib-accordion-group>
+              <uib-accordion-group is-open="gTrendsCheck.open">
+                <uib-accordion-heading>
+                  <span ng-click="refreshSlider(gTrendsCheck.open)">Google Trends <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': gTrendsCheck.open, 'glyphicon-chevron-right': !gTrendsCheck.open}"></i></span>
+                </uib-accordion-heading>
+                <div class="form-group">
+                  <rzslider rz-slider-model="patternJson.gTrendsRange.min" rz-slider-high="patternJson.gTrendsRange.max" rz-slider-options="patternJson.gTrendsRange.options"></rzslider>
+                </div>
+              </uib-accordion-group>
+              <uib-accordion-group is-open="usageCheck.open">
+                <uib-accordion-heading>
+                  <span ng-click="refreshSlider(usageCheck.open)">Usage <small>(Number of times this question has been asked)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': usageCheck.open, 'glyphicon-chevron-right': !usageCheck.open}"></i><span>
+                </uib-accordion-heading>
+                <div class="form-group">
+                  <rzslider rz-slider-model="patternJson.usageRange.min" rz-slider-high="patternJson.usageRange.max" rz-slider-options="patternJson.usageRange.options"></rzslider>
+                </div>
+              </uib-accordion-group>
+              <uib-accordion-group is-open="correctCheck.open">
+                <uib-accordion-heading>
+                  <span ng-click="refreshSlider(correctCheck.open)">Correctness <small>(Number of times the players have got the answer right)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': correctCheck.open, 'glyphicon-chevron-right': !correctCheck.open}"></i></span>
+                </uib-accordion-heading>
+                <div class="form-group">
+                  <rzslider rz-slider-model="patternJson.correctRange.min" rz-slider-high="patternJson.correctRange.max" rz-slider-options="patternJson.correctRange.options"></rzslider>
+                </div>
+              </uib-accordion-group>
+            </uib-accordion>
+            <!--<div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="patternJson.searchIn.all" ng-click="changeSelection(0)">All
+              </label>
+              <label>
+                <input type="checkbox" ng-model="patternJson.searchIn.ques" ng-click="changeSelection(1)">Questions
+              </label>
+              <label>
+                <input type="checkbox" ng-model="patternJson.searchIn.top" ng-click="changeSelection(1)">Topics
+              </label>
+              <label>
+                <input type="checkbox" ng-model="patternJson.searchIn.cat" ng-click="changeSelection(1)">Categories
+              </label>
+            </div>-->
+            <div class="form-group text-center">
+              <input class="btn btn-success btn-block" type="submit" value="Hit Me!"></input>
+            </div>
+            {{patternJson | json}}
+          </form>
+          <button type="button" class="btn btn-info" ng-click="onSavePattern()">Save Pattern</button>
+        </div>
+      </div>
+      <br>
+
+      <script type="text/ng-template" id="tempModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Give a name</h3>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <input type="text" ng-model="patternName"/>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </script>
+
+    </div>
+
+    <div id="search" class="well row nga-default nga-stagger-slow nga-slide-left" ng-show="!isPattern && isBasic">
       <form id="searchForm" class="col-sm-9 col-xs-9" ng-submit="onSearch()">
         <input name="searchText" id="searchText" ng-model="searchText" class="col-sm-7 col-xs-7" placeholder="Search using Keywords, Topics, Category" type="text" />
         <button type="button" class="btn btn-success col-sm-2 col-xs-2" ng-click="onSearch()" name="button"><span class="glyphicon glyphicon-search"></span> Search</button>
@@ -35,21 +184,101 @@
 
         <button type="button" ng-click="questionpaper()" class="pull-right">Questionpaper</button>
     </div>
-      <div ng-include="'QuestionDisplay.html'"></div>
-      <div id="pageNo" class="row" ng-hide="!questions.length">
-        <!-- Pagination and Page Tracker are generated by Paging plugin in client side. -->
-        <div paging page="currentPage" page-size="selectedRowCount" total="totalQuestions"
-        text-first="<<"
-        text-last=">>"
-        text-next=">"
-        text-prev="<"
-        show-prev-next="true"
-        show-first-last="true"
-        ul-class="pagination col-sm-8 col-xs-6"
-        paging-action="onPageclick(page)">
+      <div class="questions nga-default nga-slide-up" ng-show="isPattern || isBasic">
+        <div id="questionContainer" class="row">
+          <table id="questionList" class="table table-bordered table-responsive table-hover">
+            <div ng-if="!questions.length">
+              <h1>Sorry. No Questions to display.</h1>
+            </div>
+            <thead ng-hide="!questions.length">
+              <tr>
+                <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
+                <th>Question</th>
+                <th>Topics</th>
+                <th>Categories</th>
+                <th ng-click="onSortClick('difficultyLevel')">
+                  <a href="#">
+                    Difficulty Level
+                    <span ng-show="sortType == 'difficultyLevel' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'difficultyLevel' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </a>
+                </th>
+                <th ng-click="onSortClick('timesUsed')">
+                  <a href="#">
+                    Times Used
+                    <span ng-show="sortType == 'timesUsed' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'timesUsed' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </a>
+                </th>
+                <th ng-click="onSortClick('correctRatio')">
+                  <a href="#">
+                    Correct Ratio
+                    <span ng-show="sortType == 'correctRatio' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'correctRatio' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </a>
+                </th>
+                <th ng-click="onSortClick('frequency')">
+                  <a href="#">
+                    Frequecy per Day
+                    <span ng-show="sortType == 'frequency' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'frequency' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </a>
+                </th>
+                <th width='9%'>
+                  <a ng-click="onSortClick('lastEdited')" href="#">
+                    Last Edited
+                    <span ng-show="sortType == 'lastEdited' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'lastEdited' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </a> <br/> --------------- <br/>
+                  <a ng-click="onSortClick('createdOn')" href="#">
+                    Created On
+                    <span ng-show="sortType == 'createdOn' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'createdOn' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </a>
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="question-row" ng-repeat="x in questions">
+                <td><input type="checkbox" ng-click="selectQuestion(quesSelected[$index+1], $index+1, x.questionId)" ng-model="quesSelected[$index+1]"></td>
+                <td class="question">{{x.question}}</td>
+                <td>{{x.topics}}</td>
+                <td>{{x.categories}}</td>
+                <td>{{x.difficultyLevel}}</td>
+                <td>{{x.timesUsed}}</td>
+                <td>{{x.correctRatio}}</td>
+                <td>{{x.frequency}}</td>
+                <td>{{dateFormater(x.lastEdited) | date:'MM/dd/yyyy'}}
+                  <br/> -------------- <br/>
+                  {{dateFormater(x.createdOn) | date:'MM/dd/yyyy'}}</td>
+                <td width='7%'>
+                  <button type="button" class="btn btn-xs btn-default command-edit" ng-click="onEditClick($index)">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                  </button>
+                  <button type="button" class="btn btn-xs btn-default command-delete" ng-click="onDeleteClick($index)">
+                    <span class="glyphicon glyphicon-trash"></span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <p class="pageTracker col-sm-4 col-xs-6">
-          Showing {{firstQuestion + 1}} to {{lastQuestion}} of {{totalQuestions}} Questions
-        </p>
+        <div id="pageNo" class="row" ng-hide="!questions.length">
+          <!-- Pagination and Page Tracker are generated by Paging plugin in client side. -->
+          <div paging page="currentPage" page-size="selectedRowCount" total="totalQuestions"
+          text-first="<<"
+          text-last=">>"
+          text-next=">"
+          text-prev="<"
+          show-prev-next="true"
+          show-first-last="true"
+          ul-class="pagination col-sm-8 col-xs-6"
+          paging-action="onPageclick(page)">
+          </div>
+          <p class="pageTracker col-sm-4 col-xs-6">
+            Showing {{firstQuestion + 1}} to {{lastQuestion}} of {{totalQuestions}} Questions
+          </p>
+        </div>
       </div>
     </main>

@@ -1,54 +1,12 @@
-QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $ajaxService){
+QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $ajaxService, $patternService){
   /*Initialize variables for pattern search form*/
   $scope = angular.extend($scope, {
     newPattern : true,
     patternList :[],
     variableList : ['Sachin Tendulkar','Rahul Dravid', 'Sourav Ganguly'],
     //formFields : ['whitelist','blacklist','regexPatterns','wikiRange','gTrendsRange','usageRange','correctRange','searchIn'],
-    patternJson : {
-      patternName : "Sample Pattern",
-      whitelist : [],
-      blacklist : [],
-      wikiRange : {min: 10, max: 70, options: {floor: 0, ceil: 100, step: 5}},
-      gTrendsRange : {min: 10, max: 70, options: {floor: 0,ceil: 100, step: 5}},
-      usageRange : {min: 10, max: 400, options: {floor: 0,ceil: 1000, step: 100}},
-      correctRange : {min: 100, max: 700, options: {floor: 0,ceil: 1000, step: 50}},
-      regexPatterns : [],
-      searchIn : {
-        all: true,
-        ques: false,
-        top: false,
-        cat: false
-      }, //Checkbox fields
-    },
+    patternJson : $patternService.getPattern(),
     regexFields : [{value:0}],//Array to dynamically create input boxes for regex
-
-    /* Parameters for question display after search pattern is executed */
-    /* Dropdown options */
-    noOfQuestions: [50, //first one default
-                    100,
-                    150,
-                    250,
-                    500,
-                    1000],
-    selectedRowCountIndex: 0,
-    selectedRowCount: 50,
-
-    /* checkbox intialization for selection */
-    quesSelected : [],
-    deleteIds: [],
-    querydelete: false,
-
-    /* Intializing question table with empty obj Array */
-    questions: [{}],
-
-    /* Pagination Setup */
-    firstQuestion: 0,
-    currentPage: 1,
-
-    /* default sort setup*/
-    sortType: '', // set the default sort type
-    sortReverse: false,  // set the default sort order
   });
 
   $scope.initPatternList = function(){
@@ -122,12 +80,6 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
         if(err)
           console.log(err);
         console.log(results);
-        var $scp = $scope;
-        var dt = results.data;
-        $scp.questions = dt.rows;
-        $scp.totalQuestions = dt.count;
-        $scp.lastQuestion = $scp.firstQuestion + $scp.selectedRowCount;
-        $scp.lastQuestion = ($scp.lastQuestion > $scp.totalQuestions)? $scp.totalQuestions : $scp.lastQuestion;
     });
   }
 

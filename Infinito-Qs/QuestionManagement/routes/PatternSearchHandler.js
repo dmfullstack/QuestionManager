@@ -49,11 +49,14 @@ module.exports = function(wagner) {
         }
         whitelist = getRegex(displaySettings.whitelist);
         blacklist = getRegex(displaySettings.blacklist);
-
+        
+        console.log(displaySettings);
         wagner.invoke(db.QuestionDB.find, {
           searchSettings : {
             query: whitelist,
             blacklist: blacklist,
+            firstQuestion:displaySettings.firstQuestion,
+            count: displaySettings.count,
             searchIn: displaySettings.searchIn,
             wagner: wagner,
             db: db
