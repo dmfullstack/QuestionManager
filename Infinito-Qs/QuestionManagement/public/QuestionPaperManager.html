@@ -28,16 +28,9 @@
           <th>
             <a href="ManageUI.html">{{questionPaper.Name}}</a>
           </th>
-          <th>Sports</th>
-          <th>
-            <button type="button" class="btn btn-xs btn-default command-edit">
-              <span class="glyphicon glyphicon-ok"></span>yes
-            </button>
-            <button type="button" class="btn btn-xs btn-default command-edit">
-              <span class="glyphicon glyphicon-remove"></span>no
-            </button>
-          </th>
-          <th></th>
+          <th>{{questionPaper.Topic}}</th>
+          <th>{{questionPaper.IsPickedInTournament}}</th>
+          <th>{{questionPaper.LastEditOn}}</th>
           <td width='7%'>
             <button type="button" class="btn btn-xs btn-default command-edit" ng-click="onEditClick($index)">
               <span class="glyphicon glyphicon-pencil"></span>
