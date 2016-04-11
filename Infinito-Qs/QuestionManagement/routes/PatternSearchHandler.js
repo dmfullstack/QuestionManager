@@ -34,22 +34,6 @@ module.exports = function(wagner) {
           }
         });
       break;
-      case 'performSearch' :
-        //console.log(req.body);
-        var displaySettings = req.body.data,
-        whitelist = "",
-        blacklist = "";
-        getRegex = function (objArray) {
-          var temp = [];
-          _.each(objArray, function (value, key) {
-            temp = _.union(temp,_.values(value));
-          });
-          var query = temp.join(",");
-          return query !=""? new RegExp('\\b(' + query.replace(/\,/g,'|') + ')','ig'): "";
-        }
-        whitelist = getRegex(displaySettings.whitelist);
-        blacklist = getRegex(displaySettings.blacklist);
-
     }
   });
   return router;

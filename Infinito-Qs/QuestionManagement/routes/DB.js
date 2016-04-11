@@ -176,7 +176,7 @@ module.exports.QuestionDB = {
               query = {};
             }
             /*Changes for pattern search starts*/
-            if(typeof searchSettings.blacklist !='undefined' && searchSettings.blacklist !=''){
+            /*if(typeof searchSettings.blacklist !='undefined' && searchSettings.blacklist !=''){
               console.log(searchSettings.blacklist);
               query = {
                 $and: [
@@ -185,10 +185,11 @@ module.exports.QuestionDB = {
                     {$not: searchSettings.blacklist}
                   }
                 ]
-            };
+              };
               console.log(query);
-            }
+            }*/
             /*Changes for pattern search starts*/
+            console.log(query);
             Question.count(query).exec(function(err, doc) {
               var outputCount = doc;
               console.log(query);
