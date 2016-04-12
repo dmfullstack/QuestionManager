@@ -1,34 +1,25 @@
 <main class="container">
   <div id="well questionContainer" class="row">
-    <table id="questionList" class="table table-bordered table-responsive table-hover">
-      <thead align="center" ng-hide="!QuestionPapers.length">
+    <div>
+      <h1 ng-if="!QuestionPapers.length">Sorry :'(. No Question Papers to display!</h1>
+      <h1 ng-if="QuestionPapers.length">Question Papers</h1>
+    </div>
+
+    <table id="questionList" class="table table-bordered table-responsive" ng-hide="!QuestionPapers.length">
+      <thead>
         <tr>
-          <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
+          <th></th>
           <th>Name</th>
           <th>Topics</th>
-          <!-- <th>Picked in tournament</th> -->
-          <th width='9%'>
-            <a ng-click="onSortClick('lastEdited')" href="#">
-              Last Edited
-              <span ng-show="sortType == 'lastEdited' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-              <span ng-show="sortType == 'lastEdited' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-            </a> <br/> --------------- <br/>
-            <a ng-click="onSortClick('createdOn')" href="#">
-              Created On
-              <span ng-show="sortType == 'createdOn' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-              <span ng-show="sortType == 'createdOn' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-            </a>
-          </th>
-          <th></th>
+          <th>Edit/Delete Question Paper</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="questionPaper in QuestionPapers" ng-class="{pickedInTournament : questionPaper.IsPickedInTournament, notPickedInTournament : !questionPaper.IsPickedInTournament}">
-          <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
-          <th>{{questionPaper.Name}}</th>
-          <th>{{questionPaper.topics.join(', ')}}</th>
-          <th>{{questionPaper.LastEditOn}}</th>
-          <td width='7%'>
+          <td><input type="checkbox" align="left" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></td>
+          <td>{{questionPaper.Name}}</td>
+          <td>{{questionPaper.topics.join(', ')}}</td>
+          <td width='9%'>
             <button type="button" class="btn btn-xs btn-default command-edit" ng-click="onEditClick($index)" title="Edit Question Paper">
               <span class="glyphicon glyphicon-pencil"></span>
             </button>
