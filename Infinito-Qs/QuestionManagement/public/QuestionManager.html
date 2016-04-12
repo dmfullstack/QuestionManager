@@ -208,57 +208,44 @@
           <label>
             <input type="checkbox" ng-model="searchIn.cat" ng-click="changeSelection(1)">Categories
           </label>
-          <label>
-            <input type="checkbox" ng-model="searchWith.difficultyLevel" ng-click="changeSelection(1)">DifficultyLevel
+          <label ng-click="showMoreSearchOptions= !showMoreSearchOptions" class="btn btn-primary"> More Search Options
           </label>
-          <label>
-             <div id='difficultyLevelValue' uib-dropdown>
-              <button uib-dropdown-toggle class="btn btn-default" type="button" >
-               {{difficultyLevels[searchWith.difficultyLevelValue]}}
-              <span class="caret"></span></button>
-              <ul uib-dropdown-menu >
-               <li class="noofRows" ng-repeat="x in difficultyLevels" ng-click="rangeSelected('dl', $index)">
-                <a href>{{x}}</a>
-               </li>
-              </ul>
-             </div>
-          </label>
-          <label>
-            <input type="checkbox" ng-model="searchWith.wiki" ng-click="changeSelection(1)">Wiki Rank
-          </label>
-          <label>
-             <div id='wikiRange' uib-dropdown class='actionBar'>
-              <button uib-dropdown-toggle class="btn btn-default" type="button">
-               {{wikiRange[currentSelectedWR]}}
-              <span class="caret"></span></button>
-              <ul uib-dropdown-menu >
-               <li class="noofRows" ng-repeat="x in wikiRange" ng-click="rangeSelected('wiki', $index)">
-                <a href>{{x}}</a>
-               </li>
-              </ul>
-             </div>
-          </label>
+        </form>
 
-          <label>
-            <input type="checkbox" ng-model="searchWith.google" ng-click="changeSelection(1)">Google Rank
-          </label>
-          <label>
-             <div id='googleRange' uib-dropdown class='actionBar'>
-              <button uib-dropdown-toggle class="btn btn-default" type="button">
-              {{googleRange[currentSelectedGR]}}
-              <span class="caret"></span></button>
-              <ul uib-dropdown-menu >
-               <li class="noofRows" ng-repeat="x in googleRange" ng-click="rangeSelected('google', $index)">
-                <a href>{{x}}</a>
-               </li>
-              </ul>
-             </div>
-          </label>
+        <form class="form row col-sm-12 col-xs-12" role="form">
+
+          <div id="metaData" ng-show="showMoreSearchOptions">
+          <hr>
+           
+           <div id="difficultyLevel" class="form-group col-sm-2 col-xs-2"> 
+             DifficultyLevel: 
+             <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable DifficultyLevel in Search" tooltip-trigger="mouseenter" tooltip-placement="top">
+                <select class="form-control" ng-model="searchWith.difficultyLevelValue" ng-options="opt for opt in difficultyLevels"> </select>
+             </span>
+           </div>
+
+           <div id="wikiLevel" class="form-group col-sm-2 col-xs-2"> 
+              WikiPedia Rank:
+              <span id="WikiHelper" uib-popover="wikiHelper" popover-placement="right-bottom" popover-trigger="mouseenter" class="glyphicon glyphicon-question-sign"> </span>
+              <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable Wiki Rank in Search" tooltip-trigger="mouseenter" tooltip-placement="top">
+                <select class="form-control" ng-model="currentWikiLevel" ng-options="opt for opt in difficultyLevels" ng-change="rangeSelected('wiki')">  </select>
+              </span>
+           </div>
+          
+           <div id = "GoogleLevel" class="form-group col-sm-2 col-xs-2" > 
+             GoogleTrend Rank:
+            <span id="GoogleHelper" uib-popover="googleHelper" popover-placement="right-bottom" popover-trigger="mouseenter" class="glyphicon glyphicon-question-sign"> </span>
+            <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable GoogleRank in Search" tooltip-trigger="mouseenter" tooltip-placement="top">
+              <select class="form-control" ng-model="currentGoogleLevel" ng-options="opt for opt in difficultyLevels" ng-change="rangeSelected('google')"></select>
+            </span>
+           </div>
+
+         </div> <!-- End of MetaData-->
         </form>
 
         <!-- <button type="button" ng-click="buttonclick()" class="pull-right">More Questions</button> -->
 
-        <button type="button" ng-click="questionpaper()" class="pull-right">Questionpaper</button>
+        <!-- <button type="button" ng-click="questionpaper()" class="pull-right">Questionpaper</button> -->
     </div>
       <div class="questions nga-default nga-slide-up" ng-show="isPattern || isBasic">
         <div id="questionContainer" class="row">
@@ -309,7 +296,7 @@
                 </th>
                 <th ng-click="onSortClick('googleResultScore')">
                   <a href="#">
-                    Google Trend Rank
+                    Google Score
                     <span ng-show="sortType == 'googleResultScore' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
                     <span ng-show="sortType == 'googleResultScore' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </a>

@@ -177,13 +177,11 @@ module.exports.QuestionDB = {
             }
             /*Changes for pattern search starts*/
 
-            console.log("So Far Before", query);
-            console.log("searchWith ");
-            console.log(searchSettings.searchWith);
+            console.log("Before SearchWith", query);
             query = updateQueryWithMetaData(query, searchSettings.searchWith);
-            console.log("So Far After", query);
+            console.log("After SearchWith", query);
 
-            /*Changes for pattern search ends*/
+            /*Changes for pattern search starts*/
             Question.count(query).exec(function(err, doc) {
               var outputCount = doc;
               console.log(query,outputCount);
@@ -478,7 +476,7 @@ var updateQueryWithMetaData = function(query, metadataObj) {
        correct = "",
        blacklist = "";
 
-   if (metadataObj.wiki || metadataObj.google || metadataObj.difficultyLevel
+   if (metadataObj.wiki || metadataObj.google || (metadataObj.difficultyLevel != 0)
             || metadataObj.usage || metadataObj.correct) {
    var result = [];
 
@@ -505,16 +503,18 @@ var updateQueryWithMetaData = function(query, metadataObj) {
      }
      result.push(google);
    }
+
    if (metadataObj.usage == true) {
      var min = parseInt(metadataObj.usageRange.min),
          max = parseInt(metadataObj.usageRange.max);
-
+    
      usage = {timesUsed: {$gte:min}};
      if (max > min) {
        usage = {timesUsed: {$gte:min, $lte:max}};
      }
      result.push(usage);
    }
+
    if (metadataObj.correct == true) {
      var min = parseInt(metadataObj.correctRange.min),
          max = parseInt(metadataObj.correctRange.max);
@@ -526,8 +526,8 @@ var updateQueryWithMetaData = function(query, metadataObj) {
      result.push(correct);
    }
 
-   if(metadataObj.difficultyLevel ==  true) {
-      difficultyLevelChk = {difficultyLevel: (metadataObj.difficultyLevelValue+1)};
+   if(metadataObj.difficultyLevelValue) {
+      difficultyLevelChk = {difficultyLevel: (metadataObj.difficultyLevelValue)};     
       result.push(difficultyLevelChk);
    }
 
