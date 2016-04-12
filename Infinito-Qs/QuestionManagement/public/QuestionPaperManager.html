@@ -1,12 +1,15 @@
 <main class="container">
-  <div id="questionContainer" class="row">
+  <div id="legendContainer">
+
+  </div>
+  <div id="well questionContainer" class="row">
     <table id="questionList" class="table table-bordered table-responsive table-hover">
-      <thead ng-hide="!QuestionPapers.length">
+      <thead align="center" ng-hide="!QuestionPapers.length">
         <tr>
           <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
           <th>Name</th>
           <th>Topics</th>
-          <th>Picked in tournament</th>
+          <!-- <th>Picked in tournament</th> -->
           <th width='9%'>
             <a ng-click="onSortClick('lastEdited')" href="#">
               Last Edited
@@ -23,19 +26,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="questionPaper in QuestionPapers">
+        <tr ng-repeat="questionPaper in QuestionPapers" ng-class="{pickedInTournament : questionPaper.IsPickedInTournament, notPickedInTournament : !questionPaper.IsPickedInTournament}">
           <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
-          <th>
-            <a href="ManageUI.html">{{questionPaper.Name}}</a>
-          </th>
+          <th>{{questionPaper.Name}}</th>
           <th>{{questionPaper.topics.join(', ')}}</th>
-          <th>{{questionPaper.TournamentsPicked}}</th>
           <th>{{questionPaper.LastEditOn}}</th>
           <td width='7%'>
-            <button type="button" class="btn btn-xs btn-default command-edit" ng-click="onEditClick($index)">
+            <button type="button" class="btn btn-xs btn-default command-edit" ng-click="onEditClick($index)" title="Edit Question Paper">
               <span class="glyphicon glyphicon-pencil"></span>
             </button>
-            <button type="button" class="btn btn-xs btn-default command-delete" ng-click="onDeleteClick($index)">
+            <button type="button" class="btn btn-xs btn-default command-delete" ng-click="onDeleteClick($index)" ng-disabled = "{{questionPaper.IsPickedInTournament}}" title="{{questionPaper.IsPickedInTournament ? 'Question Paper used in a Tournament cannot be deleted' : 'Delete Question Paper'}}">
               <span class="glyphicon glyphicon-trash"></span>
             </button>
           </td>

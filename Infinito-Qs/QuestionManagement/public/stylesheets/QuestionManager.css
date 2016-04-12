@@ -116,3 +116,15 @@ h1 {
 .allow-overflow{
   overflow:visible;
 }
+
+.pickedInTournament{
+  background-color: #d9534f;
+}
+
+.notPickedInTournament{
+  background-color: #5cb85c;
+}
+
+.anchorButton{
+  padding: 2% 2%;
+}

@@ -101,6 +101,11 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
           self.$scope.isBasic = false;
         }
       };
+
+      self.$scope.goTo = function(pageName){
+        $window.location.href = "/#" + pageName;
+      }
+
       self.$scope.questionpaper=function(){
         $window.location.href='/manageQuestions.html';
       };
