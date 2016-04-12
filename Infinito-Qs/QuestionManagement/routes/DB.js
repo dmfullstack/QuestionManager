@@ -478,7 +478,8 @@ var updateQueryWithMetaData = function(query, metadataObj) {
        correct = "",
        blacklist = "";
 
-   if (metadataObj.wiki || metadataObj.google || metadataObj.difficultyLevel || metadataObj.usage || metadataObj.correct) {
+   if (metadataObj.wiki || metadataObj.google || metadataObj.difficultyLevel
+            || metadataObj.usage || metadataObj.correct) {
    var result = [];
 
    result.push(query);

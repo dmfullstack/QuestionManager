@@ -32,7 +32,7 @@ module.exports = function(wagner) {
         /*Changes for pattern based search starts*/
         if(req.body.patternJson){
           try{
-          var patternSettings = req.body.patternJson,
+          var patternSettings = req.body.searchWith,
           whitelist = "",
           blacklist = "";
           getRegex = function (objArray) {
