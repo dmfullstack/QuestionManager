@@ -79,7 +79,7 @@
                   <span ng-click="refreshSlider(wikiCheck.open)">Wikidata PageViews <small>(in thousands)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': wikiCheck.open, 'glyphicon-chevron-right': !wikiCheck.open}"></i></span>
                 </uib-accordion-heading>
                 <div class="form-group">
-                  <rzslider rz-slider-model="patternJson.wikiRange.min" rz-slider-high="patternJson.wikiRange.max" rz-slider-options="patternJson.wikiRange.options"></rzslider>
+                  <rzslider rz-slider-model="patternJson.wikiRange.min" rz-slider-high="patternJson.wikiRange.max" rz-slider-options="patternJson.wikiRange.options" ng-click="onChange(patternJson.wikiRange.options.id)"></rzslider>
                 </div>
               </uib-accordion-group>
               <uib-accordion-group is-open="googleCheck.open">
@@ -87,7 +87,7 @@
                   <span ng-click="refreshSlider(googleCheck.open)">Google Trends <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': googleCheck.open, 'glyphicon-chevron-right': !googleCheck.open}"></i></span>
                 </uib-accordion-heading>
                 <div class="form-group">
-                  <rzslider rz-slider-model="patternJson.googleRange.min" rz-slider-high="patternJson.googleRange.max" rz-slider-options="patternJson.googleRange.options"></rzslider>
+                  <rzslider rz-slider-model="patternJson.googleRange.min" rz-slider-high="patternJson.googleRange.max" rz-slider-options="patternJson.googleRange.options" ng-click="onChange(patternJson.googleRange.options.id)"></rzslider>
                 </div>
               </uib-accordion-group>
               <uib-accordion-group is-open="usageCheck.open">
@@ -95,7 +95,7 @@
                   <span ng-click="refreshSlider(usageCheck.open)">Usage <small>(Number of times this question has been asked)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': usageCheck.open, 'glyphicon-chevron-right': !usageCheck.open}"></i><span>
                 </uib-accordion-heading>
                 <div class="form-group">
-                  <rzslider rz-slider-model="patternJson.usageRange.min" rz-slider-high="patternJson.usageRange.max" rz-slider-options="patternJson.usageRange.options"></rzslider>
+                  <rzslider rz-slider-model="patternJson.usageRange.min" rz-slider-high="patternJson.usageRange.max" rz-slider-options="patternJson.usageRange.options" ng-click="onChange(patternJson.usageRange.options.id)"></rzslider>
                 </div>
               </uib-accordion-group>
               <uib-accordion-group is-open="correctCheck.open">
@@ -103,24 +103,24 @@
                   <span ng-click="refreshSlider(correctCheck.open)">Correctness <small>(Number of times the players have got the answer right)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': correctCheck.open, 'glyphicon-chevron-right': !correctCheck.open}"></i></span>
                 </uib-accordion-heading>
                 <div class="form-group">
-                  <rzslider rz-slider-model="patternJson.correctRange.min" rz-slider-high="patternJson.correctRange.max" rz-slider-options="patternJson.correctRange.options"></rzslider>
+                  <rzslider rz-slider-model="patternJson.correctRange.min" rz-slider-high="patternJson.correctRange.max" rz-slider-options="patternJson.correctRange.options" ng-click="onChange(patternJson.correctRange.options.id)"></rzslider>
                 </div>
               </uib-accordion-group>
             </uib-accordion>
-            <!--<div class="checkbox">
+            <div class="checkbox">
               <label>
-                <input type="checkbox" ng-model="patternJson.searchIn.all" ng-click="changeSelection(0)">All
+                <input type="checkbox" ng-model="patternJson.wikiFlag">WikiData
               </label>
               <label>
-                <input type="checkbox" ng-model="patternJson.searchIn.ques" ng-click="changeSelection(1)">Questions
+                <input type="checkbox" ng-model="patternJson.googleFlag">Google Rank
               </label>
               <label>
-                <input type="checkbox" ng-model="patternJson.searchIn.top" ng-click="changeSelection(1)">Topics
+                <input type="checkbox" ng-model="patternJson.usageFlag">Usage
               </label>
               <label>
-                <input type="checkbox" ng-model="patternJson.searchIn.cat" ng-click="changeSelection(1)">Categories
+                <input type="checkbox" ng-model="patternJson.correctFlag">Correctness
               </label>
-            </div>-->
+            </div>
             <div class="form-group text-center">
               <input class="btn btn-success btn-block" type="submit" value="Hit Me!"></input>
             </div>

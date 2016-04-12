@@ -193,14 +193,14 @@ QuestionManagerApp.service('$patternService', function (){
     patternName : "",
     whitelist : [],
     blacklist : [],
-    wikiFlag: true,
-    googleFlag: true,
+    wikiFlag: false,
+    googleFlag: false,
     usageFlag: false,
     correctFlag: false,
-    wikiRange : {min: 30000, max: 50000, options: {floor: 0, ceil: 100000, step: 1000}},
-    googleRange : {min: 10, max: 70, options: {floor: 0,ceil: 100, step: 5}},
-    usageRange : {min: 10, max: 400, options: {floor: 0,ceil: 1000, step: 100}},
-    correctRange : {min: 100, max: 700, options: {floor: 0,ceil: 1000, step: 50}},
+    wikiRange : {min: 30000, max: 50000, options: {floor: 0, ceil: 100000, step: 1000, id: "wiki"}},
+    googleRange : {min: 10, max: 70, options: {floor: 0,ceil: 100, step: 5, id: "google"}},
+    usageRange : {min: 10, max: 6000, options: {floor: 0,ceil: 10000, step: 100, id: "usage"}},
+    correctRange : {min: 100, max: 700, options: {floor: 0,ceil: 1000, step: 50, id: "correct"}},
     regexPatterns : []
   };
 

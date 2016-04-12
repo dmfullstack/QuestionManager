@@ -471,11 +471,14 @@ module.exports.init = module.exports.QuestionDB.init;
 /* Helper Function */
 var updateQueryWithMetaData = function(query, metadataObj) {
    /*Add Meta Data params */
-   var wiki = "";
-   var google = "";
-   var difficultyLevelChk = "";
+   var wiki = "",
+       google = "",
+       difficultyLevelChk = "",
+       usage = "",
+       correct = "",
+       blacklist = "";
 
-   if (metadataObj.wiki || metadataObj.google || metadataObj.difficultyLevel) {
+   if (metadataObj.wiki || metadataObj.google || metadataObj.difficultyLevel || metadataObj.usage || metadataObj.correct) {
    var result = [];
 
    result.push(query);
@@ -501,17 +504,27 @@ var updateQueryWithMetaData = function(query, metadataObj) {
      }
      result.push(google);
    }
-   /*if (metadataObj.correct == true) {
+   if (metadataObj.usage == true) {
+     var min = parseInt(metadataObj.usageRange.min),
+         max = parseInt(metadataObj.usageRange.max);
+
+     usage = {timesUsed: {$gte:min}};
+     if (max > min) {
+       usage = {timesUsed: {$gte:min, $lte:max}};
+     }
+     result.push(usage);
+   }
+   if (metadataObj.correct == true) {
      var min = parseInt(metadataObj.correctRange.min),
          max = parseInt(metadataObj.correctRange.max);
 
-     google= {googleResultScore: {$gte:min}};
+     correct = {correctRatio: {$gte:min}};
      if (max > min) {
-       google= {googleResultScore: {$gte:min, $lte:max}};
+       correct = {correctRatio: {$gte:min, $lte:max}};
      }
-     result.push(google);
+     result.push(correct);
+   }
 
-   }*/
    if(metadataObj.difficultyLevel ==  true) {
       difficultyLevelChk = {difficultyLevel: (metadataObj.difficultyLevelValue+1)};
       result.push(difficultyLevelChk);

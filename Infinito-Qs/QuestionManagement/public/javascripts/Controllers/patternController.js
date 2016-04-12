@@ -51,22 +51,18 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     });
   };
 
-  //handle checkbox selection
-  $scope.changeSelection = function(control) {
-    var $scp = $scope;
-    if($scp.patternJson.searchIn.ques && $scp.patternJson.searchIn.top && $scp.patternJson.searchIn.cat)
-    {
-      control=0;
-      $scp.patternJson.searchIn.all = true;
+  $scope.onChange = function (slider){
+    switch(slider){
+      case "wiki"   : $scope.patternJson.wikiFlag = true;
+                      break;
+      case "google" : $scope.patternJson.googleFlag = true;
+                      break;
+      case "usage"  : $scope.patternJson.usageFlag = true;
+                      break;
+      case "correct": $scope.patternJson.correctFlag = true;
+                      break;
     }
-    if(control && ($scp.patternJson.searchIn.ques || $scp.patternJson.searchIn.top || $scp.patternJson.searchIn.cat)) {
-      $scp.patternJson.searchIn.all = false;
-    } else if($scp.patternJson.searchIn.all) {
-      $scp.patternJson.searchIn.ques = false;
-      $scp.patternJson.searchIn.top = false;
-      $scp.patternJson.searchIn.cat = false;
-    }
-  };
+  }
 
   //Search form submit handler
   $scope.performSearch = function () {
