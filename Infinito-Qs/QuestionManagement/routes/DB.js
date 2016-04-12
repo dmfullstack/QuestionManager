@@ -176,26 +176,14 @@ module.exports.QuestionDB = {
               query = {};
             }
             /*Changes for pattern search starts*/
-            /*if(typeof searchSettings.blacklist !='undefined' && searchSettings.blacklist !=''){
-              console.log(searchSettings.blacklist);
-              query = {
-                $and: [
-                  {question:searchSettings.query},
-                  {question:
-                    {$not: searchSettings.blacklist}
-                  }
-                ]
-              };
-              console.log(query);
-
-            }*/
 
             console.log("So Far Before", query);
+            console.log("searchWith ");
+            console.log(searchSettings.searchWith);
             query = updateQueryWithMetaData(query, searchSettings.searchWith);
             console.log("So Far After", query);
 
-            /*Changes for pattern search starts*/
-            console.log(query);
+            /*Changes for pattern search ends*/
             Question.count(query).exec(function(err, doc) {
               var outputCount = doc;
               console.log(query,outputCount);
@@ -215,7 +203,6 @@ module.exports.QuestionDB = {
                     callback(err,null);
                     return;
                   }
-                  console.log(doc.length);
                   for(var i = 0, doclen = doc.length; i<doclen; i++) {
                     var topics = [],
                         categories = [],
@@ -514,10 +501,25 @@ var updateQueryWithMetaData = function(query, metadataObj) {
      }
      result.push(google);
    }
+   /*if (metadataObj.correct == true) {
+     var min = parseInt(metadataObj.correctRange.min),
+         max = parseInt(metadataObj.correctRange.max);
 
+     google= {googleResultScore: {$gte:min}};
+     if (max > min) {
+       google= {googleResultScore: {$gte:min, $lte:max}};
+     }
+     result.push(google);
+
+   }*/
    if(metadataObj.difficultyLevel ==  true) {
       difficultyLevelChk = {difficultyLevel: (metadataObj.difficultyLevelValue+1)};
       result.push(difficultyLevelChk);
+   }
+
+   if(typeof metadataObj.blacklist !='undefined' && metadataObj.blacklist !=''){
+     blacklist = {question:{$not:metadataObj.blacklist}};
+     result.push(blacklist);
    }
 
      query = {$and: result};

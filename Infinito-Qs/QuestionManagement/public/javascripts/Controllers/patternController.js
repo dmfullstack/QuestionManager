@@ -4,7 +4,7 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     newPattern : true,
     patternList :[],
     variableList : ['Sachin Tendulkar','Rahul Dravid', 'Sourav Ganguly'],
-    //formFields : ['whitelist','blacklist','regexPatterns','wikiRange','gTrendsRange','usageRange','correctRange','searchIn'],
+    //formFields : ['whitelist','blacklist','regexPatterns','wikiRange','googleRange','usageRange','correctRange','searchIn'],
     patternJson : $patternService.getPattern(),
     regexFields : [{value:0}],//Array to dynamically create input boxes for regex
   });

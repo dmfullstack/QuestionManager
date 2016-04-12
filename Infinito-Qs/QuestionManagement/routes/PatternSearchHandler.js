@@ -1,8 +1,7 @@
 var express = require('express'),
     db = require('./DB'),
     fs = require('fs'),
-    path = require('path'),
-    _ = require('underscore');
+    path = require('path');
 
 var router = express.Router();
 

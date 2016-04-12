@@ -82,12 +82,12 @@
                   <rzslider rz-slider-model="patternJson.wikiRange.min" rz-slider-high="patternJson.wikiRange.max" rz-slider-options="patternJson.wikiRange.options"></rzslider>
                 </div>
               </uib-accordion-group>
-              <uib-accordion-group is-open="gTrendsCheck.open">
+              <uib-accordion-group is-open="googleCheck.open">
                 <uib-accordion-heading>
-                  <span ng-click="refreshSlider(gTrendsCheck.open)">Google Trends <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': gTrendsCheck.open, 'glyphicon-chevron-right': !gTrendsCheck.open}"></i></span>
+                  <span ng-click="refreshSlider(googleCheck.open)">Google Trends <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': googleCheck.open, 'glyphicon-chevron-right': !googleCheck.open}"></i></span>
                 </uib-accordion-heading>
                 <div class="form-group">
-                  <rzslider rz-slider-model="patternJson.gTrendsRange.min" rz-slider-high="patternJson.gTrendsRange.max" rz-slider-options="patternJson.gTrendsRange.options"></rzslider>
+                  <rzslider rz-slider-model="patternJson.googleRange.min" rz-slider-high="patternJson.googleRange.max" rz-slider-options="patternJson.googleRange.options"></rzslider>
                 </div>
               </uib-accordion-group>
               <uib-accordion-group is-open="usageCheck.open">

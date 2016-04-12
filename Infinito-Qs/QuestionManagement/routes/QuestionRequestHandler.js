@@ -1,6 +1,7 @@
 var express = require('express'),
     db = require('./DB'),
-    fs = require('fs');
+    fs = require('fs'),
+    _ = require('underscore');
 
 var router = express.Router();
 
@@ -27,15 +28,14 @@ module.exports = function(wagner) {
             searchWith = req.body.searchWith,
             obj = {},
             rgexQuery = query !=""? new RegExp('\\b(' + query.replace(/\s/g,'|') + ')','ig'): "";
-            console.log(req.body.patternJson);
+
         /*Changes for pattern based search starts*/
-        /*if(req.body.patternJson){
-          console.log('inside');
+        if(req.body.patternJson){
+          try{
           var patternSettings = req.body.patternJson,
           whitelist = "",
           blacklist = "";
           getRegex = function (objArray) {
-            console.log(objArray);
             var temp = [];
             _.each(objArray, function (value, key) {
               temp = _.union(temp,_.values(value));
@@ -43,40 +43,35 @@ module.exports = function(wagner) {
             var query = temp.join(",");
             return query !=""? new RegExp('\\b(' + query.replace(/\,/g,'|') + ')','ig'): "";
           }
-          console.log(patternSettings.whitelist);
-          console.log(patternSettings.blacklist);
           if(patternSettings.whitelist!="")
             whitelist = getRegex(patternSettings.whitelist);
-            console.log('here');
-            console.log(whitelist);
           if(patternSettings.blacklist!="")
             blacklist = getRegex(patternSettings.blacklist);
-          console.log(blacklist);
 
           searchWith = {
             blacklist: blacklist,
+            wiki: patternSettings.wikiFlag,
+            google: patternSettings.googleFlag,
+            usage: patternSettings.usageFlag,
+            correct: patternSettings.correctFlag,
             wikiRange: patternSettings.wikiRange,
-            gTrendsRange: patternSettings.gTrendsRange,
+            googleRange: patternSettings.googleRange,
             usageRange: patternSettings.usageRange,
             correctRange: patternSettings.correctRange,
             regexPatterns: patternSettings.regexPatterns
           }
-          query = whitelist;
-        }*/
+          rgexQuery = whitelist;
+        }catch(err){
+          console.log(err);
+        }
+          //console.log("searchwith in quesReq ");
+          //console.log(searchWith);
+        }
         /*Changes for pattern based search ends*/
         sortReverse = (sortReverse)? 1: -1;
         if(sortType!="") {
           obj[sortType] = sortReverse;
         }
-        var searchSettings = {
-          query: rgexQuery,
-          sortObj: obj,
-          firstQuestion: req.body.firstQuestion,
-          count: req.body.count,
-          searchIn: searchIn,
-          wagner: wagner,
-          db: db
-        };
         wagner.invoke(db.QuestionDB.find, {
           searchSettings : {
             query: rgexQuery,

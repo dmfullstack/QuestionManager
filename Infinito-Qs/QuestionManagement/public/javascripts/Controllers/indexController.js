@@ -288,7 +288,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
   };
 
   $rootScope.$on("filterQuestions", function () {
-    QuestionManager.getQuestionJson();
+    $scope.onSearch();
   });
 
   QuestionManager.init({
