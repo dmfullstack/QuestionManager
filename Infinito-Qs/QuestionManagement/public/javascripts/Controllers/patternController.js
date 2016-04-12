@@ -7,7 +7,10 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     //formFields : ['whitelist','blacklist','regexPatterns','wikiRange','googleRange','usageRange','correctRange','searchIn'],
     patternJson : $patternService.getPattern(),
     regexFields : [{value:0}],//Array to dynamically create input boxes for regex
+    isRun : false,
+    submitButton : "Run this!"
   });
+
 
   $scope.initPatternList = function(){
     $ajaxService.listPattern({ //get the existing patterns
@@ -66,11 +69,10 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
 
   //Search form submit handler
   $scope.performSearch = function () {
-    /*for(var i=0; i<$scope.formFields.length; i++){
-        $scope.patternJson[$scope.formFields[i]] = $scope[$scope.formFields[i]];
-    }*/
     $patternService.setPattern($scope.patternJson);
     $rootScope.$emit("filterQuestions",{});
+    $scope.isRun = true;
+    $scope.submitButton = "Re-run this!"
   }
 
   //Save a particular pattern

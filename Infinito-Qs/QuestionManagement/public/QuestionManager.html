@@ -24,7 +24,7 @@
         <div class="col-sm-6">
           <button class="btn btn-success btn-block" ng-click="isCreatePattern(false)">Run existing pattern</button>
         </div>
-      </div><br><br>
+      </div><br>
       <div class="row nga-fast nga-stagger nga-fade" ng-show="!newPattern">
         <div class="col-sm-12">
           <form class="form form-inline" action="">
@@ -40,9 +40,9 @@
         </div>
       </div>
       <div class="row nga-default nga-stagger nga-slide-left" ng-show="newPattern">
-        <div class="col-sm-12">
+        <div ng-hide="isRun" class="col-sm-12 nga-fast nga-slide-right">
           <form class="form" ng-submit="performSearch()">
-            <uib-accordion close-others="false">
+            <uib-accordion close-others="true">
               <uib-accordion-group is-open="wordCheck.open">
                 <uib-accordion-heading>
                   Word based <small>(Add words to filter out the search data)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': wordCheck.open, 'glyphicon-chevron-right': !wordCheck.open}"></i>
@@ -126,11 +126,37 @@
               </label>
             </div>
             <div class="form-group text-center">
-              <input class="btn btn-success btn-block" type="submit" value="Hit Me!"></input>
+              <input class="btn btn-success btn-block" type="submit" value="{{submitButton}}"></input>
             </div>
-            {{patternJson | json}}
           </form>
-          <button type="button" class="btn btn-info" ng-click="onSavePattern()">Save Pattern</button>
+        </div>
+        <div ng-show="isRun" class="col-sm-12 nga-fast nga-slide-left">
+          <h3>Your pattern setting:</h3>
+          <div class="row">
+            <div class="col-sm-6">
+              Include words:
+                <span ng-repeat="element in patternJson.whitelist">{{element.text}} </span><br>
+              Exclude words: <span ng-repeat="element in patternJson.blacklist">{{element.text}}</span><br>
+              <span ng-if="patternJson.wikiFlag">
+                WikiData range: {{patternJson.wikiRange.min}} to {{patternJson.wikiRange.max}}<br>
+              </span>
+            </div>
+            <div class="col-sm-6">
+              <span ng-if="patternJson.googleFlag">
+                Google Rank range: {{patternJson.googleRange.min}} to {{patternJson.googleRange.max}}<br>
+              </span>
+              <span ng-if="patternJson.usageFlag">
+                Usage range: {{patternJson.usageRange.min}} to {{patternJson.usageRange.max}}<br>
+              </span>
+              <span ng-if="patternJson.correctFlag">
+                Correctness range: {{patternJson.correctRange.min}} to {{patternJson.correctRange.max}}<br>
+              </span>
+            </div>
+          </div><br>
+          <div class="row">
+            <div class="col-sm-2"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>
+            <div class="col-sm-2"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
+          </div>
         </div>
       </div>
       <br>
