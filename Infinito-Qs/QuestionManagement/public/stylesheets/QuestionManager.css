@@ -128,3 +128,14 @@ h1 {
 .anchorButton{
   padding: 2% 2%;
 }
+
+.tableFooter{
+  text-align: end;
+}
+
+.foo{
+  text-align: end;
+  border: 1px solid rgba(0, 0, 0, .2);
+  padding: 5px 5px;
+  margin-right: 5px;
+}

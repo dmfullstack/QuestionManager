@@ -259,9 +259,12 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
             searchIn: $scp.searchIn,
             searchWith: $scp.searchWith
           };
-      if($scp.isPattern)
-        queryObj.patternJson = $scp.patternJson;
 
+      //Changes for pattern search starts
+      if($scp.isPattern)
+        queryObj.searchWith = $scp.patternJson;
+      //Changes for pattern search ends
+      
       self.$ajaxService.getQuestionJson(queryObj, function(err, results) {
         if(err)
         {
@@ -293,7 +296,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
   };
 
   $rootScope.$on("filterQuestions", function () {
-    QuestionManager.getQuestionJson();
+    $scope.onSearch();
   });
 
   QuestionManager.init({
