@@ -139,6 +139,10 @@ h1 {
   margin-right: 5px;
 }
 
+.brand-name{
+  margin-bottom: 5px;
+}
+
 .tooltipWrap{
   position:relative;
 }

@@ -541,7 +541,7 @@ var updateQueryWithMetaData = function(query, metadataObj) {
 
    if(typeof metadataObj.blacklist !='undefined' && metadataObj.blacklist !=''){
      blacklist = {question:{$not:metadataObj.blacklist}};
-     result.push(blacklist);
+     result.push(blacklist); 
    }
 
      query = {$and: result};

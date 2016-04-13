@@ -54,13 +54,14 @@ module.exports = function(wagner) {
               google: patternSettings.googleFlag,
               usage: patternSettings.usageFlag,
               correct: patternSettings.correctFlag,
-              difficultyLevelValue: patternSettings.difficultyValue.value,
               wikiRange: patternSettings.wikiRange,
               googleRange: patternSettings.googleRange,
               usageRange: patternSettings.usageRange,
               correctRange: patternSettings.correctRange,
               regexPatterns: patternSettings.regexPatterns
             }
+            if(patternSettings.difficultyFlag)
+              searchWith.difficultyLevelValue = patternSettings.difficultyValue.value;
             rgexQuery = whitelist;
           }catch(err){
             console.log(err);
