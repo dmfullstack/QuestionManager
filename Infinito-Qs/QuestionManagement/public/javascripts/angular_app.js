@@ -8,186 +8,201 @@ var QuestionManagerApp = angular.module("QuestionManagerApp", [
 ])
 .config(function ($routeProvider, $locationProvider, $provide) {
   $routeProvider
-    .when('/', {
-      templateUrl: 'QuestionManager.html',
-      controller: 'index',
-      controllerAs: 'indexController'
-    })
-    .when('/signout',{
-      resolve :{
-          signout: ['signoutService', function (signoutService) {
-                    signoutService($window);
-        }]
-      }
-    })
-    .when('/QuestionPaperManager',{
-      templateUrl: 'QuestionPaperManager.html',
-      controller: 'questionPaper',
-      controllerAs: 'questionPaperController'
-    })
-    .otherwise({
-      redirectTo: '/'
-    });
+  .when('/', {
+    templateUrl: 'QuestionManager.html',
+    controller: 'index',
+    controllerAs: 'indexController'
+  })
+  .when('/signout',{
+    resolve :{
+      signout: ['signoutService', function (signoutService) {
+        signoutService($window);
+      }]
+    }
+  })
+  .when('/QuestionPaperManager',{
+    templateUrl: 'QuestionPaperManager.html',
+    controller: 'questionPaper',
+    controllerAs: 'questionPaperController'
+  })
+  .otherwise({
+    redirectTo: '/'
+  });
   $locationProvider.html5Mode(true);
 });
 QuestionManagerApp.factory('_', function() {
   return window._;
 });
 QuestionManagerApp.service('$ajaxService', function($http){
-   this.getQuestionJson = function(data, callback) {
-     $http({
-       url: '/QuestionRequestHandler',
-       data: data,
-       // dataType: 'json',
-       method: 'post'
-     }).then(function(results) {
-       callback(null,results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   this.onQuestionDelete = function(data, callback) {
-     $http({
-       url: '/QuestionRequestHandler',
-       data: data,
-       // dataType: 'json',
-       method: 'post'
-     }).then(function(results) {
-       callback(null,results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   this.addTopic = function(data, callback) {
-     $http({
-       url: '/TopicsRequestHandler',
-       data: data,
-       // dataType: 'json',
-       method: 'post'
-     }).then(function(results) {
-       callback(null,results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   this.addCategoryId = function(data, callback) {
-     $http({
-       url: '/TopicsRequestHandler',
-       data: data,
-       // dataType: 'json',
-       method: 'post'
-     }).then(function(results) {
-       callback(null,results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   this.yesBtnClicked = function(data, callback) {
-     $http({
-       url: '/TopicsRequestHandler',
-       data: data,
-       // dataType: 'json',
-       method: 'post'
-     }).then(function(results) {
-       callback(null,results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   this.QuestionSave = function(data, callback) {
-     $http({
-       url: '/QuestionRequestHandler',
-       data: data,
-       // dataType: 'json',
-       method: 'post'
-     }).then(function(results) {
-       callback(null,results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   this.getCategoriesDatalist = function(data, callback) {
-     $http({
-       url: '/TopicsRequestHandler',
-       data: data,
-       // dataType: 'json',
-       method: 'post'
-     }).then(function(results) {
-       callback(null,results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   this.getTopicDatalist = function(data, callback) {
-     $http({
-       url: '/TopicsRequestHandler',
-       data: data,
-       // dataType: 'json',
-       method: 'post'
-     }).then(function(results) {
-       callback(null,results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   this.deleteSelectedQuestion = function(data, callback) {
-     //console.log('call received');
-     $http({
-       url: '/QuestionRequestHandler',
-       data: data,
-       method: 'post'
-     }).then(function(results) {
-       //console.log(results);
-       callback(null, results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   /*Changes for Search Pattern starts*/
-   this.savePattern = function(data, callback) {
-     console.log('call received');
-     $http({
-       url: '/PatternSearchHandler',
-       data: data,
-       method: 'post'
-     }).then(function(results) {
-       console.log(results);
-       callback(null, results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   this.listPattern = function(data, callback) {
-     //console.log('call received');
-     $http({
-       url: '/PatternSearchHandler',
-       data: data,
-       method: 'post'
-     }).then(function(results) {
-       //console.log(results);
-       callback(null, results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   };
-   /*Changes for Search Pattern ends*/
-   this.getQuestionPapers = function(data,callback)
-   {
-     $http({
-       url: '/QuestionPaperRequestHandler',
-       data: data,
-       method: 'get'
-     }).then(function(results) {
-       console.log(results);
-       callback(null, results);
-     }, function errorCall(data) {
-       callback(data,null);
-     });
-   }
+  this.getQuestionJson = function(data, callback) {
+    $http({
+      url: '/QuestionRequestHandler',
+      data: data,
+      // dataType: 'json',
+      method: 'post'
+    }).then(function(results) {
+      callback(null,results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  this.onQuestionDelete = function(data, callback) {
+    $http({
+      url: '/QuestionRequestHandler',
+      data: data,
+      // dataType: 'json',
+      method: 'post'
+    }).then(function(results) {
+      callback(null,results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  this.addTopic = function(data, callback) {
+    $http({
+      url: '/TopicsRequestHandler',
+      data: data,
+      // dataType: 'json',
+      method: 'post'
+    }).then(function(results) {
+      callback(null,results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  this.addCategoryId = function(data, callback) {
+    $http({
+      url: '/TopicsRequestHandler',
+      data: data,
+      // dataType: 'json',
+      method: 'post'
+    }).then(function(results) {
+      callback(null,results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  this.yesBtnClicked = function(data, callback) {
+    $http({
+      url: '/TopicsRequestHandler',
+      data: data,
+      // dataType: 'json',
+      method: 'post'
+    }).then(function(results) {
+      callback(null,results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  this.QuestionSave = function(data, callback) {
+    $http({
+      url: '/QuestionRequestHandler',
+      data: data,
+      // dataType: 'json',
+      method: 'post'
+    }).then(function(results) {
+      callback(null,results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  this.getCategoriesDatalist = function(data, callback) {
+    $http({
+      url: '/TopicsRequestHandler',
+      data: data,
+      // dataType: 'json',
+      method: 'post'
+    }).then(function(results) {
+      callback(null,results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  this.getTopicDatalist = function(data, callback) {
+    $http({
+      url: '/TopicsRequestHandler',
+      data: data,
+      // dataType: 'json',
+      method: 'post'
+    }).then(function(results) {
+      callback(null,results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  this.deleteSelectedQuestion = function(data, callback) {
+    //console.log('call received');
+    $http({
+      url: '/QuestionRequestHandler',
+      data: data,
+      method: 'post'
+    }).then(function(results) {
+      //console.log(results);
+      callback(null, results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  /*Changes for Search Pattern starts*/
+  this.savePattern = function(data, callback) {
+    console.log('call received');
+    $http({
+      url: '/PatternSearchHandler',
+      data: data,
+      method: 'post'
+    }).then(function(results) {
+      console.log(results);
+      callback(null, results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  this.listPattern = function(data, callback) {
+    //console.log('call received');
+    $http({
+      url: '/PatternSearchHandler',
+      data: data,
+      method: 'post'
+    }).then(function(results) {
+      //console.log(results);
+      callback(null, results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+  /*Changes for Search Pattern ends*/
+  this.getQuestionPapers = function(data,callback)
+  {
+    $http({
+      url: '/QuestionPaperRequestHandler',
+      data: data,
+      method: 'get'
+    }).then(function(results) {
+      console.log(results);
+      callback(null, results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+
+  this.onQuestionPaperDelete = function(data,callback)
+  {
+    $http({
+      url: '/QuestionPaperRequestHandler',
+      data: data,
+      method: 'get'
+    }).then(function(results) {
+      console.log(results);
+      callback(null, results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+
 });
 
 QuestionManagerApp.service('signoutService', function ($window){
-    $window.location.href = '/signout';
+  $window.location.href = '/signout';
 });
 
 QuestionManagerApp.service('$patternService', function (){
@@ -210,10 +225,10 @@ QuestionManagerApp.service('$patternService', function (){
 
   return{
     getPattern: function() {
-          return patternJson;
+      return patternJson;
     },
     setPattern: function(value) {
-       patternJson = angular.toJson(value);
+      patternJson = angular.toJson(value);
     }
   };
 });

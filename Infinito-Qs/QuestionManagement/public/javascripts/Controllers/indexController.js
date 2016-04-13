@@ -1,5 +1,5 @@
-QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope','_',
-function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $rootScope,_) {
+QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope','_','$sce',
+function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $rootScope,_,$sce) {
 
   $scope = angular.extend($scope, {
     /* Dropdown options */
@@ -53,7 +53,10 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     googleRange : ["1-100","100-200","200-300","300-400","400-500","500-600","600-700","700-800","800-900","900-1000"],
     difficultyLevels : [0,1,2,3,4,5,6,7,8,9,10],
     currentWikiLevel : 0,
-    currentGoogleLevel : 0
+    currentGoogleLevel : 0,
+    difficultyLevelHelperHtml : "",
+    wikiHelperHtml            : "",
+    googleHelperHtml          : ""
   });
   var QuestionManager = {
 
@@ -80,6 +83,12 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         $scp.deleteIds= [];
         $scp.querydelete= false;
       };
+      self.$scope.helpContentForMetadata = function() {
+        var $scp = self.$scope;
+        $scp.difficultyLevelHelperHtml = $sce.trustAsHtml("<div> <p> Difficulty Level are derived based on several Parameters(Wiki PageView, Google Trend Rank, User Analytics). <br><hr> Difficulty Level are mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
+        $scp.wikiHelperHtml= $sce.trustAsHtml("<div> <p> Wiki Rank is derived based on WikiPedia PageViews of the question's Keywords. Wiki PageViews gives the popularity of the articles.<br><hr> Wiki Rank is mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
+        $scp.googleHelperHtml = $sce.trustAsHtml("<div> <p> Google Rank is derived based on Google Knowlege Graph. <br><hr> Google Rank is mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
+      }();
 
     },
 
@@ -155,7 +164,6 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
             break;
         }
       }
-
 
       self.$scope.onPageclick = function(page) {
         var $scp = self.$scope;
