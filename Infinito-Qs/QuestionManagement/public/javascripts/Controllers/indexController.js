@@ -264,7 +264,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
       if($scp.isPattern)
         queryObj.searchWith = $scp.patternJson;
       //Changes for pattern search ends
-      
+
       self.$ajaxService.getQuestionJson(queryObj, function(err, results) {
         if(err)
         {

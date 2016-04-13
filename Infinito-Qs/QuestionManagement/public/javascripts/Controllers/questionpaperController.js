@@ -4,11 +4,11 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$ajaxService'
     init: function(config) {
       angular.extend(this,config);
       this.getQuestionPapers();
+      this.eventHandlers();
     },
 
     getQuestionPapers : function ()
     {
-      var self =this;
       $http.get('/QuestionPaperRequestHandler/getQuestionPaper')
       .then(function(response){
         $scope.QuestionPapers = response.data;
@@ -17,6 +17,24 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$ajaxService'
         })
       })
     },
+
+    deleteQuestionPaper : function(index)
+    {
+      var self=this;
+      var selectedQuestionPaper = $scope.QuestionPapers[index];
+      $http.get('/QuestionPaperRequestHandler/' + selectedQuestionPaper.Name)
+      .then(function(response){
+        self.getQuestionPapers();
+      })
+    },
+
+    eventHandlers: function() {
+      var self=this;
+      self.$scope.onQuestionPaperDelete= function(index){
+        self.deleteQuestionPaper(index);
+      };
+    }
+
   };
 
   QuestionPaperManager.init({
