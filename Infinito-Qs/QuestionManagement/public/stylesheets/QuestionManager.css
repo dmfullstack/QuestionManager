@@ -116,7 +116,6 @@ h1 {
 .allow-overflow{
   overflow:visible;
 }
-
 .pickedInTournament{
   background-color: #d9534f;
 }
@@ -142,4 +141,8 @@ h1 {
 
 .brand-name{
   margin-bottom: 5px;
+}
+
+.tooltipWrap{
+  position:relative;
 }

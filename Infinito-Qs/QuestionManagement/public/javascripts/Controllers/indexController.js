@@ -1,5 +1,5 @@
-QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope',
-function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $rootScope) {
+QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope','$sce',
+function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $rootScope, $sce) {
 
   $scope = angular.extend($scope, {
     /* Dropdown options */
@@ -40,18 +40,20 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     isBasic : false,
     patternJson : $patternService.getPattern(),
     searchWith : {
-      difficultyLevel : false,
       difficultyLevelValue : 0,
       wiki            : false,
       wikiRange       : {min:1, max:100},
       google          : false,
       googleRange     : {min:1, max:100}
     },
-    difficultyLevels : [1,2,3,4,5,6,7,8,9,10],
-    wikiRange : ["1-100","100-1000","1k-10k","10k-50k","50k+"],
-    currentSelectedWR : 0,
-    googleRange : ["1-100","100-200","200-300","300-500","500-750","750-1000"],
-    currentSelectedGR : 0
+    wikiRange : ["1-100","100-500","500-2k","2k-5k","5k-10k","10k-20k","20k-30k","30k-40k","40k-50k","50k+"],
+    googleRange : ["1-100","100-200","200-300","300-400","400-500","500-600","600-700","700-800","800-900","900-1000"],
+    difficultyLevels : [0,1,2,3,4,5,6,7,8,9,10],
+    currentWikiLevel : 0,
+    currentGoogleLevel : 0,
+    difficultyLevelHelperHtml : "", 
+    wikiHelperHtml            : "",
+    googleHelperHtml          : ""
   });
   var QuestionManager = {
 
@@ -78,6 +80,13 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         $scp.deleteIds= [];
         $scp.querydelete= false;
       };
+      self.$scope.helpContentForMetadata = function() { 
+        var $scp = self.$scope;
+        console.log("Inside Help Am i Printing");
+        $scp.difficultyLevelHelperHtml = $sce.trustAsHtml("<div> <p> Difficulty Level are derived based on several Parameters(Wiki PageView, Google Trend Rank, User Analytics). <br><hr> Difficulty Level are mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
+        $scp.wikiHelperHtml= $sce.trustAsHtml("<div> <p> Wiki Rank is derived based on WikiPedia PageViews of the question's Keywords. Wiki PageViews gives the popularity of the articles.<br><hr> Wiki Rank is mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
+        $scp.googleHelperHtml = $sce.trustAsHtml("<div> <p> Google Rank is derived based on Google Knowlege Graph. <br><hr> Google Rank is mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
+      }(); 
 
     },
 
@@ -89,6 +98,11 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
 
       self.$scope.onReset= function() {
         self.$scope.searchText="";
+        self.$scope.searchWith.wiki = false;
+        self.$scope.currentWikiLevel= 0;
+        self.$scope.searchWith.google = false;
+        self.$scope.currentGoogleLevel = 0;
+        self.$scope.searchWith.difficultyLevelValue= 0;
         self.getQuestionJson();
       };
 
@@ -121,21 +135,30 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         self.getQuestionJson();
       };
 
-      self.$scope.rangeSelected = function(option, indexSelected) {
+      self.$scope.rangeSelected = function(option) {
         var $scp = self.$scope;
         switch(option) {
-          case 'dl':
-            $scp.searchWith.difficultyLevelValue = indexSelected;
-            break;
           case 'wiki':
-            $scp.currentSelectedWR = indexSelected;
-            $scp.searchWith.wikiRange = $scp.wikiRange[indexSelected].replace(/k/g,"000").split("-");
-            console.log($scp.searchWith.wikiRange);
+            if ($scp.currentWikiLevel == 0) {
+              $scp.searchWith.wiki = false;
+            }
+            else {
+              $scp.searchWith.wiki = true;
+              var minMaxArray = $scp.wikiRange[$scp.currentWikiLevel-1].replace(/k/g,"000").split("-");
+              $scp.searchWith.wikiRange.min = minMaxArray[0];
+              $scp.searchWith.wikiRange.max = minMaxArray[1];
+            }
             break;
           case 'google':
-            $scp.currentSelectedGR = indexSelected;
-            $scp.searchWith.googleRange = $scp.googleRange[indexSelected].split("-");
-            console.log($scp.searchWith.googleRange);
+            if ($scp.currentGoogleLevel == 0) { 
+              $scp.searchWith.google = false;
+            }
+            else {
+              $scp.searchWith.google = true;
+              var minMaxArray = $scp.googleRange[$scp.currentGoogleLevel-1].split("-");
+              $scp.searchWith.googleRange.min = minMaxArray[0];
+              $scp.searchWith.googleRange.max = minMaxArray[1];
+            }
             break;
         }
       }

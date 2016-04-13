@@ -24,7 +24,7 @@
         <div class="col-sm-6">
           <button class="btn btn-success btn-block" ng-click="isCreatePattern(false)">Run existing pattern</button>
         </div>
-      </div><br><br>
+      </div><br>
       <div class="row nga-fast nga-stagger nga-fade" ng-show="!newPattern">
         <div class="col-sm-12">
           <form class="form form-inline" action="">
@@ -40,9 +40,9 @@
         </div>
       </div>
       <div class="row nga-default nga-stagger nga-slide-left" ng-show="newPattern">
-        <div class="col-sm-12">
+        <div ng-hide="isRun" class="col-sm-12 nga-fast nga-slide-right">
           <form class="form" ng-submit="performSearch()">
-            <uib-accordion close-others="false">
+            <uib-accordion close-others="true">
               <uib-accordion-group is-open="wordCheck.open">
                 <uib-accordion-heading>
                   Word based <small>(Add words to filter out the search data)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': wordCheck.open, 'glyphicon-chevron-right': !wordCheck.open}"></i>
@@ -126,11 +126,37 @@
               </label>
             </div>
             <div class="form-group text-center">
-              <input class="btn btn-success btn-block" type="submit" value="Hit Me!"></input>
+              <input class="btn btn-success btn-block" type="submit" value="{{submitButton}}"></input>
             </div>
-            {{patternJson | json}}
           </form>
-          <button type="button" class="btn btn-info" ng-click="onSavePattern()">Save Pattern</button>
+        </div>
+        <div ng-show="isRun" class="col-sm-12 nga-fast nga-slide-left">
+          <h3>Your pattern setting:</h3>
+          <div class="row">
+            <div class="col-sm-6">
+              Include words:
+                <span ng-repeat="element in patternJson.whitelist">{{element.text}} </span><br>
+              Exclude words: <span ng-repeat="element in patternJson.blacklist">{{element.text}}</span><br>
+              <span ng-if="patternJson.wikiFlag">
+                WikiData range: {{patternJson.wikiRange.min}} to {{patternJson.wikiRange.max}}<br>
+              </span>
+            </div>
+            <div class="col-sm-6">
+              <span ng-if="patternJson.googleFlag">
+                Google Rank range: {{patternJson.googleRange.min}} to {{patternJson.googleRange.max}}<br>
+              </span>
+              <span ng-if="patternJson.usageFlag">
+                Usage range: {{patternJson.usageRange.min}} to {{patternJson.usageRange.max}}<br>
+              </span>
+              <span ng-if="patternJson.correctFlag">
+                Correctness range: {{patternJson.correctRange.min}} to {{patternJson.correctRange.max}}<br>
+              </span>
+            </div>
+          </div><br>
+          <div class="row">
+            <div class="col-sm-2"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>
+            <div class="col-sm-2"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
+          </div>
         </div>
       </div>
       <br>
@@ -182,57 +208,45 @@
           <label>
             <input type="checkbox" ng-model="searchIn.cat" ng-click="changeSelection(1)">Categories
           </label>
-          <label>
-            <input type="checkbox" ng-model="searchWith.difficultyLevel" ng-click="changeSelection(1)">DifficultyLevel
+           <button type="button" class="btn btn-primary" ng-click="showMoreSearchOptions= !showMoreSearchOptions" name="button"><span class="glyphicon glyphicon-tasks"></span> More Search Options</button>
           </label>
-          <label>
-             <div id='difficultyLevelValue' uib-dropdown>
-              <button uib-dropdown-toggle class="btn btn-default" type="button" >
-               {{difficultyLevels[searchWith.difficultyLevelValue]}}
-              <span class="caret"></span></button>
-              <ul uib-dropdown-menu >
-               <li class="noofRows" ng-repeat="x in difficultyLevels" ng-click="rangeSelected('dl', $index)">
-                <a href>{{x}}</a>
-               </li>
-              </ul>
-             </div>
-          </label>
-          <label>
-            <input type="checkbox" ng-model="searchWith.wiki" ng-click="changeSelection(1)">Wiki Rank
-          </label>
-          <label>
-             <div id='wikiRange' uib-dropdown class='actionBar'>
-              <button uib-dropdown-toggle class="btn btn-default" type="button">
-               {{wikiRange[currentSelectedWR]}}
-              <span class="caret"></span></button>
-              <ul uib-dropdown-menu >
-               <li class="noofRows" ng-repeat="x in wikiRange" ng-click="rangeSelected('wiki', $index)">
-                <a href>{{x}}</a>
-               </li>
-              </ul>
-             </div>
-          </label>
+        </form>
 
-          <label>
-            <input type="checkbox" ng-model="searchWith.google" ng-click="changeSelection(1)">Google Rank
-          </label>
-          <label>
-             <div id='googleRange' uib-dropdown class='actionBar'>
-              <button uib-dropdown-toggle class="btn btn-default" type="button">
-              {{googleRange[currentSelectedGR]}}
-              <span class="caret"></span></button>
-              <ul uib-dropdown-menu >
-               <li class="noofRows" ng-repeat="x in googleRange" ng-click="rangeSelected('google', $index)">
-                <a href>{{x}}</a>
-               </li>
-              </ul>
-             </div>
-          </label>
+        <form class="form row col-sm-12 col-xs-12" role="form">
+
+          <div id="metaData" ng-show="showMoreSearchOptions">
+          <hr>
+           
+           <div id="difficultyLevel" class="form-group col-sm-2 col-xs-2"> 
+             DifficultyLevel: 
+             <span id="DifficultyLevelHelper" popover-title="Difficulty Level Of Questions" uib-popover-html="difficultyLevelHelperHtml" popover-placement="right" popover-append-to-body="true" popover-trigger="mouseenter" class="glyphicon glyphicon-question-sign"> </span>
+             <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable DifficultyLevel in Search" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-enable="searchWith.difficultyLevelValue">
+                <select class="form-control" ng-model="searchWith.difficultyLevelValue" ng-options="opt for opt in difficultyLevels"> </select>
+             </span>
+           </div>
+
+           <div id="wikiLevel" class="form-group col-sm-2 col-xs-2"> 
+              WikiPedia Rank:
+              <span id="WikiHelper" uib-popover-html="wikiHelperHtml" popover-title="Wiki Rank Of Questions" popover-placement="right" popover-trigger="mouseenter" popover-append-to-body="true" class="glyphicon glyphicon-question-sign"> </span>
+              <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable Wiki Rank in Search" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-enable="currentWikiLevel">
+                <select class="form-control" ng-model="currentWikiLevel" ng-options="opt for opt in difficultyLevels" ng-change="rangeSelected('wiki')">  </select>
+              </span>
+           </div>
+          
+           <div id = "GoogleLevel" class="form-group col-sm-2 col-xs-2" > 
+             GoogleTrend Rank:
+            <span id="GoogleHelper" uib-popover-html="googleHelperHtml" popover-title="Google Rank of Questions" popover-placement="right" popover-trigger="mouseenter" popover-append-to-body="true" class="glyphicon glyphicon-question-sign"> </span>
+            <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable GoogleRank in Search" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-enable="currentGoogleLevel">
+              <select class="form-control" ng-model="currentGoogleLevel" ng-options="opt for opt in difficultyLevels" ng-change="rangeSelected('google')"></select>
+            </span>
+           </div>
+
+         </div> <!-- End of MetaData-->
         </form>
 
         <!-- <button type="button" ng-click="buttonclick()" class="pull-right">More Questions</button> -->
 
-        <button type="button" ng-click="questionpaper()" class="pull-right">Questionpaper</button>
+        <!-- <button type="button" ng-click="questionpaper()" class="pull-right">Questionpaper</button> -->
     </div>
       <div class="questions nga-default nga-slide-up" ng-show="isPattern || isBasic">
         <div id="questionContainer" class="row">
@@ -283,7 +297,7 @@
                 </th>
                 <th ng-click="onSortClick('googleResultScore')">
                   <a href="#">
-                    Google Trend Rank
+                    Google Score
                     <span ng-show="sortType == 'googleResultScore' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
                     <span ng-show="sortType == 'googleResultScore' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </a>

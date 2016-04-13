@@ -30,42 +30,40 @@ module.exports = function(wagner) {
             rgexQuery = query !=""? new RegExp('\\b(' + query.replace(/\s/g,'|') + ')','ig'): "";
 
         /*Changes for pattern based search starts*/
-        if(req.body.patternJson){
+        if(typeof searchWith.patternName != "undefined"){
           try{
-          var patternSettings = req.body.searchWith,
-          whitelist = "",
-          blacklist = "";
-          getRegex = function (objArray) {
-            var temp = [];
-            _.each(objArray, function (value, key) {
-              temp = _.union(temp,_.values(value));
-            });
-            var query = temp.join(",");
-            return query !=""? new RegExp('\\b(' + query.replace(/\,/g,'|') + ')','ig'): "";
-          }
-          if(patternSettings.whitelist!="")
-            whitelist = getRegex(patternSettings.whitelist);
-          if(patternSettings.blacklist!="")
-            blacklist = getRegex(patternSettings.blacklist);
+            var patternSettings = req.body.searchWith,
+            whitelist = "",
+            blacklist = "";
+            getRegex = function (objArray) {
+              var temp = [];
+              _.each(objArray, function (value, key) {
+                temp = _.union(temp,_.values(value));
+              });
+              var query = temp.join(",");
+              return query !=""? new RegExp('\\b(' + query.replace(/\,/g,'|') + ')','ig'): "";
+            }
+            if(patternSettings.whitelist!="")
+              whitelist = getRegex(patternSettings.whitelist);
+            if(patternSettings.blacklist!="")
+              blacklist = getRegex(patternSettings.blacklist);
 
-          searchWith = {
-            blacklist: blacklist,
-            wiki: patternSettings.wikiFlag,
-            google: patternSettings.googleFlag,
-            usage: patternSettings.usageFlag,
-            correct: patternSettings.correctFlag,
-            wikiRange: patternSettings.wikiRange,
-            googleRange: patternSettings.googleRange,
-            usageRange: patternSettings.usageRange,
-            correctRange: patternSettings.correctRange,
-            regexPatterns: patternSettings.regexPatterns
+            searchWith = {
+              blacklist: blacklist,
+              wiki: patternSettings.wikiFlag,
+              google: patternSettings.googleFlag,
+              usage: patternSettings.usageFlag,
+              correct: patternSettings.correctFlag,
+              wikiRange: patternSettings.wikiRange,
+              googleRange: patternSettings.googleRange,
+              usageRange: patternSettings.usageRange,
+              correctRange: patternSettings.correctRange,
+              regexPatterns: patternSettings.regexPatterns
+            }
+            rgexQuery = whitelist;
+          }catch(err){
+            console.log(err);
           }
-          rgexQuery = whitelist;
-        }catch(err){
-          console.log(err);
-        }
-          //console.log("searchwith in quesReq ");
-          //console.log(searchWith);
         }
         /*Changes for pattern based search ends*/
         sortReverse = (sortReverse)? 1: -1;
