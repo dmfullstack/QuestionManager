@@ -82,7 +82,6 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
       };
       self.$scope.helpContentForMetadata = function() { 
         var $scp = self.$scope;
-        console.log("Inside Help Am i Printing");
         $scp.difficultyLevelHelperHtml = $sce.trustAsHtml("<div> <p> Difficulty Level are derived based on several Parameters(Wiki PageView, Google Trend Rank, User Analytics). <br><hr> Difficulty Level are mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
         $scp.wikiHelperHtml= $sce.trustAsHtml("<div> <p> Wiki Rank is derived based on WikiPedia PageViews of the question's Keywords. Wiki PageViews gives the popularity of the articles.<br><hr> Wiki Rank is mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
         $scp.googleHelperHtml = $sce.trustAsHtml("<div> <p> Google Rank is derived based on Google Knowlege Graph. <br><hr> Google Rank is mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");

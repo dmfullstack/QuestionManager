@@ -208,7 +208,7 @@
           <label>
             <input type="checkbox" ng-model="searchIn.cat" ng-click="changeSelection(1)">Categories
           </label>
-           <button type="button" class="btn btn-primary" ng-click="showMoreSearchOptions= !showMoreSearchOptions" name="button"><span class="glyphicon glyphicon-tasks"></span> More Search Options</button>
+           <button type="button" class="btn" ng-click="showMoreSearchOptions= !showMoreSearchOptions" name="button"><span class="glyphicon glyphicon-tasks"></span> More Search Options</button>
           </label>
         </form>
 
@@ -226,7 +226,7 @@
            </div>
 
            <div id="wikiLevel" class="form-group col-sm-2 col-xs-2"> 
-              WikiPedia Rank:
+              WikiRank:
               <span id="WikiHelper" uib-popover-html="wikiHelperHtml" popover-title="Wiki Rank Of Questions" popover-placement="right" popover-trigger="mouseenter" popover-append-to-body="true" class="glyphicon glyphicon-question-sign"> </span>
               <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable Wiki Rank in Search" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-enable="currentWikiLevel">
                 <select class="form-control" ng-model="currentWikiLevel" ng-options="opt for opt in difficultyLevels" ng-change="rangeSelected('wiki')">  </select>
@@ -234,7 +234,7 @@
            </div>
           
            <div id = "GoogleLevel" class="form-group col-sm-2 col-xs-2" > 
-             GoogleTrend Rank:
+             GoogleRank:
             <span id="GoogleHelper" uib-popover-html="googleHelperHtml" popover-title="Google Rank of Questions" popover-placement="right" popover-trigger="mouseenter" popover-append-to-body="true" class="glyphicon glyphicon-question-sign"> </span>
             <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable GoogleRank in Search" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-enable="currentGoogleLevel">
               <select class="form-control" ng-model="currentGoogleLevel" ng-options="opt for opt in difficultyLevels" ng-change="rangeSelected('google')"></select>
