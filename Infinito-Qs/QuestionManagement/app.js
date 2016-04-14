@@ -71,11 +71,13 @@ app.use('/QuestionRequestHandler', questionRequestHandler(wagner));
 app.use('/TopicsRequestHandler', topicsRequestHandler(wagner));
 app.use('/PatternSearchHandler', patternSearchHandler(wagner));
 app.use('/QuestionPaperRequestHandler',questionPaperRequestHandler);
-
+app.get('/QuestionPaperManager',function(req,res){
+res.redirect('/');
+});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
-  err.status = 404;
+  err.statgus = 404;
   next(err);
 });
 // console.log('connectionURL');
