@@ -469,18 +469,26 @@ module.exports.init = module.exports.QuestionDB.init;
 /* Helper Function */
 var updateQueryWithMetaData = function(query, metadataObj) {
    /*Add Meta Data params */
-   var wiki = "",
-       google = "",
-       difficultyLevelChk = "",
-       usage = "",
-       correct = "",
-       blacklist = "";
+   var wiki = {},
+       google = {},
+       regex = [],
+       difficultyLevelChk = {},
+       usage = {},
+       correct = {},
+       blacklist = {};
 
    if (metadataObj.wiki || metadataObj.google || (metadataObj.difficultyLevel != 0)
-            || metadataObj.usage || metadataObj.correct) {
+            || metadataObj.usage || metadataObj.correct || _.isDefined(metadataObj.regexPatterns)) {
    var result = [];
 
    result.push(query);
+
+   /*if(_.isDefined(metadataObj.regexPatterns)){
+     _.each(metadataObj.regexPatterns, function (pattern) {
+       regex.push({question: {$regex: pattern}})
+     });
+     results.push(regex);
+   }*/
 
    if (metadataObj.wiki == true) {
      var min = parseInt(metadataObj.wikiRange.min),
@@ -507,7 +515,7 @@ var updateQueryWithMetaData = function(query, metadataObj) {
    if (metadataObj.usage == true) {
      var min = parseInt(metadataObj.usageRange.min),
          max = parseInt(metadataObj.usageRange.max);
-    
+
      usage = {timesUsed: {$gte:min}};
      if (max > min) {
        usage = {timesUsed: {$gte:min, $lte:max}};
@@ -527,13 +535,13 @@ var updateQueryWithMetaData = function(query, metadataObj) {
    }
 
    if(metadataObj.difficultyLevelValue) {
-      difficultyLevelChk = {difficultyLevel: (metadataObj.difficultyLevelValue)};     
+      difficultyLevelChk = {difficultyLevel: (metadataObj.difficultyLevelValue)};
       result.push(difficultyLevelChk);
    }
 
    if(typeof metadataObj.blacklist !='undefined' && metadataObj.blacklist !=''){
      blacklist = {question:{$not:metadataObj.blacklist}};
-     result.push(blacklist);
+     result.push(blacklist); 
    }
 
      query = {$and: result};

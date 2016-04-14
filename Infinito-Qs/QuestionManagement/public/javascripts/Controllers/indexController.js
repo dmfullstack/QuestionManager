@@ -1,5 +1,5 @@
-QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope','$sce',
-function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $rootScope, $sce) {
+QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope','_','$sce',
+function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $rootScope,_,$sce) {
 
   $scope = angular.extend($scope, {
     /* Dropdown options */
@@ -36,9 +36,12 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
       top: false,
       cat: false
     },
+    /*Changes for pattern search starts*/
     isPattern : false,
     isBasic : false,
     patternJson : $patternService.getPattern(),
+    qsetArray : [],
+    /*Changes for pattern search ends*/
     searchWith : {
       difficultyLevelValue : 0,
       wiki            : false,
@@ -51,7 +54,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     difficultyLevels : [0,1,2,3,4,5,6,7,8,9,10],
     currentWikiLevel : 0,
     currentGoogleLevel : 0,
-    difficultyLevelHelperHtml : "", 
+    difficultyLevelHelperHtml : "",
     wikiHelperHtml            : "",
     googleHelperHtml          : ""
   });
@@ -80,12 +83,12 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         $scp.deleteIds= [];
         $scp.querydelete= false;
       };
-      self.$scope.helpContentForMetadata = function() { 
+      self.$scope.helpContentForMetadata = function() {
         var $scp = self.$scope;
         $scp.difficultyLevelHelperHtml = $sce.trustAsHtml("<div> <p> Difficulty Level are derived based on several Parameters(Wiki PageView, Google Trend Rank, User Analytics). <br><hr> Difficulty Level are mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
         $scp.wikiHelperHtml= $sce.trustAsHtml("<div> <p> Wiki Rank is derived based on WikiPedia PageViews of the question's Keywords. Wiki PageViews gives the popularity of the articles.<br><hr> Wiki Rank is mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
         $scp.googleHelperHtml = $sce.trustAsHtml("<div> <p> Google Rank is derived based on Google Knowlege Graph. <br><hr> Google Rank is mapped in Ascending order.</p> <b><span style = 'color:red'>Hard</span></b> [ 1 | 2 | ..... | 9 | 10 ]  <b><span style = 'color:green'> Easy</span></b></p> </div>");
-      }(); 
+      }();
 
     },
 
@@ -149,7 +152,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
             }
             break;
           case 'google':
-            if ($scp.currentGoogleLevel == 0) { 
+            if ($scp.currentGoogleLevel == 0) {
               $scp.searchWith.google = false;
             }
             else {
@@ -209,45 +212,64 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
       };
       self.$scope.selectQuestion = function(isEnabled, index, questionId) {
         var scp = self.$scope;
-
+        var isPattern = scp.isPattern;
         /*  If all question is selected enable querydelete, check all the checkboxes and empty the deleteIds
           if all is unselected make querydelete to false and uncheck all the checkboxes
           If single question select push it questionSelected Array
           If single question unselect push
           */
-
         switch (isEnabled) {
           case true:
             if(index==0) {
-              scp.querydelete = true;
               for(var i=1;i<scp.quesSelected.length;i++) {
                 scp.quesSelected[i] = true;
               }
-              scp.deleteIds = [];
+              if(isPattern){
+                scp.qsetArray = _.union(scp.qsetArray, scp.questions);
+              }
+              else{
+                scp.querydelete = true;
+                scp.deleteIds = [];
+              }
             } else {
-              scp.querydelete = false;
               scp.quesSelected[0] = false;
-              scp.deleteIds.push(questionId);
+              if(isPattern)
+                scp.qsetArray.push(_.find(scp.questions,{questionId:questionId}));
+              else {
+                scp.querydelete = false;
+                scp.deleteIds.push(questionId);
+              }
             }
             break;
           case false:
             if(index==0) {
-              scp.querydelete = false;
               for(var i=1;i<scp.quesSelected.length;i++) {
                 scp.quesSelected[i] = false;
               }
+              if(isPattern)
+                scp.qsetArray = _.difference(scp.qsetArray,scp.questions);
+              else
+                scp.querydelete = false;
             } else {
-              scp.querydelete = false;
               scp.quesSelected[0] = false;
-              scp.deleteIds.splice(scp.deleteIds.indexOf(questionId),1);
+              if(isPattern){
+                scp.qsetArray = _.reject(scp.qsetArray,{questionId:questionId});
+                console.log(scp.qsetArray);
+              }else{
+                scp.querydelete = false;
+                scp.deleteIds.splice(scp.deleteIds.indexOf(questionId),1);
+              }
             }
             break;
         }
-        // //console.log({
-        //   querydelete: scp.querydelete,
-        //   quesSelected: scp.quesSelected,
-        //   deleteIds: scp.deleteIds
-        // });
+        if(scp.isPattern){
+
+        }
+        console.log({
+          querydelete: scp.querydelete,
+          quesSelected: scp.quesSelected,
+          deleteIds: scp.deleteIds
+        });
       };
       self.$scope.deleteSelected =  function() {
         // create a post in service

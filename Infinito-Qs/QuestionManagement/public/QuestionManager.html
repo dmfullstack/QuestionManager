@@ -57,7 +57,7 @@
                   <label for="blacklist">Must exclude</label>
                   <tags-input ng-model="patternJson.blacklist" name='blacklist' replace-spaces-with-dashes="false">
                     <auto-complete source="variableList"></auto-complete>
-                    </tags-input>
+                  </tags-input>
                 </div>
               </uib-accordion-group>
               <uib-accordion-group is-open="regexCheck.open">
@@ -110,6 +110,14 @@
                   <rzslider rz-slider-model="patternJson.correctRange.min" rz-slider-high="patternJson.correctRange.max" rz-slider-options="patternJson.correctRange.options" ng-click="onChange(patternJson.correctRange.options.id)"></rzslider>
                 </div>
               </uib-accordion-group>
+              <uib-accordion-group is-open="difficultyCheck.open">
+                <uib-accordion-heading>
+                  <span ng-click="refreshSlider(difficultyCheck.open)">Difficulty <small>(Filter based on level of difficulty)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': difficultyCheck.open, 'glyphicon-chevron-right': !difficultyCheck.open}"></i></span>
+                </uib-accordion-heading>
+                <div class="form-group">
+                  <rzslider rz-slider-model="patternJson.difficultyValue.value" rz-slider-options="patternJson.difficultyValue.options" ng-click="onChange(patternJson.difficultyValue.options.id)"></rzslider>
+                </div>
+              </uib-accordion-group>
             </uib-accordion>
             <div class="checkbox">
               <label>
@@ -124,6 +132,9 @@
               <label>
                 <input type="checkbox" ng-model="patternJson.correctFlag">Correctness
               </label>
+              <label>
+                <input type="checkbox" ng-model="patternJson.difficultyFlag">Difficulty
+              </label>
             </div>
             <div class="form-group text-center">
               <input class="btn btn-success btn-block" type="submit" value="{{submitButton}}"></input>
@@ -134,9 +145,10 @@
           <h3>Your pattern setting:</h3>
           <div class="row">
             <div class="col-sm-6">
-              Include words:
-                <span ng-repeat="element in patternJson.whitelist">{{element.text}} </span><br>
-              Exclude words: <span ng-repeat="element in patternJson.blacklist">{{element.text}}</span><br>
+              Include words: <span ng-if="patternJson.whitelist.length<1"><i>(All words)</i></span>
+              <span ng-repeat="element in patternJson.whitelist">{{element.text}} </span><br>
+              Exclude words: <span ng-if="patternJson.blacklist.length<1"><i>(None)</i></span>
+              <span ng-repeat="element in patternJson.blacklist">{{element.text}}</span><br>
               <span ng-if="patternJson.wikiFlag">
                 WikiData range: {{patternJson.wikiRange.min}} to {{patternJson.wikiRange.max}}<br>
               </span>
@@ -151,31 +163,32 @@
               <span ng-if="patternJson.correctFlag">
                 Correctness range: {{patternJson.correctRange.min}} to {{patternJson.correctRange.max}}<br>
               </span>
+              <span ng-if="patternJson.difficultyFlag">
+                Difficulty level: {{patternJson.difficultyValue.value}}<br>
+              </span>
             </div>
           </div><br>
           <div class="row">
             <div class="col-sm-2"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>
             <div class="col-sm-2"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
+          </div><br>
+          <div class="row">
+            <div class="col-sm-12">
+              {{totalQuestions}} Question(s) found
+            </div>
           </div>
         </div>
       </div>
-      <br>
-
-      <script type="text/ng-template" id="tempModal.html">
-        <div class="modal-header">
-            <h3 class="modal-title">Give a name</h3>
+    </div>
+    <div class="well" ng-if="qsetArray.length>0">
+      <div class="row">
+        <div class="col-lg-12">
+          <h3>Q-set Buffer</h3>
+          <ul>
+            <li ng-repeat="selectedQuestion in qsetArray">{{selectedQuestion.question}}</li>
+          </ul>
         </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <input type="text" ng-model="patternName"/>
-          </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-        </div>
-      </script>
-
+      </div>
     </div>
 
     <div id="search" class="well row nga-default nga-stagger-slow nga-slide-left allow-overflow" ng-show="!isPattern && isBasic">
@@ -224,7 +237,6 @@
                 <select class="form-control" ng-model="searchWith.difficultyLevelValue" ng-options="opt for opt in difficultyLevels"> </select>
              </span>
            </div>
-
            <div id="wikiLevel" class="form-group col-sm-2 col-xs-2">
               WikiRank:
               <span id="WikiHelper" uib-popover-html="wikiHelperHtml" popover-title="Wiki Rank Of Questions" popover-placement="right" popover-trigger="mouseenter" popover-append-to-body="true" class="glyphicon glyphicon-question-sign"> </span>
@@ -362,4 +374,19 @@
           </p>
         </div>
       </div>
+
+      <script type="text/ng-template" id="tempModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Give a name</h3>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <input type="text" ng-model="patternName"/>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </script>
     </main>

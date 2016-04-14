@@ -6,7 +6,7 @@ var express = require('express'),
 var router = express.Router();
 
 module.exports = function(wagner) {
-
+ 
   router.post('/', function(req, res, next) {
     console.log(req.body);
     switch(req.body.requestType){
@@ -60,6 +60,8 @@ module.exports = function(wagner) {
               correctRange: patternSettings.correctRange,
               regexPatterns: patternSettings.regexPatterns
             }
+            if(patternSettings.difficultyFlag)
+              searchWith.difficultyLevelValue = patternSettings.difficultyValue.value;
             rgexQuery = whitelist;
           }catch(err){
             console.log(err);

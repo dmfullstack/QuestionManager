@@ -30,7 +30,9 @@ var QuestionManagerApp = angular.module("QuestionManagerApp", [
   });
   $locationProvider.html5Mode(true);
 });
-
+QuestionManagerApp.factory('_', function() {
+  return window._;
+});
 QuestionManagerApp.service('$ajaxService', function($http){
   this.getQuestionJson = function(data, callback) {
     $http({
@@ -212,10 +214,12 @@ QuestionManagerApp.service('$patternService', function (){
     googleFlag: false,
     usageFlag: false,
     correctFlag: false,
+    difficultyFlag: false,
     wikiRange : {min: 30000, max: 50000, options: {floor: 0, ceil: 100000, step: 1000, id: "wiki"}},
     googleRange : {min: 10, max: 70, options: {floor: 0,ceil: 100, step: 5, id: "google"}},
     usageRange : {min: 10, max: 6000, options: {floor: 0,ceil: 10000, step: 100, id: "usage"}},
     correctRange : {min: 100, max: 700, options: {floor: 0,ceil: 1000, step: 50, id: "correct"}},
+    difficultyValue : {value:3, options: {floor: 0,ceil: 10, step: 1, showTicks: true, id: "difficulty"}},
     regexPatterns : []
   };
 

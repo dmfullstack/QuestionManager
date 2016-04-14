@@ -3,7 +3,7 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
   $scope = angular.extend($scope, {
     newPattern : true,
     patternList :[],
-    variableList : ['Sachin Tendulkar','Rahul Dravid', 'Sourav Ganguly'],
+    variableList : ['Denmark','Australia','Germany'],
     //formFields : ['whitelist','blacklist','regexPatterns','wikiRange','googleRange','usageRange','correctRange','searchIn'],
     patternJson : $patternService.getPattern(),
     regexFields : [{value:0}],//Array to dynamically create input boxes for regex
@@ -64,6 +64,8 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
                       break;
       case "correct": $scope.patternJson.correctFlag = true;
                       break;
+      case "difficulty": $scope.patternJson.difficultyFlag = true;
+                          break;
     }
   }
 
@@ -72,7 +74,7 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     $patternService.setPattern($scope.patternJson);
     $rootScope.$emit("filterQuestions",{});
     $scope.isRun = true;
-    $scope.submitButton = "Re-run this!"
+    $scope.submitButton = "Re-run this!";
   }
 
   //Save a particular pattern
