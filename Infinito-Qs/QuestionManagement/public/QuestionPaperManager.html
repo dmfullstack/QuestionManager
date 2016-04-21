@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="questionPaper in QuestionPapers | orderBy : 'Name'" ng-class="{pickedInTournament : questionPaper.IsPickedInTournament, notPickedInTournament : !questionPaper.IsPickedInTournament}">
+        <tr ng-repeat="questionPaper in QuestionPapers" ng-class="{pickedInTournament : questionPaper.IsPickedInTournament, notPickedInTournament : !questionPaper.IsPickedInTournament}">
           <td><input type="checkbox" align="left" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></td>
           <td>{{questionPaper.Name}}</td>
           <td>{{questionPaper.topics.join(', ')}}</td>

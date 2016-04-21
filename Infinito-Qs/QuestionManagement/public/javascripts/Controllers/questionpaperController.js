@@ -28,11 +28,25 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$ajaxService'
       })
     },
 
+    editQuestionPaper : function(index)
+    {
+      var self = this;
+      var selectedQuestionPaper = $scope.QuestionPapers[index];
+      $http.get('/QuestionPaperRequestHandler/getQuestions/' + selectedQuestionPaper.Name)
+      .then(function(response){
+        console.log(response);
+      })
+    },
+
     eventHandlers: function() {
       var self=this;
       self.$scope.onQuestionPaperDelete= function(index){
         self.deleteQuestionPaper(index);
       };
+
+      self.$scope.onEditClick = function(index){
+        self.editQuestionPaper(index);
+      }
     }
 
   };
