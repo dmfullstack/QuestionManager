@@ -6,7 +6,7 @@ var questionPaper = require('../models/questionPaper');
 
 var question = require("../models/question");
 
-
+//Populate Question Papers from the Collection
 router.route('/getQuestionPaper').get(function (req,res) {
   questionPaper.find()
   .select({'Name' : 1 , 'topics' : 1 , 'Tournaments' : 1 , "_id" : 0})
@@ -18,6 +18,7 @@ router.route('/getQuestionPaper').get(function (req,res) {
   });
 });
 
+//Remove Question Paper By Name(Name is Unique)
 router.route('/:questionPaperName').get(function(req,res){
   questionPaper.remove({"Name" : req.params.questionPaperName})
   .exec(function(err, questionPaperNames) {
@@ -30,13 +31,13 @@ router.route('/:questionPaperName').get(function(req,res){
 
 router.route('/getQuestions/:questionPaperName').get(function(req,res){
   questionPaper.find({"Name" : req.params.questionPaperName})
-  .populate("Question")
+  .populate("questions")
   .exec(function(err, questions) {
     if (err) {
       console.log(err);
       return res.send(err);
     }
-    return res.send(questions[0].Question);
+    return res.send(questions[0].questions);
   });
 });
 

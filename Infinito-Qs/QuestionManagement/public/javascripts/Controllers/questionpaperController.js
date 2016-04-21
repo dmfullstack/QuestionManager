@@ -1,4 +1,4 @@
-QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$ajaxService', function($scope,$http) {
+QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal', function($scope,$http,$uibModal) {
 
   var QuestionPaperManager = {
     init: function(config) {
@@ -34,25 +34,38 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$ajaxService'
       var selectedQuestionPaper = $scope.QuestionPapers[index];
       $http.get('/QuestionPaperRequestHandler/getQuestions/' + selectedQuestionPaper.Name)
       .then(function(response){
-        console.log(response);
-      })
+        var modalInstance = self.$uibModal.open({
+          animation: self.$scope.animationsEnabled,
+          templateUrl: 'questionModal.html',
+          controller: 'EditQuestionPaperControl',
+          resolve: {
+            $mainControllerScope: function () {
+              return {
+                  Questions : response.data,
+                  QuestionPaper : selectedQuestionPaper
+              }
+            }
+          }
+        })
+      });
     },
 
-    eventHandlers: function() {
-      var self=this;
-      self.$scope.onQuestionPaperDelete= function(index){
-        self.deleteQuestionPaper(index);
-      };
+  eventHandlers: function() {
+    var self=this;
+    self.$scope.onQuestionPaperDelete= function(index){
+      self.deleteQuestionPaper(index);
+    };
 
-      self.$scope.onEditClick = function(index){
-        self.editQuestionPaper(index);
-      }
+    self.$scope.onEditClick = function(index){
+      self.editQuestionPaper(index);
     }
+  }
 
-  };
+};
 
-  QuestionPaperManager.init({
-    $scope: $scope,
-    $http: $http
-  });
+QuestionPaperManager.init({
+  $scope: $scope,
+  $http: $http,
+  $uibModal: $uibModal
+});
 }]);
