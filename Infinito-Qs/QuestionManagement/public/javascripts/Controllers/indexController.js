@@ -77,9 +77,22 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
       self.$scope.intializeQuesSelect= function() {
         //intialize quesSelected variable to false;
         var $scp = self.$scope;
-        for(var i=0,len = self.$scope.questions.length; i<len; i++) {
-          $scp.quesSelected[i] = false;
+        var matched = [];
+        if(!_.isEmpty($scp.qsetArray)){
+           matched = _.intersection($scp.qsetArray, _.pluck($scp.questions, 'questionId'));
+          //console.log(matched);
         }
+        for(var i=1,len = $scp.questions.length; i<=len; i++) {
+          if($scp.isPattern && matched.length>0){
+            if(_.contains(matched, $scp.questions[i-1]['questionId'])){
+              $scope.quesSelected[i] = true;
+            }
+            else
+              $scp.quesSelected[i] = false;
+          }else
+            $scp.quesSelected[i] = false;
+        }
+        $scope.quesSelected[0] = _.every(_.rest($scope.quesSelected));
         $scp.deleteIds= [];
         $scp.querydelete= false;
       };
@@ -225,7 +238,20 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
                 scp.quesSelected[i] = true;
               }
               if(isPattern){
-                scp.qsetArray = _.union(scp.qsetArray, scp.questions);
+                var newQuestions = [];
+                if(scp.qsetArray.length>0){
+                  console.log("difference");
+                  var temp = _.pluck(scp.questions, 'questionId');
+                  console.log(temp);
+                  console.log(temp.length);
+                  newQuestions = _.difference(temp, scp.qsetArray);
+                }else{
+                  console.log("pluck");
+                  newQuestions = _.pluck(scp.questions, 'questionId');
+                }
+                  console.log("new questions");
+                  console.log(newQuestions);
+                scp.qsetArray = _.union(scp.qsetArray, newQuestions);
               }
               else{
                 scp.querydelete = true;
@@ -234,7 +260,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
             } else {
               scp.quesSelected[0] = false;
               if(isPattern)
-                scp.qsetArray.push(_.find(scp.questions,{questionId:questionId}));
+                scp.qsetArray.push(questionId);
               else {
                 scp.querydelete = false;
                 scp.deleteIds.push(questionId);
@@ -247,14 +273,13 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
                 scp.quesSelected[i] = false;
               }
               if(isPattern)
-                scp.qsetArray = _.difference(scp.qsetArray,scp.questions);
+                scp.qsetArray = _.difference(scp.qsetArray,_.pluck(scp.questions, 'questionId'));
               else
                 scp.querydelete = false;
             } else {
               scp.quesSelected[0] = false;
               if(isPattern){
-                scp.qsetArray = _.reject(scp.qsetArray,{questionId:questionId});
-                console.log(scp.qsetArray);
+                scp.qsetArray.splice(scp.qsetArray.indexOf(questionId),1);
               }else{
                 scp.querydelete = false;
                 scp.deleteIds.splice(scp.deleteIds.indexOf(questionId),1);
@@ -263,13 +288,14 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
             break;
         }
         if(scp.isPattern){
-
+          console.log(scp.qsetArray);
+          console.log("count : "+ scp.qsetArray.length);
         }
-        console.log({
+        /*console.log({
           querydelete: scp.querydelete,
           quesSelected: scp.quesSelected,
           deleteIds: scp.deleteIds
-        });
+        });*/
       };
       self.$scope.deleteSelected =  function() {
         // create a post in service

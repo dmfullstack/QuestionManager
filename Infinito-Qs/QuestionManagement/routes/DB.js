@@ -523,7 +523,7 @@ var updateQueryWithMetaData = function(query, metadataObj) {
      result.push(usage);
    }
 
-   if (metadataObj.correct == true) {
+   /*if (metadataObj.correct == true) {
      var min = parseInt(metadataObj.correctRange.min),
          max = parseInt(metadataObj.correctRange.max);
 
@@ -532,7 +532,7 @@ var updateQueryWithMetaData = function(query, metadataObj) {
        correct = {correctRatio: {$gte:min, $lte:max}};
      }
      result.push(correct);
-   }
+   }*/
 
    if(metadataObj.difficultyLevelValue) {
       difficultyLevelChk = {difficultyLevel: (metadataObj.difficultyLevelValue)};
@@ -541,7 +541,7 @@ var updateQueryWithMetaData = function(query, metadataObj) {
 
    if(typeof metadataObj.blacklist !='undefined' && metadataObj.blacklist !=''){
      blacklist = {question:{$not:metadataObj.blacklist}};
-     result.push(blacklist); 
+     result.push(blacklist);
    }
 
      query = {$and: result};

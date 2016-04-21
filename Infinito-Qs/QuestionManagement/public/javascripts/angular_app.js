@@ -31,7 +31,7 @@ var QuestionManagerApp = angular.module("QuestionManagerApp", [
   $locationProvider.html5Mode(true);
 });
 QuestionManagerApp.factory('_', function() {
-  return window._;
+  return window._; //register underscore js
 });
 QuestionManagerApp.service('$ajaxService', function($http){
   this.getQuestionJson = function(data, callback) {

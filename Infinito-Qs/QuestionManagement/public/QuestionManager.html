@@ -16,6 +16,7 @@
         </div>
       </div>
     </div>
+    <!--Pattern search changes starts-->
     <div class="well nga-default nga-stagger-slow nga-slide-left" ng-show="isPattern" ng-controller="pattern">
       <div class="row">
         <div class="col-sm-6">
@@ -40,7 +41,7 @@
         </div>
       </div>
       <div class="row nga-default nga-stagger nga-slide-left" ng-show="newPattern">
-        <div ng-hide="isRun" class="col-sm-12 nga-fast nga-slide-right">
+        <div class="col-sm-6 nga-fast nga-slide-right">
           <form class="form" ng-submit="performSearch()">
             <uib-accordion close-others="true">
               <uib-accordion-group is-open="wordCheck.open">
@@ -141,14 +142,14 @@
             </div>
           </form>
         </div>
-        <div ng-show="isRun" class="col-sm-12 nga-fast nga-slide-left">
+        <div class="col-sm-6 nga-fast nga-fade">
           <h3>Your pattern setting:</h3>
           <div class="row">
             <div class="col-sm-6">
               Include words: <span ng-if="patternJson.whitelist.length<1"><i>(All words)</i></span>
               <span ng-repeat="element in patternJson.whitelist">{{element.text}} </span><br>
               Exclude words: <span ng-if="patternJson.blacklist.length<1"><i>(None)</i></span>
-              <span ng-repeat="element in patternJson.blacklist">{{element.text}}</span><br>
+              <span ng-repeat="element in patternJson.blacklist">{{element.text}} </span><br>
               <span ng-if="patternJson.wikiFlag">
                 WikiData range: {{patternJson.wikiRange.min}} to {{patternJson.wikiRange.max}}<br>
               </span>
@@ -168,19 +169,21 @@
               </span>
             </div>
           </div><br>
-          <div class="row">
-            <div class="col-sm-2"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>
-            <div class="col-sm-2"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
-          </div><br>
-          <div class="row">
-            <div class="col-sm-12">
-              {{totalQuestions}} Question(s) found
+          <div ng-show="isRun">
+            <div class="row">
+              <!--<div class="col-sm-6"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>-->
+              <div class="col-sm-6"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
+            </div><br>
+            <div class="row">
+              <div class="col-sm-12">
+                {{totalQuestions}} Question(s) found
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="well" ng-if="qsetArray.length>0">
+    <!--<div class="well" ng-if="qsetArray.length>0">
       <div class="row">
         <div class="col-lg-12">
           <h3>Q-set Buffer</h3>
@@ -189,8 +192,8 @@
           </ul>
         </div>
       </div>
-    </div>
-
+    </div>-->
+    <!--Pattern search changes ends-->
     <div id="search" class="well row nga-default nga-stagger-slow nga-slide-left allow-overflow" ng-show="!isPattern && isBasic">
       <form id="searchForm" class="col-sm-9 col-xs-9" ng-submit="onSearch()">
         <input name="searchText" id="searchText" ng-model="searchText" class="col-sm-7 col-xs-7" placeholder="Search using Keywords, Topics, Category" type="text" />
@@ -260,104 +263,12 @@
 
         <!-- <button type="button" ng-click="questionpaper()" class="pull-right">Questionpaper</button> -->
     </div>
-      <div class="questions nga-default nga-slide-up" ng-show="isPattern || isBasic">
-        <div id="questionContainer" class="row">
-          <div ng-if="!questions.length">
-            <h1>Sorry. No Questions to display.</h1>
-          </div>
-          <table id="questionList" ng-hide="!questions.length" class="table table-hover table-responsive nga-default nga-stagger nga-slide-up">
-            <thead>
-              <tr>
-                <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
-                <th>Question</th>
-                <th>Topics</th>
-                <th>Categories</th>
-                <th ng-click="onSortClick('difficultyLevel')">
-                  <a href="#">
-                    Difficulty Level
-                    <span ng-show="sortType == 'difficultyLevel' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType == 'difficultyLevel' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                  </a>
-                </th>
-                <th ng-click="onSortClick('timesUsed')">
-                  <a href="#">
-                    Times Used
-                    <span ng-show="sortType == 'timesUsed' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType == 'timesUsed' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                  </a>
-                </th>
-                <th ng-click="onSortClick('correctRatio')">
-                  <a href="#">
-                    Correct Ratio
-                    <span ng-show="sortType == 'correctRatio' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType == 'correctRatio' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                  </a>
-                </th>
-                <th ng-click="onSortClick('frequency')">
-                  <a href="#">
-                    Frequecy per Day
-                    <span ng-show="sortType == 'frequency' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType == 'frequency' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                  </a>
-                </th>
-                <th ng-click="onSortClick('wikiPageView')">
-                  <a href="#">
-                    Wiki Pageview
-                    <span ng-show="sortType == 'wikiPageView' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType == 'wikiPageView' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                  </a>
-                </th>
-                <th ng-click="onSortClick('googleResultScore')">
-                  <a href="#">
-                    Google Score
-                    <span ng-show="sortType == 'googleResultScore' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType == 'googleResultScore' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                  </a>
-                </th>
-
-                <th width='9%'>
-                  <a ng-click="onSortClick('lastEdited')" href="#">
-                    Last Edited
-                    <span ng-show="sortType == 'lastEdited' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType == 'lastEdited' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                  </a> <br/> --------------- <br/>
-                  <a ng-click="onSortClick('createdOn')" href="#">
-                    Created On
-                    <span ng-show="sortType == 'createdOn' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType == 'createdOn' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                  </a>
-                </th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="question-row" ng-repeat="x in questions">
-                <td><input type="checkbox" ng-click="selectQuestion(quesSelected[$index+1], $index+1, x.questionId)" ng-model="quesSelected[$index+1]"></td>
-                <td class="question">{{x.question}}</td>
-                <td>{{x.topics}}</td>
-                <td>{{x.categories}}</td>
-                <td>{{x.difficultyLevel}}</td>
-                <td>{{x.timesUsed}}</td>
-                <td>{{x.correctRatio}}</td>
-                <td>{{x.frequency}}</td>
-                <td>{{x.wikiPageView}}</td>
-                <td>{{x.googleResultScore}}</td>
-                <td>{{dateFormater(x.lastEdited) | date:'MM/dd/yyyy'}}
-                  <br/> -------------- <br/>
-                  {{dateFormater(x.createdOn) | date:'MM/dd/yyyy'}}</td>
-                <td width='7%'>
-                  <button type="button" class="btn btn-xs btn-default command-edit" ng-click="onEditClick($index)">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                  </button>
-                  <button type="button" class="btn btn-xs btn-default command-delete" ng-click="onDeleteClick($index)">
-                    <span class="glyphicon glyphicon-trash"></span>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="questions nga-default nga-slide-up" ng-show="isBasic||isPattern">
+      <div id="questionContainer" class="row">
+        <div ng-if="!questions.length">
+          <h1>Sorry. No Questions to display.</h1>
         </div>
-        <div id="pageNo" class="row" ng-hide="!questions.length">
+        <div id="pageNo" class="col-sm-12" ng-hide="!questions.length">
           <!-- Pagination and Page Tracker are generated by Paging plugin in client side. -->
           <div paging page="currentPage" page-size="selectedRowCount" total="totalQuestions"
           text-first="<<"
@@ -373,20 +284,129 @@
             Showing {{firstQuestion + 1}} to {{lastQuestion}} of {{totalQuestions}} Questions
           </p>
         </div>
-      </div>
+        <table id="questionList" ng-hide="!questions.length" class="table table-hover table-responsive nga-default nga-stagger nga-slide-up">
+          <thead>
+            <tr>
+              <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
+              <th>Question</th>
+              <th>Topics</th>
+              <th>Categories</th>
+              <th ng-click="onSortClick('difficultyLevel')">
+                <a href="#">
+                  Difficulty Level
+                  <span ng-show="sortType == 'difficultyLevel' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                  <span ng-show="sortType == 'difficultyLevel' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a>
+              </th>
+              <th ng-click="onSortClick('timesUsed')">
+                <a href="#">
+                  Times Used
+                  <span ng-show="sortType == 'timesUsed' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                  <span ng-show="sortType == 'timesUsed' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a>
+              </th>
+              <th ng-click="onSortClick('correctRatio')">
+                <a href="#">
+                  Correct Ratio
+                  <span ng-show="sortType == 'correctRatio' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                  <span ng-show="sortType == 'correctRatio' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a>
+              </th>
+              <th ng-click="onSortClick('frequency')">
+                <a href="#">
+                  Frequecy per Day
+                  <span ng-show="sortType == 'frequency' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                  <span ng-show="sortType == 'frequency' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a>
+              </th>
+              <th ng-click="onSortClick('wikiPageView')">
+                <a href="#">
+                  Wiki Pageview
+                  <span ng-show="sortType == 'wikiPageView' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                  <span ng-show="sortType == 'wikiPageView' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a>
+              </th>
+              <th ng-click="onSortClick('googleResultScore')">
+                <a href="#">
+                  Google Score
+                  <span ng-show="sortType == 'googleResultScore' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                  <span ng-show="sortType == 'googleResultScore' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a>
+              </th>
 
-      <script type="text/ng-template" id="tempModal.html">
-        <div class="modal-header">
-            <h3 class="modal-title">Give a name</h3>
+              <th width='9%'>
+                <a ng-click="onSortClick('lastEdited')" href="#">
+                  Last Edited
+                  <span ng-show="sortType == 'lastEdited' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                  <span ng-show="sortType == 'lastEdited' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a> <br/> --------------- <br/>
+                <a ng-click="onSortClick('createdOn')" href="#">
+                  Created On
+                  <span ng-show="sortType == 'createdOn' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                  <span ng-show="sortType == 'createdOn' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                </a>
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="question-row" ng-repeat="x in questions">
+              <td><input type="checkbox" ng-click="selectQuestion(quesSelected[$index+1], $index+1, x.questionId)" ng-model="quesSelected[$index+1]"></td>
+              <td class="question">{{x.question}}</td>
+              <td>{{x.topics}}</td>
+              <td>{{x.categories}}</td>
+              <td>{{x.difficultyLevel}}</td>
+              <td>{{x.timesUsed}}</td>
+              <td>{{x.correctRatio}}</td>
+              <td>{{x.frequency}}</td>
+              <td>{{x.wikiPageView}}</td>
+              <td>{{x.googleResultScore}}</td>
+              <td>{{dateFormater(x.lastEdited) | date:'MM/dd/yyyy'}}
+                <br/> -------------- <br/>
+                {{dateFormater(x.createdOn) | date:'MM/dd/yyyy'}}</td>
+              <td width='7%'>
+                <button type="button" class="btn btn-xs btn-default command-edit" ng-click="onEditClick($index)">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                <button type="button" class="btn btn-xs btn-default command-delete" ng-click="onDeleteClick($index)">
+                  <span class="glyphicon glyphicon-trash"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="pageNo" class="row" ng-hide="!questions.length">
+        <!-- Pagination and Page Tracker are generated by Paging plugin in client side. -->
+        <div paging page="currentPage" page-size="selectedRowCount" total="totalQuestions"
+        text-first="<<"
+        text-last=">>"
+        text-next=">"
+        text-prev="<"
+        show-prev-next="true"
+        show-first-last="true"
+        ul-class="pagination col-sm-8 col-xs-6"
+        paging-action="onPageclick(page)">
         </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <input type="text" ng-model="patternName"/>
-          </div>
+        <p class="pageTracker col-sm-4 col-xs-6">
+          Showing {{firstQuestion + 1}} to {{lastQuestion}} of {{totalQuestions}} Questions
+        </p>
+      </div>
+    </div>
+
+    <script type="text/ng-template" id="tempModal.html">
+      <div class="modal-header">
+          <h3 class="modal-title">Give a name</h3>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <input type="text" ng-model="patternName"/>
         </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-        </div>
-      </script>
-    </main>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+      </div>
+    </script>
+    <!--Changes for search pattern ends-->
+  </main>
