@@ -73,11 +73,11 @@ module.exports.QuestionDB = {
               if(docs.length == 0) {
                 obj["lastEdited"] = new Date();
                 obj["createdOn"] = new Date();
-                obj.difficultyLevel = generateRandomNumber(10);// To be fixed
-                var noOfAttemps = generateRandomNumber(10000);// To be fixed
-                obj.timesUsed = noOfAttemps;
-                obj.correctRatio = generateRandomNumber(noOfAttemps) + '/' + noOfAttemps; //to be fixed
-                obj.frequency = Math.round(obj.timesUsed/10);
+                obj.difficultyLevel = 0;
+                var noOfAttemps = 0;
+                obj.timesUsed = 0;
+                obj.correctRatio = 0;
+                obj.frequency = 0;
 
                 var q = new Question(obj); // validating with schema
                 q.save(function(err) { // saving the data

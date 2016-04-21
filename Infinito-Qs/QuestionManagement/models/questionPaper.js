@@ -2,13 +2,13 @@ var mongoose = require('mongoose'),
 
 questionPaperSchema = mongoose.Schema({
   topics: [{ type: String, ref: 'Topics' }],// Distinct Topic Ids of the Questions in the Selected Question paper
-  Question: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],//question Ids of Questions Selected for the Question Paper
-  Name : String ,// Name of the Question Paper. Should Be Unique across the Collection
+  questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],//question Ids of Questions Selected for the Question Paper
+  name : String ,// Name of the Question Paper. Should Be Unique across the Collection
   patternId : String, //patternId used to create the Question Paper
-  Tournaments : [{ type: String, ref: 'Tournaments' }], // In which all Tournaments is the Question Paper is currently used
-  difficultyLevel : String // Difficult Level of the Question Paper(User Selected)
+  tournaments : [{ type: String, ref: 'Tournaments' }], // In which all Tournaments is the Question Paper is currently used
+  difficultyLevel : Number // Difficult Level of the Question Paper(User Selected)
 });
 
-QuestionPapers = mongoose.model('QuestionPapers',questionPaperSchema,'QuestionPapers');
+QuestionPaper = mongoose.model('QuestionPaper',questionPaperSchema,'QuestionPapers');
 
-module.exports = QuestionPapers;
+module.exports = QuestionPaper;
