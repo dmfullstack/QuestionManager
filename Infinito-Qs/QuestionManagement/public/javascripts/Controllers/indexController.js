@@ -1,5 +1,5 @@
-QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope','_','$sce',
-function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $rootScope,_,$sce) {
+QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope','_','$sce', '$QuestionService',
+function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $rootScope,_,$sce,$QuestionService) {
 
   $scope = angular.extend($scope, {
     /* Dropdown options */
@@ -40,7 +40,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     isPattern : false,
     isBasic : false,
     patternJson : $patternService.getPattern(),
-    qsetArray : [],
+    qsetArray : $QuestionService.getSelectedQuestions(),
     /*Changes for pattern search ends*/
     searchWith : {
       difficultyLevelValue : 0,
@@ -56,7 +56,8 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     currentGoogleLevel : 0,
     difficultyLevelHelperHtml : "",
     wikiHelperHtml            : "",
-    googleHelperHtml          : ""
+    googleHelperHtml          : "",
+    questionPapers : []
   });
   var QuestionManager = {
 
@@ -64,7 +65,6 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     init: function(config) {
       angular.extend(this,config);
       this.getQuestionJson();
-      this.initQuestionPapers();
       this.registerHelpers();
       this.eventHandlers();
     },
@@ -80,8 +80,8 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         var $scp = self.$scope;
         var matched = [];
         if(!_.isEmpty($scp.qsetArray)){
-           matched = _.intersection($scp.qsetArray, $scp.questions);
-          //console.log(matched);
+           matched = _.intersection(_.pluck($scp.qsetArray,'questionId'), _.pluck($scp.questions,'questionId'));
+           console.log(matched);
         }
         for(var i=1,len = $scp.questions.length; i<=len; i++) {
           if($scp.isPattern && matched.length>0){
@@ -284,6 +284,8 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         if(scp.isPattern){
           console.log(scp.qsetArray);
           console.log("count : "+ scp.qsetArray.length);
+          $QuestionService.setSelectedQuestions(scp.qsetArray)
+          console.log($QuestionService.getSelectedQuestions());
         }
         /*console.log({
           querydelete: scp.querydelete,
@@ -357,15 +359,6 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         self.getQuestionJson();
       });
     },
-    initQuestionPapers: function(){
-      $ajaxService.getQuestionPapers({},
-        function(err, results) {
-            if(err)
-              console.log(err);
-            $scope.questionPapers = results;
-            console.log(results);
-      });
-    }
   };
 
   $rootScope.$on("filterQuestions", function () {

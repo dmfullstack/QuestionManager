@@ -11,9 +11,9 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal', f
     {
       $http.get('/QuestionPaperRequestHandler/getQuestionPaper')
       .then(function(response){
-        $scope.QuestionPapers = response.data;
-        angular.forEach($scope.QuestionPapers , function(value){
-          value.IsPickedInTournament = value.Tournaments.length > 0 ? true : false
+        $scope.questionPapers = response.data;
+        angular.forEach($scope.questionPapers , function(value){
+          value.IsPickedInTournament = value.tournaments.length > 0 ? true : false
         })
       })
     },
@@ -21,17 +21,17 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal', f
     deleteQuestionPaper : function(index)
     {
       var self=this;
-      var selectedQuestionPaper = $scope.QuestionPapers[index];
+      var selectedQuestionPaper = $scope.questionPapers[index];
       $http.get('/QuestionPaperRequestHandler/' + selectedQuestionPaper.Name)
       .then(function(response){
-        self.getQuestionPapers();
+        self.getquestionPapers();
       })
     },
 
     editQuestionPaper : function(index)
     {
       var self = this;
-      var selectedQuestionPaper = $scope.QuestionPapers[index];
+      var selectedQuestionPaper = $scope.questionPapers[index];
       $http.get('/QuestionPaperRequestHandler/getQuestions/' + selectedQuestionPaper.Name)
       .then(function(response){
         var modalInstance = self.$uibModal.open({

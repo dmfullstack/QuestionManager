@@ -232,3 +232,15 @@ QuestionManagerApp.service('$patternService', function (){
     }
   };
 });
+
+QuestionManagerApp.service('$QuestionService', function () {
+  var selectedQuestions = [];
+  return{
+    getSelectedQuestions: function() {
+      return selectedQuestions;
+    },
+    setSelectedQuestions: function(value) {
+      selectedQuestions = value;
+    }
+  };
+});

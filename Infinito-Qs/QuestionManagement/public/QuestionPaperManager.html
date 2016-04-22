@@ -17,7 +17,7 @@
       <tbody>
         <tr ng-repeat="questionPaper in QuestionPapers" ng-class="{pickedInTournament : questionPaper.IsPickedInTournament, notPickedInTournament : !questionPaper.IsPickedInTournament}">
           <td><input type="checkbox" align="left" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></td>
-          <td>{{questionPaper.Name}}</td>
+          <td>{{questionPaper.name}}</td>
           <td>{{questionPaper.topics.join(', ')}}</td>
           <td width='9%'>
             <button type="button" class="btn btn-xs btn-default command-edit"  ng-click ="onEditClick($index)" title="Edit Question Paper">

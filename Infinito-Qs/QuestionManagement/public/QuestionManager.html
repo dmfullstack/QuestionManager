@@ -299,15 +299,17 @@
           ul-class="pagination col-sm-8 col-xs-6"
           paging-action="onPageclick(page)">
           </div>
-          <form class="form-inline col-sm-4 col-xs-6">
-            <select class="form-control" name="qsetSelect">
-              <option value="">Add to Question Paper</option>
-              <option ng-repeat="questionPaper in questionPapers.data" value="{{questionPaper.name}}">
-                {{questionPaper.name}}
-              </option>
-            </select>
-            <button class="btn btn-primary">+</button>
-          </form>
+          <span ng-controller="questionPaper">
+            <form class="form-inline col-sm-4 col-xs-6">
+              <select class="form-control" name="qpSelect">
+                <option value="none" disabled selected>Add to Question Paper</option>
+                <option ng-repeat="questionPaper in questionPapers" value="{{questionPaper.name}}">
+                  {{questionPaper.name}}
+                </option>
+              </select>
+              <button class="btn btn-primary">+</button>
+            </form>
+          </span>
         </div>
         <table id="questionList" ng-hide="!questions.length" class="table table-hover table-responsive nga-default nga-stagger nga-slide-up">
           <thead>
