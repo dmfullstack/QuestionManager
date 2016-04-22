@@ -1,0 +1,1 @@
+db.QuestionPapers.insert({Name : 'Question Paper 1',patternId : 'P106Q33999P19',topics : ['Harry Potter Movies'],Question:[ObjectId("57023b7d4453dee306471113")],Tournaments : [],difficultyLevel : 'Easy'})
