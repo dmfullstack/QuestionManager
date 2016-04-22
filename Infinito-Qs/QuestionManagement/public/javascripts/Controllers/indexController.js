@@ -64,6 +64,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     init: function(config) {
       angular.extend(this,config);
       this.getQuestionJson();
+      this.initQuestionPapers();
       this.registerHelpers();
       this.eventHandlers();
     },
@@ -79,7 +80,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         var $scp = self.$scope;
         var matched = [];
         if(!_.isEmpty($scp.qsetArray)){
-           matched = _.intersection($scp.qsetArray, _.pluck($scp.questions, 'questionId'));
+           matched = _.intersection($scp.qsetArray, $scp.questions);
           //console.log(matched);
         }
         for(var i=1,len = $scp.questions.length; i<=len; i++) {
@@ -240,9 +241,9 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
               if(isPattern){
                 var newQuestions = [];
                 if(scp.qsetArray.length>0)
-                  newQuestions = _.difference(_.pluck(scp.questions, 'questionId'), scp.qsetArray);
+                  newQuestions = _.difference(scp.questions, scp.qsetArray);
                 else
-                  newQuestions = _.pluck(scp.questions, 'questionId');
+                  newQuestions = scp.questions;
                 scp.qsetArray = _.union(scp.qsetArray, newQuestions);
               }
               else{
@@ -252,7 +253,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
             } else {
               scp.quesSelected[0] = false;
               if(isPattern)
-                scp.qsetArray.push(questionId);
+                scp.qsetArray.push(_.find(scp.questions,{questionId:questionId}));
               else {
                 scp.querydelete = false;
                 scp.deleteIds.push(questionId);
@@ -265,13 +266,14 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
                 scp.quesSelected[i] = false;
               }
               if(isPattern)
-                scp.qsetArray = _.difference(scp.qsetArray, _.pluck(scp.questions, 'questionId'));
+                scp.qsetArray = _.difference(scp.qsetArray, scp.questions);
               else
                 scp.querydelete = false;
             } else {
               scp.quesSelected[0] = false;
               if(isPattern){
-                scp.qsetArray.splice(scp.qsetArray.indexOf(questionId),1);
+                //scp.qsetArray.splice(scp.qsetArray.indexOf(questionId),1);
+                scp.qsetArray = _.reject(scp.qsetArray, {questionId:questionId});
               }else{
                 scp.querydelete = false;
                 scp.deleteIds.splice(scp.deleteIds.indexOf(questionId),1);
@@ -353,6 +355,15 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
           console.log(err);
         }
         self.getQuestionJson();
+      });
+    },
+    initQuestionPapers: function(){
+      $ajaxService.getQuestionPapers({},
+        function(err, results) {
+            if(err)
+              console.log(err);
+            $scope.questionPapers = results;
+            console.log(results);
       });
     }
   };

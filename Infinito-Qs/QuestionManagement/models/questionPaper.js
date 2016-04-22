@@ -9,6 +9,6 @@ questionPaperSchema = mongoose.Schema({
   difficultyLevel : Number // Difficult Level of the Question Paper(User Selected)
 });
 
-QuestionPaper = mongoose.model('QuestionPaper',questionPaperSchema,'QuestionPapers');
+QuestionPaper = mongoose.model('QuestionPaper',questionPaperSchema,'questionPapers');
 
 module.exports = QuestionPaper;

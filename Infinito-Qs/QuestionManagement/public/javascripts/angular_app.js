@@ -174,7 +174,7 @@ QuestionManagerApp.service('$ajaxService', function($http){
   this.getQuestionPapers = function(data,callback)
   {
     $http({
-      url: '/QuestionPaperRequestHandler',
+      url: '/QuestionPaperRequestHandler/getQuestionPaper',
       data: data,
       method: 'get'
     }).then(function(results) {

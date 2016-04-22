@@ -41,108 +41,138 @@
         </div>
       </div>
       <div class="row nga-default nga-stagger nga-slide-left" ng-show="newPattern">
-        <div class="col-sm-6 nga-fast nga-slide-right">
-          <form class="form" ng-submit="performSearch()">
-            <uib-accordion close-others="true">
-              <uib-accordion-group is-open="wordCheck.open">
-                <uib-accordion-heading>
-                  Word based <small>(Add words to filter out the search data)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': wordCheck.open, 'glyphicon-chevron-right': !wordCheck.open}"></i>
-                </uib-accordion-heading>
-                <div class="form-group">
-                  <label for="whitelist">Must include</label>
-                  <tags-input ng-model="patternJson.whitelist" name='whitelist' replace-spaces-with-dashes="false">
-                    <auto-complete source="variableList"></auto-complete>
-                  </tags-input>
-                </div>
-                <div class="form-group">
-                  <label for="blacklist">Must exclude</label>
-                  <tags-input ng-model="patternJson.blacklist" name='blacklist' replace-spaces-with-dashes="false">
-                    <auto-complete source="variableList"></auto-complete>
-                  </tags-input>
-                </div>
-              </uib-accordion-group>
-              <uib-accordion-group is-open="regexCheck.open">
-                <uib-accordion-heading>
-                  Match Regular Expression <small>(Add patterns to filter out the search data)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': regexCheck.open, 'glyphicon-chevron-right': !regexCheck.open}"></i>
-                </uib-accordion-heading>
-                <div class="form-group">
-                  <div ng-repeat="item in regexFields">
-                     <label>Pattern {{item.value}}</label>
-                     <input type="text" ng-model="patternJson.regexPatterns[item.value]" name="pattern{{item.value}}"\>
-                      <span ng-show="$last">
-                        <a class="btn btn-primary btn-sm" ng-click="addField()"><b>+</b></a>
-                      </span>
-                      <span ng-show="$last && regexFields.length>1">
-                        <a class="btn btn-danger btn-sm" ng-click="removeField()"><b>-</b></a>
-                      </span>
+        <span ng-hide="isRun" class="nga-fast nga-stagger-fast nga-fade">
+          <div class="col-sm-6" >
+            <form class="form" ng-submit="performSearch()">
+              <uib-accordion close-others="true">
+                <uib-accordion-group is-open="wordCheck.open">
+                  <uib-accordion-heading>
+                    Word based <small>(Add words to filter out the search data)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': wordCheck.open, 'glyphicon-chevron-right': !wordCheck.open}"></i>
+                  </uib-accordion-heading>
+                  <div class="form-group">
+                    <label for="whitelist">Must include</label>
+                    <tags-input ng-model="patternJson.whitelist" name='whitelist' replace-spaces-with-dashes="false">
+                      <auto-complete source="variableList"></auto-complete>
+                    </tags-input>
                   </div>
-                  {{regexPatterns}}
-                </div>
-              </uib-accordion-group>
-              <uib-accordion-group is-open="wikiCheck.open">
-                <uib-accordion-heading>
-                  <span ng-click="refreshSlider(wikiCheck.open)">Wikidata PageViews <small>(in thousands)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': wikiCheck.open, 'glyphicon-chevron-right': !wikiCheck.open}"></i></span>
-                </uib-accordion-heading>
-                <div class="form-group">
-                  <rzslider rz-slider-model="patternJson.wikiRange.min" rz-slider-high="patternJson.wikiRange.max" rz-slider-options="patternJson.wikiRange.options" ng-click="onChange(patternJson.wikiRange.options.id)"></rzslider>
-                </div>
-              </uib-accordion-group>
-              <uib-accordion-group is-open="googleCheck.open">
-                <uib-accordion-heading>
-                  <span ng-click="refreshSlider(googleCheck.open)">Google Trends <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': googleCheck.open, 'glyphicon-chevron-right': !googleCheck.open}"></i></span>
-                </uib-accordion-heading>
-                <div class="form-group">
-                  <rzslider rz-slider-model="patternJson.googleRange.min" rz-slider-high="patternJson.googleRange.max" rz-slider-options="patternJson.googleRange.options" ng-click="onChange(patternJson.googleRange.options.id)"></rzslider>
-                </div>
-              </uib-accordion-group>
-              <uib-accordion-group is-open="usageCheck.open">
-                <uib-accordion-heading>
-                  <span ng-click="refreshSlider(usageCheck.open)">Usage <small>(Number of times this question has been asked)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': usageCheck.open, 'glyphicon-chevron-right': !usageCheck.open}"></i><span>
-                </uib-accordion-heading>
-                <div class="form-group">
-                  <rzslider rz-slider-model="patternJson.usageRange.min" rz-slider-high="patternJson.usageRange.max" rz-slider-options="patternJson.usageRange.options" ng-click="onChange(patternJson.usageRange.options.id)"></rzslider>
-                </div>
-              </uib-accordion-group>
-              <uib-accordion-group is-open="correctCheck.open">
-                <uib-accordion-heading>
-                  <span ng-click="refreshSlider(correctCheck.open)">Correctness <small>(Number of times the players have got the answer right)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': correctCheck.open, 'glyphicon-chevron-right': !correctCheck.open}"></i></span>
-                </uib-accordion-heading>
-                <div class="form-group">
-                  <rzslider rz-slider-model="patternJson.correctRange.min" rz-slider-high="patternJson.correctRange.max" rz-slider-options="patternJson.correctRange.options" ng-click="onChange(patternJson.correctRange.options.id)"></rzslider>
-                </div>
-              </uib-accordion-group>
-              <uib-accordion-group is-open="difficultyCheck.open">
-                <uib-accordion-heading>
-                  <span ng-click="refreshSlider(difficultyCheck.open)">Difficulty <small>(Filter based on level of difficulty)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': difficultyCheck.open, 'glyphicon-chevron-right': !difficultyCheck.open}"></i></span>
-                </uib-accordion-heading>
-                <div class="form-group">
-                  <rzslider rz-slider-model="patternJson.difficultyValue.value" rz-slider-options="patternJson.difficultyValue.options" ng-click="onChange(patternJson.difficultyValue.options.id)"></rzslider>
-                </div>
-              </uib-accordion-group>
-            </uib-accordion>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" ng-model="patternJson.wikiFlag">WikiData
-              </label>
-              <label>
-                <input type="checkbox" ng-model="patternJson.googleFlag">Google Rank
-              </label>
-              <label>
-                <input type="checkbox" ng-model="patternJson.usageFlag">Usage
-              </label>
-              <label>
-                <input type="checkbox" ng-model="patternJson.correctFlag">Correctness
-              </label>
-              <label>
-                <input type="checkbox" ng-model="patternJson.difficultyFlag">Difficulty
-              </label>
+                  <div class="form-group">
+                    <label for="blacklist">Must exclude</label>
+                    <tags-input ng-model="patternJson.blacklist" name='blacklist' replace-spaces-with-dashes="false">
+                      <auto-complete source="variableList"></auto-complete>
+                    </tags-input>
+                  </div>
+                </uib-accordion-group>
+                <uib-accordion-group is-open="regexCheck.open">
+                  <uib-accordion-heading>
+                    Match Regular Expression <small>(Add patterns to filter out the search data)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': regexCheck.open, 'glyphicon-chevron-right': !regexCheck.open}"></i>
+                  </uib-accordion-heading>
+                  <div class="form-group">
+                    <div ng-repeat="item in regexFields">
+                       <label>Pattern {{item.value}}</label>
+                       <input type="text" ng-model="patternJson.regexPatterns[item.value]" name="pattern{{item.value}}"\>
+                        <span ng-show="$last">
+                          <a class="btn btn-primary btn-sm" ng-click="addField()"><b>+</b></a>
+                        </span>
+                        <span ng-show="$last && regexFields.length>1">
+                          <a class="btn btn-danger btn-sm" ng-click="removeField()"><b>-</b></a>
+                        </span>
+                    </div>
+                    {{regexPatterns}}
+                  </div>
+                </uib-accordion-group>
+                <uib-accordion-group is-open="wikiCheck.open">
+                  <uib-accordion-heading>
+                    <span ng-click="refreshSlider(wikiCheck.open)">Wikidata PageViews <small>(in thousands)</small> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': wikiCheck.open, 'glyphicon-chevron-right': !wikiCheck.open}"></i></span>
+                  </uib-accordion-heading>
+                  <div class="form-group">
+                    <rzslider rz-slider-model="patternJson.wikiRange.min" rz-slider-high="patternJson.wikiRange.max" rz-slider-options="patternJson.wikiRange.options" ng-click="onChange(patternJson.wikiRange.options.id)"></rzslider>
+                  </div>
+                </uib-accordion-group>
+                <uib-accordion-group is-open="googleCheck.open">
+                  <uib-accordion-heading>
+                    <span ng-click="refreshSlider(googleCheck.open)">Google Trends <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': googleCheck.open, 'glyphicon-chevron-right': !googleCheck.open}"></i></span>
+                  </uib-accordion-heading>
+                  <div class="form-group">
+                    <rzslider rz-slider-model="patternJson.googleRange.min" rz-slider-high="patternJson.googleRange.max" rz-slider-options="patternJson.googleRange.options" ng-click="onChange(patternJson.googleRange.options.id)"></rzslider>
+                  </div>
+                </uib-accordion-group>
+                <uib-accordion-group is-open="usageCheck.open">
+                  <uib-accordion-heading>
+                    <span ng-click="refreshSlider(usageCheck.open)">Usage <small>(Number of times this question has been asked)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': usageCheck.open, 'glyphicon-chevron-right': !usageCheck.open}"></i><span>
+                  </uib-accordion-heading>
+                  <div class="form-group">
+                    <rzslider rz-slider-model="patternJson.usageRange.min" rz-slider-high="patternJson.usageRange.max" rz-slider-options="patternJson.usageRange.options" ng-click="onChange(patternJson.usageRange.options.id)"></rzslider>
+                  </div>
+                </uib-accordion-group>
+                <uib-accordion-group is-open="correctCheck.open">
+                  <uib-accordion-heading>
+                    <span ng-click="refreshSlider(correctCheck.open)">Correctness <small>(Number of times the players have got the answer right)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': correctCheck.open, 'glyphicon-chevron-right': !correctCheck.open}"></i></span>
+                  </uib-accordion-heading>
+                  <div class="form-group">
+                    <rzslider rz-slider-model="patternJson.correctRange.min" rz-slider-high="patternJson.correctRange.max" rz-slider-options="patternJson.correctRange.options" ng-click="onChange(patternJson.correctRange.options.id)"></rzslider>
+                  </div>
+                </uib-accordion-group>
+                <uib-accordion-group is-open="difficultyCheck.open">
+                  <uib-accordion-heading>
+                    <span ng-click="refreshSlider(difficultyCheck.open)">Difficulty <small>(Filter based on level of difficulty)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': difficultyCheck.open, 'glyphicon-chevron-right': !difficultyCheck.open}"></i></span>
+                  </uib-accordion-heading>
+                  <div class="form-group">
+                    <rzslider rz-slider-model="patternJson.difficultyValue.value" rz-slider-options="patternJson.difficultyValue.options" ng-click="onChange(patternJson.difficultyValue.options.id)"></rzslider>
+                  </div>
+                </uib-accordion-group>
+              </uib-accordion>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" ng-model="patternJson.wikiFlag">WikiData
+                </label>
+                <label>
+                  <input type="checkbox" ng-model="patternJson.googleFlag">Google Rank
+                </label>
+                <label>
+                  <input type="checkbox" ng-model="patternJson.usageFlag">Usage
+                </label>
+                <label>
+                  <input type="checkbox" ng-model="patternJson.correctFlag">Correctness
+                </label>
+                <label>
+                  <input type="checkbox" ng-model="patternJson.difficultyFlag">Difficulty
+                </label>
+              </div>
+              <div class="form-group text-center">
+                <input class="btn btn-success btn-block" type="submit" value="{{submitButton}}"></input>
+              </div>
+            </form>
+          </div>
+          <div class="col-sm-6">
+            <h3>Your pattern setting:</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                Include words: <span ng-if="patternJson.whitelist.length<1"><i>(All words)</i></span>
+                <span ng-repeat="element in patternJson.whitelist">{{element.text}} </span><br>
+                Exclude words: <span ng-if="patternJson.blacklist.length<1"><i>(None)</i></span>
+                <span ng-repeat="element in patternJson.blacklist">{{element.text}} </span><br>
+                <span ng-if="patternJson.wikiFlag">
+                  WikiData range: {{patternJson.wikiRange.min}} to {{patternJson.wikiRange.max}}<br>
+                </span>
+              </div>
+              <div class="col-sm-6">
+                <span ng-if="patternJson.googleFlag">
+                  Google Rank range: {{patternJson.googleRange.min}} to {{patternJson.googleRange.max}}<br>
+                </span>
+                <span ng-if="patternJson.usageFlag">
+                  Usage range: {{patternJson.usageRange.min}} to {{patternJson.usageRange.max}}<br>
+                </span>
+                <span ng-if="patternJson.correctFlag">
+                  Correctness range: {{patternJson.correctRange.min}} to {{patternJson.correctRange.max}}<br>
+                </span>
+                <span ng-if="patternJson.difficultyFlag">
+                  Difficulty level: {{patternJson.difficultyValue.value}}<br>
+                </span>
+              </div>
             </div>
-            <div class="form-group text-center">
-              <input class="btn btn-success btn-block" type="submit" value="{{submitButton}}"></input>
-            </div>
-          </form>
-        </div>
-        <div class="col-sm-6 nga-fast nga-fade">
+          </div>
+        </span>
+        <div ng-show="isRun" class="col-sm-6 nga-default nga-slide-left">
           <h3>Your pattern setting:</h3>
           <div class="row">
             <div class="col-sm-6">
@@ -169,17 +199,16 @@
               </span>
             </div>
           </div><br>
-          <div ng-show="isRun">
-            <div class="row">
-              <!--<div class="col-sm-6"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>-->
-              <div class="col-sm-6"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
-            </div><br>
-            <div class="row">
-              <div class="col-sm-12">
-                {{totalQuestions}} Question(s) found
-              </div>
+          <div class="row">
+            <div class="col-sm-4"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>
+            <div class="col-sm-4"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
+          </div><br>
+          <div class="row">
+            <div class="col-sm-12">
+              {{totalQuestions}} Question(s) found
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
@@ -270,9 +299,15 @@
           ul-class="pagination col-sm-8 col-xs-6"
           paging-action="onPageclick(page)">
           </div>
-          <p class="pageTracker col-sm-4 col-xs-6">
-            Showing {{firstQuestion + 1}} to {{lastQuestion}} of {{totalQuestions}} Questions
-          </p>
+          <form class="form-inline col-sm-4 col-xs-6">
+            <select class="form-control" name="qsetSelect">
+              <option value="">Add to Question Paper</option>
+              <option ng-repeat="questionPaper in questionPapers.data" value="{{questionPaper.name}}">
+                {{questionPaper.name}}
+              </option>
+            </select>
+            <button class="btn btn-primary">+</button>
+          </form>
         </div>
         <table id="questionList" ng-hide="!questions.length" class="table table-hover table-responsive nga-default nga-stagger nga-slide-up">
           <thead>
@@ -391,6 +426,26 @@
       <div class="modal-body">
         <div class="form-group">
           <input type="text" ng-model="patternName"/>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+      </div>
+    </script>\
+
+    <script type="text/ng-template" id="qpSaveModal.html">
+      <div class="modal-header">
+          <h3 class="modal-title">Create Question Paper</h3>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <input type="text" ng-model="qpName"/>
+          <select name="difficultylevel">
+            <option ng-repeat="difficulty in difficultyList" value="{{difficulty}}">
+              {{difficulty}}
+            </option>
+          </select>
         </div>
       </div>
       <div class="modal-footer">
