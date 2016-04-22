@@ -8,6 +8,7 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     patternJson : $patternService.getPattern(),
     regexFields : [{value:0}],//Array to dynamically create input boxes for regex
     isRun : false,
+    questionPapers: [],
     submitButton : "Run this!"
   });
 
@@ -19,7 +20,6 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
           if(err)
             console.log(err);
           $scope.patternList = results;
-          console.log($scope.patternList);
     });
   }
 

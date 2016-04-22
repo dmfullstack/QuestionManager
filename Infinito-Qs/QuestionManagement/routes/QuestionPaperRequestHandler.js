@@ -8,8 +8,7 @@ var question = require("../models/question");
 
 //Populate Question Papers from the Collection
 router.route('/getQuestionPaper').get(function (req,res) {
-  questionPaper.find()
-  .select({'Name' : 1 , 'topics' : 1 , 'Tournaments' : 1 , "_id" : 0})
+  questionPaper.find({})
   .exec(function(err, questionPapers) {
     if (err) {
       return res.send(err);
