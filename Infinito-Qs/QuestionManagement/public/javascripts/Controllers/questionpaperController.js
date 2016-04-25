@@ -1,4 +1,4 @@
-QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal', function($scope,$http,$uibModal) {
+QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$QuestionService', function($scope,$http,$uibModal,$QuestionService) {
 
   var QuestionPaperManager = {
     init: function(config) {
