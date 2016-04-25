@@ -7,9 +7,16 @@ var mongoose = require('mongoose'),
       options: Array,
       topicId:Array,
       patternId: String,
+      correctRatio: { type: String, default: "" },
+      difficultyLevel: Number,
       wikiPageView: Number,
       googleResultScore : Number
-    }),
-    questionBank = mongoose.model('questionBank', questionSchema,'questionBank');
+    });
 
+questionSchema.statics.getRankFromCorrectRatio = function getRankFromCorrectRatio(doc) {
+      //console.log(doc.correctRatio);
+      return 5;
+};
+
+var questionBank = mongoose.model('questionBank', questionSchema,'questionBank');
 module.exports = questionBank;
