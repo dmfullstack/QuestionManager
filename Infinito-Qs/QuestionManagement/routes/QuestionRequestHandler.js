@@ -84,6 +84,7 @@ module.exports = function(wagner) {
             db: db
           },
           callback: function(err, json) {
+            console.log(json);
             res.json(json);
           }
         });

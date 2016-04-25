@@ -1,67 +1,64 @@
-<div class="modal-header">
-  <button type="button" class="close" ng-click="editQuestionClose()" aria-hidden="true">&times;</button>
-  <h4 class="modal-title">{{QuestionPaper.name}}</h4>
-  <div class="form-inline pull-right wrapper">
-    <label for="createdOn">{{Questions.Count}}</label>
-  </div>
-</div>
-<div class="modal-body">
-
-  <div class="form-group">
-    <label for="QuestionPaperName">Name: </label><strong class="required text-danger">*</strong>
-    <input type="text" class="form-control" name="QuestionPaperName" value={{QuestionPaper.name}} required>
-  </input>
-</div>
-
-<div class="wrap" ng-if="QuestionPaper.topics.length > 0">
-  <div class="form-inline">
-    <label for="topicId">Topics:</label><br/>
-    <div ng-repeat="topic in QuestionPaper.topics" class="well well-sm topics">
-      {{topic}}
+<form id="editQuestionPaper" method="post" ng-submit="saveQuestionPaper()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="editQuestionClose()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">{{QuestionPaper.name}}</h4>
+    <div class="form-inline pull-right wrapper">
+      <label for="createdOn">{{Questions.Count}}</label>
     </div>
   </div>
-</div>
+  <div class="modal-body">
 
-<div class="wrap" ng-if="QuestionPaper.tournaments.length > 0">
-  <div class="form-inline">
-    <label for="topicId">Tournaments Used :</label><br/>
-    <div ng-repeat="tournament in QuestionPaper.tournaments" class="well well-sm topics">
-      {{tournament}}
+    <div class="form-group">
+      <label for="QuestionPaperName">Name: </label><strong class="required text-danger">*</strong>
+      <input type="text" class="form-control" name="QuestionPaperName" value={{QuestionPaper.name}} required>
+    </input>
+  </div>
+
+  <div class="wrap" ng-if="QuestionPaper.topics.length > 0">
+    <div class="form-inline">
+      <label for="topicId">Topics:</label><br/>
+      <div ng-repeat="topic in QuestionPaper.topics" class="well well-sm topics">
+        {{topic}}
+      </div>
     </div>
   </div>
-</div>
 
-<div class="wrap" ng-hide="!Questions.length">
-  <div class="form-inline">
-  <label>Questions :</label><br/>
-  <table class="table table-bordered" >
-    <thead>
-      <tr>
-        <th></th>
-        <th>Name</th>
-      </tr>
-    </thead>
-    <tbody class="table">
-      <tr ng-repeat="Question in Questions">
-        <td><input type="checkbox" align="left"></td>
-        <td>{{Question.question}}</td>
-        <td>
-          <button type="button" class="btn btn-xs btn-default command-edit"  ng-click ="editQuestionPaper($index)" title="Edit Question Paper">
-            <span class="glyphicon glyphicon-pencil"></span>
-          </button>
-          <button type="button" class="btn btn-xs btn-default command-delete" ng-click ="deleteQuestion($index)" title="Remove Question">
-            <span class="glyphicon glyphicon-trash"></span>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-</div>
+  <div class="wrap" ng-if="QuestionPaper.tournaments.length > 0">
+    <div class="form-inline">
+      <label for="topicId">Tournaments Used :</label><br/>
+      <div ng-repeat="tournament in QuestionPaper.tournaments" class="well well-sm topics">
+        {{tournament}}
+      </div>
+    </div>
+  </div>
 
-<div class="modal-footer">
-  <button type="button" class="btn btn-default" ng-click="editQuestionClose()">Close</button>
-  <button type="button" class="btn btn-primary" ng-click="saveQuestionPaper()">Save changes</button>
-</div>
+  <div class="wrap" ng-hide="!Questions.length">
+    <div class="form-inline">
+      <label>Questions :</label><br/>
+      <table class="table table-hover table-responsive nga-default nga-stagger nga-slide-up" >
+        <tbody class="table">
+          <tr ng-repeat="Question in Questions">
+            <td><input id="{{Question.questionId}}" type="checkbox" value="{{Question.questionId}}" ng-checked="selectedQuestionIndices.indexOf($index) > -1" align="left" ng-click="toggleSelection($index)"></td>
+            <td>{{Question.question}}</td>
+            <td>
+              <button type="button" class="btn btn-xs btn-default command-edit"  ng-click ="onEditClick($index)" title="Edit Question Paper">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </button>
+              <button type="button" class="btn btn-xs btn-default command-delete"  ng-click ="selectQuestion($index,true);deleteQuestions()" title="Remove Question">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button ng-show="selectedQuestionIndices.length > 0" type="button" class="btn btn-warning pull-left" ng-click="deleteQuestions()">Delete Questions</button>
+    <button type="button" class="btn btn-default" ng-click="editQuestionClose()">Close</button>
+    <button type="submit" class="btn btn-primary">Save changes</button>
+  </div>
 
 </div>
+</form>

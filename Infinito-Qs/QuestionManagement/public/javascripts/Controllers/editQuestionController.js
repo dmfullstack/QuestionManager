@@ -274,7 +274,7 @@ QuestionManagerApp.controller('EditQuestionControl', ['$scope','$http','$mainCon
         }
 
         question.options = scp.tabs.map(function (tab) { return tab.content; })
-        //console.log(question);
+        console.log(question);
         self.$ajaxService.QuestionSave(
           {
             requestType: 'save',
