@@ -64,7 +64,6 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     init: function(config) {
       angular.extend(this,config);
       this.getQuestionJson();
-      this.initQuestionPapers();
       this.registerHelpers();
       this.eventHandlers();
     },
@@ -357,15 +356,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         self.getQuestionJson();
       });
     },
-    initQuestionPapers: function(){
-      $ajaxService.getQuestionPapers({},
-        function(err, results) {
-            if(err)
-              console.log(err);
-            $scope.questionPapers = results;
-            console.log(results);
-      });
-    }
+
   };
 
   $rootScope.$on("filterQuestions", function () {
