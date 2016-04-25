@@ -50,6 +50,7 @@ module.exports = function(wagner) {
 
             searchWith = {
               blacklist: blacklist,
+              regex: patternSettings.regexFlag,
               wiki: patternSettings.wikiFlag,
               google: patternSettings.googleFlag,
               usage: patternSettings.usageFlag,

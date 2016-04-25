@@ -69,7 +69,7 @@
                   <div class="form-group">
                     <div ng-repeat="item in regexFields">
                        <label>Pattern {{item.value}}</label>
-                       <input type="text" ng-model="patternJson.regexPatterns[item.value]" name="pattern{{item.value}}"\>
+                       <input type="text" ng-model="patternJson.regexPatterns[item.value]" name="pattern{{item.value}}" ng-click="onChange('regex')"\>
                         <span ng-show="$last">
                           <a class="btn btn-primary btn-sm" ng-click="addField()"><b>+</b></a>
                         </span>
@@ -122,6 +122,9 @@
                 </uib-accordion-group>
               </uib-accordion>
               <div class="checkbox">
+                <label>
+                  <input type="checkbox" ng-model="patternJson.regexFlag">Regex
+                </label>
                 <label>
                   <input type="checkbox" ng-model="patternJson.wikiFlag">WikiData
                 </label>
@@ -209,9 +212,9 @@
             </div>
           </div>
         </div>
-        </div>
       </div>
     </div>
+  </div>
     <!--Pattern search changes ends-->
     <div id="search" class="well row nga-default nga-stagger-slow nga-slide-left allow-overflow" ng-show="!isPattern && isBasic">
       <form id="searchForm" class="col-sm-9 col-xs-9" ng-submit="onSearch()">
@@ -301,13 +304,13 @@
           </div>
           <span ng-controller="questionPaper">
             <form class="form-inline col-sm-4 col-xs-6">
-              <select class="form-control" name="qpSelect">
+              <select class="form-control" ng-change="onQuestionPaperSelect()" ng-model="qpSelect">
                 <option value="none" disabled selected>Add to Question Paper</option>
-                <option ng-repeat="questionPaper in questionPapers" value="{{questionPaper.name}}">
+                <option ng-repeat="questionPaper in QuestionPapers" value="{{questionPaper}}">
                   {{questionPaper.name}}
                 </option>
               </select>
-              <button class="btn btn-primary">+</button>
+              <button class="btn btn-primary" ng-click="createQuestionPaper()">+</button>
             </form>
           </span>
         </div>
@@ -378,7 +381,7 @@
           </thead>
           <tbody>
             <tr class="question-row" ng-repeat="x in questions">
-              <td><input type="checkbox" ng-click="selectQuestion(quesSelected[$index+1], $index+1, x.questionId, x._id)" ng-model="quesSelected[$index+1]"></td>
+              <td><input type="checkbox" ng-disabled="checkbox[$index+1]" ng-click="selectQuestion(quesSelected[$index+1], $index+1, x.questionId, x._id)" ng-model="quesSelected[$index+1]"></td>
               <td class="question">{{x.question}}</td>
               <td>{{x.topics}}</td>
               <td>{{x.categories}}</td>

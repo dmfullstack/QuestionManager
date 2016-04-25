@@ -30,6 +30,7 @@ router.post('/' , function(req,res,next){
             break;
 
     case 'getQuestionsForQuestionPaper':
+            console.log(req.body.questionPaperName);
             questionPaper.find({"name" : req.body.questionPaperName})
             .populate("questions")
             .exec(function(err, questions) {

@@ -34,8 +34,8 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
       }
   }
 
-  var i = 1;
   /*Push and pop controls for regex input fields*/
+  var i = 1;
   $scope.addField = function(){
     $scope.regexFields.push({value:i++});
   };
@@ -55,16 +55,18 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
 
   $scope.onChange = function (slider){
     switch(slider){
-      case "wiki"   : $scope.patternJson.wikiFlag = true;
-                      break;
-      case "google" : $scope.patternJson.googleFlag = true;
-                      break;
-      case "usage"  : $scope.patternJson.usageFlag = true;
-                      break;
-      case "correct": $scope.patternJson.correctFlag = true;
-                      break;
+      case "wiki"      : $scope.patternJson.wikiFlag = true;
+                         break;
+      case "google"    : $scope.patternJson.googleFlag = true;
+                         break;
+      case "usage"     : $scope.patternJson.usageFlag = true;
+                         break;
+      case "correct"   : $scope.patternJson.correctFlag = true;
+                         break;
+      case "regex"     : $scope.patternJson.regexFlag = true;
+                         break;
       case "difficulty": $scope.patternJson.difficultyFlag = true;
-                          break;
+                         break;
     }
   }
 
