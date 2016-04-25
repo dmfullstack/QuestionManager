@@ -80,12 +80,12 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         var $scp = self.$scope;
         var matched = [];
         if(!_.isEmpty($scp.qsetArray)){
-           matched = _.intersection(_.pluck($scp.qsetArray,'questionId'), _.pluck($scp.questions,'questionId'));
+           matched = _.intersection($scp.qsetArray, _.pluck($scp.questions,'_id'));
            console.log(matched);
         }
         for(var i=1,len = $scp.questions.length; i<=len; i++) {
           if($scp.isPattern && matched.length>0){
-            if(_.contains(matched, $scp.questions[i-1]['questionId'])){
+            if(_.contains(matched, $scp.questions[i-1]['_id'])){
               $scope.quesSelected[i] = true;
             }
             else
@@ -224,7 +224,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
           $scp.searchIn.cat = false;
         }
       };
-      self.$scope.selectQuestion = function(isEnabled, index, questionId) {
+      self.$scope.selectQuestion = function(isEnabled, index, questionId, objectId) {
         var scp = self.$scope;
         var isPattern = scp.isPattern;
         /*  If all question is selected enable querydelete, check all the checkboxes and empty the deleteIds
@@ -241,9 +241,9 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
               if(isPattern){
                 var newQuestions = [];
                 if(scp.qsetArray.length>0)
-                  newQuestions = _.difference(scp.questions, scp.qsetArray);
+                  newQuestions = _.difference(_.pluck(scp.questions,'_id'), scp.qsetArray);
                 else
-                  newQuestions = scp.questions;
+                  newQuestions = _.pluck(scp.questions,'_id');
                 scp.qsetArray = _.union(scp.qsetArray, newQuestions);
               }
               else{
@@ -253,7 +253,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
             } else {
               scp.quesSelected[0] = false;
               if(isPattern)
-                scp.qsetArray.push(_.find(scp.questions,{questionId:questionId}));
+                scp.qsetArray.push(objectId);
               else {
                 scp.querydelete = false;
                 scp.deleteIds.push(questionId);
@@ -266,14 +266,14 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
                 scp.quesSelected[i] = false;
               }
               if(isPattern)
-                scp.qsetArray = _.difference(scp.qsetArray, scp.questions);
+                scp.qsetArray = _.difference(scp.qsetArray, _.pluck(scp.questions,'_id'));
               else
                 scp.querydelete = false;
             } else {
               scp.quesSelected[0] = false;
               if(isPattern){
                 //scp.qsetArray.splice(scp.qsetArray.indexOf(questionId),1);
-                scp.qsetArray = _.reject(scp.qsetArray, {questionId:questionId});
+                scp.qsetArray.splice(scp.qsetArray.indexOf(objectId),1);
               }else{
                 scp.querydelete = false;
                 scp.deleteIds.splice(scp.deleteIds.indexOf(questionId),1);
@@ -284,8 +284,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         if(scp.isPattern){
           console.log(scp.qsetArray);
           console.log("count : "+ scp.qsetArray.length);
-          $QuestionService.setSelectedQuestions(scp.qsetArray)
-          console.log($QuestionService.getSelectedQuestions());
+          $QuestionService.setSelectedQuestions(scp.qsetArray);
         }
         /*console.log({
           querydelete: scp.querydelete,
