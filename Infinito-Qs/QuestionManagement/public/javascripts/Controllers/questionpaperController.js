@@ -49,12 +49,12 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
             return {
               Questions : response.data,
               QuestionPaper : selectedQuestionPaper
+              }
             }
           }
         }
       })
     });
-  }
   $scope.getQSet();
 }
 ]);
