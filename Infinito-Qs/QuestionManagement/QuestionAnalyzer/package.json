@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "mongoose"   : "^4.4.2",
-    "request"    : "^2.69.0",
-    "underscore" : "^1.8.3"
+    "mathjs": "^3.2.0",
+    "mongoose": "^4.4.2",
+    "request": "^2.69.0",
+    "underscore": "^1.8.3"
   },
-  "scripts" : {
-    "start": "node questionAnalyzer.js config -d"
+  "scripts": {
+    "start": "node questionAnalyzer.js"
   }
 }
