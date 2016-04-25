@@ -52,9 +52,9 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
               }
             }
           }
-        }
+        })
       })
-    });
+    };
   $scope.getQSet();
 }
 ]);
