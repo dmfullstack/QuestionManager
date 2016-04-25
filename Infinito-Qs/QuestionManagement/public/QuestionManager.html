@@ -378,7 +378,7 @@
           </thead>
           <tbody>
             <tr class="question-row" ng-repeat="x in questions">
-              <td><input type="checkbox" ng-click="selectQuestion(quesSelected[$index+1], $index+1, x.questionId)" ng-model="quesSelected[$index+1]"></td>
+              <td><input type="checkbox" ng-click="selectQuestion(quesSelected[$index+1], $index+1, x.questionId, x._id)" ng-model="quesSelected[$index+1]"></td>
               <td class="question">{{x.question}}</td>
               <td>{{x.topics}}</td>
               <td>{{x.categories}}</td>
