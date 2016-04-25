@@ -359,6 +359,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         self.getQuestionJson();
       });
     },
+
   };
 
   $rootScope.$on("filterQuestions", function () {
@@ -376,4 +377,3 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
   });
 
 }]);
-///////////////////////////////////////////////////////////////////////

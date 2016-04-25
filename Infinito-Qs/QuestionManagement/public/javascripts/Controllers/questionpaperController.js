@@ -1,71 +1,61 @@
-QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$QuestionService', function($scope,$http,$uibModal,$QuestionService) {
+QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService', function($scope,$http,$uibModal,$ajaxService) {
 
-  var QuestionPaperManager = {
-    init: function(config) {
-      angular.extend(this,config);
-      this.getQuestionPapers();
-      this.eventHandlers();
-    },
+  $scope = angular.extend($scope,{
 
-    getQuestionPapers : function ()
-    {
-      $http.get('/QuestionPaperRequestHandler/getQuestionPaper')
-      .then(function(response){
-        $scope.questionPapers = response.data;
-        angular.forEach($scope.questionPapers , function(value){
-          value.IsPickedInTournament = value.tournaments.length > 0 ? true : false
-        })
-      })
-    },
+  });
 
-    deleteQuestionPaper : function(index)
-    {
-      var self=this;
-      var selectedQuestionPaper = $scope.questionPapers[index];
-      $http.get('/QuestionPaperRequestHandler/' + selectedQuestionPaper.Name)
-      .then(function(response){
-        self.getquestionPapers();
-      })
-    },
+  $scope.getQSet = function(){
+    $ajaxService.getQSet({
+      requestType : 'getQuestionPapers'
+    },function(err,response){
+      if(err){
+        console.log(err);
+      }
+      $scope.QuestionPapers = response.data;//get only Question Paper Data
+      angular.forEach($scope.QuestionPapers , function(question){
+        question.IsPickedInTournament = question.tournaments.length > 0 ? true : false
+      });
+    });
+  },
 
-    editQuestionPaper : function(index)
-    {
-      var self = this;
-      var selectedQuestionPaper = $scope.questionPapers[index];
-      $http.get('/QuestionPaperRequestHandler/getQuestions/' + selectedQuestionPaper.Name)
-      .then(function(response){
-        var modalInstance = self.$uibModal.open({
-          animation: self.$scope.animationsEnabled,
-          templateUrl: 'questionModal.html',
-          controller: 'EditQuestionPaperControl',
-          resolve: {
-            $mainControllerScope: function () {
-              return {
-                  Questions : response.data,
-                  QuestionPaper : selectedQuestionPaper
+  $scope.deleteQuestionPaper = function(index){
+    var selectedQuestionPaper = $scope.QuestionPapers[index];
+    $ajaxService.onQuestionPaperDelete({
+      requestType : 'deleteQuestionPaper',
+      questionPaperName : selectedQuestionPaper.name
+    },function(err,response){
+      if(err){
+        console.log(err);
+      }
+      $scope.getQSet();
+    });
+  },
+
+  $scope.editQuestionPaper = function(index){
+    var selectedQuestionPaper = $scope.QuestionPapers[index];
+    $ajaxService.editQuestionPaper({
+      requestType : 'getQuestionsForQuestionPaper',
+      questionPaperName : selectedQuestionPaper.name
+    },function(err,response){
+      if(err){
+        console.log(err);
+      }
+      $uibModal.open({
+        animation: $scope.animationsEnabled,
+        templateUrl: 'questionModal.html',
+        controller: 'EditQuestionPaperControl',
+        resolve: {
+          $mainControllerScope: function () {
+            return {
+              Questions : response.data,
+              QuestionPaper : selectedQuestionPaper
+>>>>>>> 17bb4ef0b97ee981113abe7ba3a2c785a3d02897
               }
             }
           }
-        })
-      });
-    },
-
-  eventHandlers: function() {
-    var self=this;
-    self.$scope.onQuestionPaperDelete= function(index){
-      self.deleteQuestionPaper(index);
-    };
-
-    self.$scope.onEditClick = function(index){
-      self.editQuestionPaper(index);
-    }
-  }
-
-};
-
-QuestionPaperManager.init({
-  $scope: $scope,
-  $http: $http,
-  $uibModal: $uibModal
-});
-}]);
+        }
+      })
+    });
+  $scope.getQSet();
+}
+]);

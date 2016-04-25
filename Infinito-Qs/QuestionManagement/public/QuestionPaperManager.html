@@ -20,10 +20,10 @@
           <td>{{questionPaper.name}}</td>
           <td>{{questionPaper.topics.join(', ')}}</td>
           <td width='9%'>
-            <button type="button" class="btn btn-xs btn-default command-edit"  ng-click ="onEditClick($index)" title="Edit Question Paper">
+            <button type="button" class="btn btn-xs btn-default command-edit"  ng-click ="editQuestionPaper($index)" title="Edit Question Paper">
               <span class="glyphicon glyphicon-pencil"></span>
             </button>
-            <button type="button" class="btn btn-xs btn-default command-delete" ng-click ="onQuestionPaperDelete($index)" ng-disabled = "{{questionPaper.IsPickedInTournament}}" title="{{questionPaper.IsPickedInTournament ? 'Question Paper used in a Tournament cannot be deleted' : 'Delete Question Paper'}}">
+            <button type="button" class="btn btn-xs btn-default command-delete" ng-click ="deleteQuestionPaper($index)" ng-disabled = "{{questionPaper.IsPickedInTournament}}" title="{{questionPaper.IsPickedInTournament ? 'Question Paper used in a Tournament cannot be deleted' : 'Delete Question Paper'}}">
               <span class="glyphicon glyphicon-trash"></span>
             </button>
           </td>

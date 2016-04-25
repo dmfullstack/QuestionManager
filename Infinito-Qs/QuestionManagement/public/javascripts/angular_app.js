@@ -145,7 +145,6 @@ QuestionManagerApp.service('$ajaxService', function($http){
   };
   /*Changes for Search Pattern starts*/
   this.savePattern = function(data, callback) {
-    console.log('call received');
     $http({
       url: '/PatternSearchHandler',
       data: data,
@@ -171,14 +170,26 @@ QuestionManagerApp.service('$ajaxService', function($http){
     });
   };
   /*Changes for Search Pattern ends*/
-  this.getQuestionPapers = function(data,callback)
+  this.getQSet = function(data,callback)
   {
     $http({
-      url: '/QuestionPaperRequestHandler/getQuestionPaper',
+      url: '/QuestionPaperRequestHandler',
       data: data,
-      method: 'get'
+      method: 'post'
     }).then(function(results) {
-      console.log(results);
+      callback(null, results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+
+  this.editQuestionPaper = function(data,callback)
+  {
+    $http({
+      url: '/QuestionPaperRequestHandler',
+      data: data,
+      method: 'post'
+    }).then(function(results) {
       callback(null, results);
     }, function errorCall(data) {
       callback(data,null);
@@ -190,9 +201,21 @@ QuestionManagerApp.service('$ajaxService', function($http){
     $http({
       url: '/QuestionPaperRequestHandler',
       data: data,
-      method: 'get'
+      method: 'post'
     }).then(function(results) {
-      console.log(results);
+      callback(null, results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
+
+  this.saveQuestionPaper = function(data,callback)
+  {
+    $http({
+      url: '/QuestionPaperRequestHandler',
+      data: data,
+      method: 'post'
+    }).then(function(results) {
       callback(null, results);
     }, function errorCall(data) {
       callback(data,null);

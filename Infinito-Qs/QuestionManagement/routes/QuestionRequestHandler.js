@@ -6,7 +6,7 @@ var express = require('express'),
 var router = express.Router();
 
 module.exports = function(wagner) {
- 
+
   router.post('/', function(req, res, next) {
     console.log(req.body);
     switch(req.body.requestType){
