@@ -49,7 +49,6 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
             return {
               Questions : response.data,
               QuestionPaper : selectedQuestionPaper
->>>>>>> 17bb4ef0b97ee981113abe7ba3a2c785a3d02897
               }
             }
           }
