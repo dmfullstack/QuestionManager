@@ -32,12 +32,12 @@
     </div>
   </div>
 
-  <div class="wrap" ng-hide="!Questions.length">
+  <div class="wrap" ng-hide="!QuestionPaper.Questions.length">
     <div class="form-inline">
       <label>Questions :</label><br/>
       <table class="table table-hover table-responsive nga-default nga-stagger nga-slide-up" >
         <tbody class="table">
-          <tr ng-repeat="Question in Questions">
+          <tr ng-repeat="Question in QuestionPaper.Questions">
             <td><input id="{{Question.questionId}}" type="checkbox" value="{{Question.questionId}}" ng-checked="selectedQuestionIndices.indexOf($index) > -1" align="left" ng-click="toggleSelection($index)"></td>
             <td>{{Question.question}}</td>
             <td>

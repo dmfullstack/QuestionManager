@@ -132,6 +132,16 @@ module.exports = function(wagner) {
           }
         });
         break;
+
+        case 'getTopics' :
+          wagner.invoke(db.TopicDB.getTopics, {
+                  query: req.body.topicIds ,
+                  callback : function(err, json) {
+                    res.json(json);
+                  }
+                });
+                break;
+
     }
   });
   return router;
