@@ -79,6 +79,7 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
           animation: self.$scope.animationsEnabled,
           templateUrl: 'modal.html',
           controller: 'EditQuestionControl',
+          scope : $scope,
           resolve: {
             $mainControllerScope: function () {
               return {

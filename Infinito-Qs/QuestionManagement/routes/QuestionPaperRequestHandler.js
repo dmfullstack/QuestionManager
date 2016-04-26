@@ -44,8 +44,9 @@ router.post('/' , function(req,res,next){
     case 'saveQuestionPaper':
       var questionPaperToSave = req.body.questionPaper;
       questionPaper.findByIdAndUpdate(questionPaperToSave._id,
-                                          { $set: { questions : questionPaperToSave.Questions ,
-                                                    topics : req.body.topics}}, function (err, qPaper) {
+                                          { $set: { name      : questionPaperToSave.name,
+                                                    questions : questionPaperToSave.Questions ,
+                                                    topics    : req.body.topics},{upsert : true}}, function (err, qPaper) {
         if (err) return handleError(err);
         res.send(qPaper);
       });
