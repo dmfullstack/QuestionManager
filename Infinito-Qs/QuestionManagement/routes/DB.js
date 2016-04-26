@@ -519,8 +519,8 @@ var updateQueryWithMetaData = function(query, metadataObj) {
          max = parseInt(metadataObj.googleRange.max);
 
      google= {googleResultScore: {$gte:min}};
-     if (max > min) {
-       google= {googleResultScore: {$gte:min, $lte:max}};
+     if (max >= min) {
+       google = {googleResultScore: {$gte:min, $lte:max}};
      }
      result.push(google);
    }
@@ -530,7 +530,7 @@ var updateQueryWithMetaData = function(query, metadataObj) {
          max = parseInt(metadataObj.usageRange.max);
 
      usage = {timesUsed: {$gte:min}};
-     if (max > min) {
+     if (max >= min) {
        usage = {timesUsed: {$gte:min, $lte:max}};
      }
      result.push(usage);
@@ -547,9 +547,15 @@ var updateQueryWithMetaData = function(query, metadataObj) {
      result.push(correct);
    }
 
-   if(metadataObj.difficultyLevelValue) {
-      difficultyLevelChk = {difficultyLevel: (metadataObj.difficultyLevelValue)};
-      result.push(difficultyLevelChk);
+   if(metadataObj.difficulty == true) {
+     var min = parseInt(metadataObj.difficultyRange.min),
+         max = parseInt(metadataObj.difficultyRange.max);
+
+     difficulty = {difficultyLevel: {$gte:min}};
+     if (max >= min) {
+       difficulty = {difficultyLevel : {$gte:min, $lte:max}};
+     }
+     result.push(difficulty);
    }
 
    if(typeof metadataObj.blacklist !='undefined' && metadataObj.blacklist !=''){
