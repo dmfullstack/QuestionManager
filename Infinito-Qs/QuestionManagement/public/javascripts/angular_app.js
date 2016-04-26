@@ -222,7 +222,6 @@ QuestionManagerApp.service('$ajaxService', function($http){
     });
   };
 
-<<<<<<< HEAD
   this.getTopics = function(data,callback)
   {
     $http({
