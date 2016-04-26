@@ -117,7 +117,7 @@
                     <span ng-click="refreshSlider(difficultyCheck.open)">Difficulty <small>(Filter based on level of difficulty)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': difficultyCheck.open, 'glyphicon-chevron-right': !difficultyCheck.open}"></i></span>
                   </uib-accordion-heading>
                   <div class="form-group">
-                    <rzslider rz-slider-model="patternJson.difficultyValue.value" rz-slider-options="patternJson.difficultyValue.options" ng-click="onChange(patternJson.difficultyValue.options.id)"></rzslider>
+                    <rzslider rz-slider-model="patternJson.difficultyRange.min" rz-slider-high="patternJson.difficultyRange.max" rz-slider-options="patternJson.difficultyRange.options" ng-click="onChange(patternJson.difficultyRange.options.id)"></rzslider>
                   </div>
                 </uib-accordion-group>
               </uib-accordion>
@@ -159,6 +159,9 @@
                 </span>
               </div>
               <div class="col-sm-6">
+                <span ng-if="patternJson.regexFlag && patternJson.regexPatterns.length>0">
+                  Regex Patterns: <span ng-repeat="element in patternJson.regexPatterns">{{element}} </span><br>
+                </span>
                 <span ng-if="patternJson.googleFlag">
                   Google Rank range: {{patternJson.googleRange.min}} to {{patternJson.googleRange.max}}<br>
                 </span>
@@ -169,13 +172,13 @@
                   Correctness range: {{patternJson.correctRange.min}} to {{patternJson.correctRange.max}}<br>
                 </span>
                 <span ng-if="patternJson.difficultyFlag">
-                  Difficulty level: {{patternJson.difficultyValue.value}}<br>
+                  Difficulty level: {{patternJson.difficultyRange.min}} to {{patternJson.difficultyRange.max}}<br>
                 </span>
               </div>
             </div>
           </div>
         </span>
-        <div ng-show="isRun" class="col-sm-6 nga-default nga-slide-left">
+        <div ng-show="isRun" class="col-sm-12 nga-default nga-slide-left">
           <h3>Your pattern setting:</h3>
           <div class="row">
             <div class="col-sm-6">
@@ -188,6 +191,9 @@
               </span>
             </div>
             <div class="col-sm-6">
+              <span ng-if="patternJson.regexFlag && patternJson.regexPatterns.length>0">
+                Regex Patterns: <span ng-repeat="element in patternJson.regexPatterns">{{element}} </span><br>
+              </span>
               <span ng-if="patternJson.googleFlag">
                 Google Rank range: {{patternJson.googleRange.min}} to {{patternJson.googleRange.max}}<br>
               </span>
@@ -198,13 +204,13 @@
                 Correctness range: {{patternJson.correctRange.min}} to {{patternJson.correctRange.max}}<br>
               </span>
               <span ng-if="patternJson.difficultyFlag">
-                Difficulty level: {{patternJson.difficultyValue.value}}<br>
+                Difficulty level: {{patternJson.difficultyRange.min}} to {{patternJson.difficultyRange.max}}<br>
               </span>
             </div>
           </div><br>
           <div class="row">
-            <div class="col-sm-4"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>
-            <div class="col-sm-4"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
+            <div class="col-sm-6"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>
+            <div class="col-sm-6"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
           </div><br>
           <div class="row">
             <div class="col-sm-12">
@@ -222,7 +228,7 @@
         <button type="button" class="btn btn-success col-sm-2 col-xs-2" ng-click="onSearch()" name="button"><span class="glyphicon glyphicon-search"></span> Search</button>
         <button type="reset" class="btn btn-default col-sm-2 col-xs-2" ng-click="onReset()"><span class="glyphicon glyphicon-remove"></span> Clear </button>
       </form>
-      <div id='noOfQuestions' uib-dropdown class='col-sm-3 col-xs-3 actionBar'>
+      <div id='noOfQuestions' uib-dropdown class='col-sm-2 col-xs-2 actionBar pull-right'>
         <button uib-dropdown-toggle class="btn btn-default" type="button">
           {{noOfQuestions[selectedRowCountIndex]}}
           <span class="caret"></span></button>
@@ -255,35 +261,31 @@
           <div id="metaData" ng-show="showMoreSearchOptions">
           <hr>
 
-           <div id="difficultyLevel" class="form-group col-sm-2 col-xs-2">
+           <div id="difficultyLevel" class="form-group col-sm-3 col-xs-3">
              DifficultyLevel:
              <span id="DifficultyLevelHelper" popover-title="Difficulty Level Of Questions" uib-popover-html="difficultyLevelHelperHtml" popover-placement="right" popover-append-to-body="true" popover-trigger="mouseenter" class="glyphicon glyphicon-question-sign"> </span>
-             <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable DifficultyLevel in Search" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-enable="searchWith.difficultyLevelValue">
-                <select class="form-control" ng-model="searchWith.difficultyLevelValue" ng-options="opt for opt in difficultyLevels"> </select>
-             </span>
+              <span title="reset" id="difficultyReset" class="glyphicon glyphicon-remove-sign" ng-click="rangeReset('difficulty')"> </span>
+               <rzslider rz-slider-model="searchWith.difficultyRange.min" rz-slider-high="searchWith.difficultyRange.max" rz-slider-options=rangeOptions ng-click="rangeSelected('difficulty')"> </rzslider>
            </div>
-           <div id="wikiLevel" class="form-group col-sm-2 col-xs-2">
+           <div id="wikiLevel" class="form-group col-sm-3 col-xs-3">
               WikiRank:
               <span id="WikiHelper" uib-popover-html="wikiHelperHtml" popover-title="Wiki Rank Of Questions" popover-placement="right" popover-trigger="mouseenter" popover-append-to-body="true" class="glyphicon glyphicon-question-sign"> </span>
-              <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable Wiki Rank in Search" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-enable="currentWikiLevel">
+              <span title="reset" id="WikiReset" class="glyphicon glyphicon-remove-sign" ng-click="rangeReset('wiki')"> </span>
+              <!--<span class="tooltipWrap" uib-tooltip="Enter 0 to Disable Wiki Rank in Search" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-enable="currentWikiLevel">
                 <select class="form-control" ng-model="currentWikiLevel" ng-options="opt for opt in difficultyLevels" ng-change="rangeSelected('wiki')">  </select>
-              </span>
+              </span> -->
+              <rzslider rz-slider-model="searchWith.wikiRange.minRank" rz-slider-high="searchWith.wikiRange.maxRank" rz-slider-options=rangeOptions ng-click="rangeSelected('wiki')"> </rzslider>
            </div>
 
-           <div id = "GoogleLevel" class="form-group col-sm-2 col-xs-2" >
+           <div id = "GoogleLevel" class="form-group col-sm-3 col-xs-3" >
              GoogleRank:
             <span id="GoogleHelper" uib-popover-html="googleHelperHtml" popover-title="Google Rank of Questions" popover-placement="right" popover-trigger="mouseenter" popover-append-to-body="true" class="glyphicon glyphicon-question-sign"> </span>
-            <span class="tooltipWrap" uib-tooltip="Enter 0 to Disable GoogleRank in Search" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-enable="currentGoogleLevel">
-              <select class="form-control" ng-model="currentGoogleLevel" ng-options="opt for opt in difficultyLevels" ng-change="rangeSelected('google')"></select>
-            </span>
+              <span title="reset" id="googleReset" class="glyphicon glyphicon-remove-sign" ng-click="rangeReset('google')"> </span>
+            <rzslider rz-slider-model="searchWith.googleRange.minRank" rz-slider-high="searchWith.googleRange.maxRank" rz-slider-options=rangeOptions ng-click="rangeSelected('google')"> </rzslider>
            </div>
 
          </div> <!-- End of MetaData-->
         </form>
-
-        <!-- <button type="button" ng-click="buttonclick()" class="pull-right">More Questions</button> -->
-
-        <!-- <button type="button" ng-click="questionpaper()" class="pull-right">Questionpaper</button> -->
     </div>
     <div class="questions nga-default nga-slide-up" ng-show="isBasic||isPattern">
       <div id="questionContainer" class="row">
@@ -304,8 +306,8 @@
           </div>
           <span ng-controller="questionPaper">
             <form class="form-inline col-sm-4 col-xs-6">
-              <select class="form-control" ng-change="onQuestionPaperSelect()" ng-model="qpSelect">
-                <option value="none" disabled selected>Add to Question Paper</option>
+              <select class="form-control" ng-model="qpSelect" ng-change="onQuestionPaperSelect()">
+                <option value="">New Question Paper</option>
                 <option ng-repeat="questionPaper in QuestionPapers" value="{{questionPaper}}">
                   {{questionPaper.name}}
                 </option>
@@ -439,24 +441,5 @@
       </div>
     </script>
 
-    <script type="text/ng-template" id="qpSaveModal.html">
-      <div class="modal-header">
-          <h3 class="modal-title">Create Question Paper</h3>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <input type="text" ng-model="qpName"/>
-          <select name="difficultylevel">
-            <option ng-repeat="difficulty in difficultyList" value="{{difficulty}}">
-              {{difficulty}}
-            </option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-          <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-      </div>
-    </script>
     <!--Changes for search pattern ends-->
   </main>

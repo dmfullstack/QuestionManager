@@ -20,6 +20,14 @@ module.exports = function(wagner) {
           }
         });
         break;
+      case 'getQuestionsById':
+        wagner.invoke(db.QuestionDB.getQuestionsById, {
+          ids: req.body.questionIds,
+          callback: function(err, json) {
+            res.json(json);
+          }
+        });
+        break;
       case 'search':
         var query = req.body.query,
             sortType = req.body.sortType,
@@ -55,14 +63,14 @@ module.exports = function(wagner) {
               google: patternSettings.googleFlag,
               usage: patternSettings.usageFlag,
               correct: patternSettings.correctFlag,
+              difficulty: patternSettings.correctFlag,
               wikiRange: patternSettings.wikiRange,
               googleRange: patternSettings.googleRange,
               usageRange: patternSettings.usageRange,
               correctRange: patternSettings.correctRange,
-              regexPatterns: patternSettings.regexPatterns
+              regexPatterns: patternSettings.regexPatterns,
+              difficultyRange: patternSettings.difficultyRange
             }
-            if(patternSettings.difficultyFlag)
-              searchWith.difficultyLevelValue = patternSettings.difficultyValue.value;
             rgexQuery = whitelist;
           }catch(err){
             console.log(err);
@@ -85,7 +93,6 @@ module.exports = function(wagner) {
             db: db
           },
           callback: function(err, json) {
-            console.log(json);
             res.json(json);
           }
         });
@@ -128,7 +135,6 @@ module.exports = function(wagner) {
             query = req.body.query? req.body.query: "",
             searchIn = req.body.searchIn,
             rgexQuery = query !=""? new RegExp('\\b(' + query.replace(/\s/g,'|') + ')','ig'): "";
-        console.log(deleteIds);
         if(deleteIds.length > 0) {
           wagner.invoke(db.QuestionDB.deleteByIds, {
             deleteIds: deleteIds,
