@@ -82,7 +82,7 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
   $scope.onSavePattern = function() {
     var modalInstance = $uibModal.open({
       animation: $scope.animationsEnabled,
-      templateUrl: 'tempModal.html', //Treat modal as seperate template for syntactical purposes
+      templateUrl: 'savePatternModal.html', //Treat modal as seperate template for syntactical purposes
       controller: 'patternModal',
       resolve:{
         patternName : function (){

@@ -234,6 +234,18 @@ QuestionManagerApp.service('$ajaxService', function($http){
       callback(data,null);
     });
   };
+  this.getQuestionsById = function(data,callback)
+  {
+    $http({
+      url: '/QuestionRequestHandler',
+      data: data,
+      method: 'post'
+    }).then(function(results) {
+      callback(null, results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
 });
 
 QuestionManagerApp.service('signoutService', function ($window){
@@ -254,7 +266,7 @@ QuestionManagerApp.service('$patternService', function (){
     googleRange : {min: 10, max: 70, options: {floor: 0,ceil: 100, step: 5, id: "google"}},
     usageRange : {min: 10, max: 6000, options: {floor: 0,ceil: 10000, step: 100, id: "usage"}},
     correctRange : {min: 0, max: 0.5, options: {floor: 0, ceil: 1, step: 0.1, precision:1, id: "correct"}},
-    difficultyValue : {value:3, options: {floor: 0,ceil: 10, step: 1, showTicks: true, id: "difficulty"}},
+    difficultyRange : {min: 0, max: 10, options: {floor: 0,ceil: 10, step: 1, id: "difficulty"}},
     regexPatterns : []
   };
 

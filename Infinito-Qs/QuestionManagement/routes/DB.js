@@ -107,6 +107,17 @@ module.exports.QuestionDB = {
       callback(err, doc);
     });
   },
+  getQuestionsById: function(Question, ids, callback) {
+    console.log('here');
+    Question.find({_id : {$in : ids}}).exec(function(err,doc){
+      if(err){
+        console.log(err);
+        callback(err,null);
+      }
+      console.log(doc);
+      callback(null,doc);
+    });
+  },
   /*
     This function used for following purpose
     - Listing: listing indicated by empty query string

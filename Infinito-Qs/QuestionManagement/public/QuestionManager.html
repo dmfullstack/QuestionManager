@@ -117,7 +117,7 @@
                     <span ng-click="refreshSlider(difficultyCheck.open)">Difficulty <small>(Filter based on level of difficulty)</small><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': difficultyCheck.open, 'glyphicon-chevron-right': !difficultyCheck.open}"></i></span>
                   </uib-accordion-heading>
                   <div class="form-group">
-                    <rzslider rz-slider-model="patternJson.difficultyValue.value" rz-slider-options="patternJson.difficultyValue.options" ng-click="onChange(patternJson.difficultyValue.options.id)"></rzslider>
+                    <rzslider rz-slider-model="patternJson.difficultyRange.min" rz-slider-high="patternJson.difficultyRange.max" rz-slider-options="patternJson.difficultyRange.options" ng-click="onChange(patternJson.difficultyRange.options.id)"></rzslider>
                   </div>
                 </uib-accordion-group>
               </uib-accordion>
@@ -159,6 +159,9 @@
                 </span>
               </div>
               <div class="col-sm-6">
+                <span ng-if="patternJson.regexFlag && patternJson.regexPatterns.length>0">
+                  Regex Patterns: <span ng-repeat="element in patternJson.regexPatterns">{{element}} </span><br>
+                </span>
                 <span ng-if="patternJson.googleFlag">
                   Google Rank range: {{patternJson.googleRange.min}} to {{patternJson.googleRange.max}}<br>
                 </span>
@@ -169,13 +172,13 @@
                   Correctness range: {{patternJson.correctRange.min}} to {{patternJson.correctRange.max}}<br>
                 </span>
                 <span ng-if="patternJson.difficultyFlag">
-                  Difficulty level: {{patternJson.difficultyValue.value}}<br>
+                  Difficulty level: {{patternJson.difficultyRange.min}} to {{patternJson.difficultyRange.max}}<br>
                 </span>
               </div>
             </div>
           </div>
         </span>
-        <div ng-show="isRun" class="col-sm-6 nga-default nga-slide-left">
+        <div ng-show="isRun" class="col-sm-12 nga-default nga-slide-left">
           <h3>Your pattern setting:</h3>
           <div class="row">
             <div class="col-sm-6">
@@ -188,6 +191,9 @@
               </span>
             </div>
             <div class="col-sm-6">
+              <span ng-if="patternJson.regexFlag && patternJson.regexPatterns.length>0">
+                Regex Patterns: <span ng-repeat="element in patternJson.regexPatterns">{{element}} </span><br>
+              </span>
               <span ng-if="patternJson.googleFlag">
                 Google Rank range: {{patternJson.googleRange.min}} to {{patternJson.googleRange.max}}<br>
               </span>
@@ -198,13 +204,13 @@
                 Correctness range: {{patternJson.correctRange.min}} to {{patternJson.correctRange.max}}<br>
               </span>
               <span ng-if="patternJson.difficultyFlag">
-                Difficulty level: {{patternJson.difficultyValue.value}}<br>
+                Difficulty level: {{patternJson.difficultyRange.min}} to {{patternJson.difficultyRange.max}}<br>
               </span>
             </div>
           </div><br>
           <div class="row">
-            <div class="col-sm-4"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>
-            <div class="col-sm-4"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
+            <div class="col-sm-6"><button class="btn btn-warning btn-block" ng-click="isRun=false">Edit Pattern</button></div>
+            <div class="col-sm-6"><button type="button" class="btn btn-info btn-block" ng-click="onSavePattern()">Save Pattern</button></div>
           </div><br>
           <div class="row">
             <div class="col-sm-12">
@@ -304,8 +310,8 @@
           </div>
           <span ng-controller="questionPaper">
             <form class="form-inline col-sm-4 col-xs-6">
-              <select class="form-control" ng-change="onQuestionPaperSelect()" ng-model="qpSelect">
-                <option value="none" disabled selected>Add to Question Paper</option>
+              <select class="form-control" ng-model="qpSelect" ng-change="onQuestionPaperSelect()">
+                <option value="">New Question Paper</option>
                 <option ng-repeat="questionPaper in QuestionPapers" value="{{questionPaper}}">
                   {{questionPaper.name}}
                 </option>
@@ -439,24 +445,5 @@
       </div>
     </script>
 
-    <script type="text/ng-template" id="qpSaveModal.html">
-      <div class="modal-header">
-          <h3 class="modal-title">Create Question Paper</h3>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <input type="text" ng-model="qpName"/>
-          <select name="difficultylevel">
-            <option ng-repeat="difficulty in difficultyList" value="{{difficulty}}">
-              {{difficulty}}
-            </option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-          <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-      </div>
-    </script>
     <!--Changes for search pattern ends-->
   </main>

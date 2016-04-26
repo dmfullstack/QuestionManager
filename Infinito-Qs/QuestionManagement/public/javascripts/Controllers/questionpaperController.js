@@ -1,9 +1,8 @@
-QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope) {
+QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q) {
 
   $scope = angular.extend($scope,{
-    selectedQuestions : $QuestionService.getUserSelectedQuestions(),
     questionPaper : {},
-    qpSelect: "New Question Name"
+    qpSelect: ""
   });
 
   $scope.getQSet = function(){
@@ -58,34 +57,58 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       })
     };
     $scope.createQuestionPaper = function () {
-      var tempObj = JSON.parse($scope.qpSelect);
-      $ajaxService.createQuestionPaper({
-        requestType : 'getQuestionsForQuestionPaper',
-        questionPaperName : tempObj.name
-      },function(err,response){
-        if(err){
-          console.log(err);
-        }
-        $uibModal.open({
-          animation: $scope.animationsEnabled,
-          templateUrl: 'questionModal.html',
-          controller: 'EditQuestionPaperControl',
-          resolve: {
-            $mainControllerScope: function () {
-              return {
-                Questions : response.data,
-                QuestionPaper : tempObj
+      var questionPaper = $scope.questionPaper;
+      var promise = getUserSelectedQuestions();
+      promise.then(function (userSelectedQuestions) {
+        if($scope.qpSelect!=""){
+          questionPaper = JSON.parse($scope.qpSelect);
+          $ajaxService.createQuestionPaper({
+            requestType : 'getQuestionsForQuestionPaper',
+            questionPaperName : questionPaper.name
+          },function(err,response){
+            if(err)
+              console.log(err);
+              questionPaper.Questions = _.union(response.data,userSelectedQuestions);
+            });
+          }else{
+            questionPaper = {};
+            questionPaper.Questions = userSelectedQuestions;
+          }
+          $uibModal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: 'questionModal.html',
+            controller: 'EditQuestionPaperControl',
+            resolve: {
+              $mainControllerScope: function () {
+                return {
+                  QuestionPaper : questionPaper
+                  }
                 }
               }
-            }
+            });
           });
-        });
       }
       $scope.onQuestionPaperSelect = function () {
-        var tempObj = JSON.parse($scope.qpSelect);
+        var tempObj = {};
+        if($scope.qpSelect!="")
+          tempObj = JSON.parse($scope.qpSelect);
         $QuestionService.setExistingQuestions(tempObj.questions);
         $rootScope.$emit("initializeQuestions",{});
       }
   $scope.getQSet();
+
+  function getUserSelectedQuestions() {
+    return $q(function(resolve,reject){
+      var questionIds = $QuestionService.getUserSelectedQuestions();
+      $ajaxService.getQuestionsById({
+        requestType : 'getQuestionsById',
+        questionIds : questionIds
+      },function(err,response){
+        if(err)
+          console.log(err);
+          resolve(response.data);
+        });
+    })
+  }
 }
 ]);

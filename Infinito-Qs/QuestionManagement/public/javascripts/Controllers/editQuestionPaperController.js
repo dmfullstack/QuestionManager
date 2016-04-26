@@ -21,11 +21,13 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
         $ajaxService.saveQuestionPaper({
           requestType : 'saveQuestionPaper',
           qSetId : self.$scope.QuestionPaper._id,
-          questions : self.$scope.Questions
+          questions : self.$scope.QuestionPaper.Questions
         },function(err,response){
           if(err){
             console.log(err);
           }
+          console.log(self.$scope.QuestionPaper._id);
+          console.log(self.$scope.Questions);
           console.log("saved");
         });
       }
