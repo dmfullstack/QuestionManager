@@ -41,18 +41,21 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     patternJson : $patternService.getPattern(),
     qsetArray : [],
     /*Changes for pattern search ends*/
+ 
     searchWith : {
-      difficultyLevelValue : 0,
+      difficulty      : false,
+      difficultyRange : {min:1, max:10},
       wiki            : false,
-      wikiRange       : {min:1, max:100},
+      wikiRange       : {minRank:1, maxRank:10, min:0, max:0},
       google          : false,
-      googleRange     : {min:1, max:100}
+      googleRange     : {minRank:1, maxRank:10, min:0, max:0}
+    }, 
+    rangeOptions : {floor:1, 
+      ceil: 10
     },
     wikiRange : ["1-100","100-500","500-2k","2k-5k","5k-10k","10k-20k","20k-30k","30k-40k","40k-50k","50k+"],
     googleRange : ["1-100","100-200","200-300","300-400","400-500","500-600","600-700","700-800","800-900","900-1000"],
-    difficultyLevels : [0,1,2,3,4,5,6,7,8,9,10],
-    currentWikiLevel : 0,
-    currentGoogleLevel : 0,
+
     difficultyLevelHelperHtml : "",
     wikiHelperHtml            : "",
     googleHelperHtml          : "",
@@ -121,12 +124,14 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
       };
 
       self.$scope.onReset= function() {
+        var range = {minRank:1, maxRank:10, min:0, max:0};
         self.$scope.searchText="";
         self.$scope.searchWith.wiki = false;
-        self.$scope.currentWikiLevel= 0;
         self.$scope.searchWith.google = false;
-        self.$scope.currentGoogleLevel = 0;
-        self.$scope.searchWith.difficultyLevelValue= 0;
+        self.$scope.searchWith.difficulty = false;
+        self.$scope.searchWith.wikiRange = {minRank: 1, maxRank: 10};
+        self.$scope.searchWith.googleRange = {minRank: 1, maxRank :10};
+        self.$scope.searchWith.difficultyRange = {min:1, max:10}; 
         self.getQuestionJson();
       };
 
@@ -159,31 +164,81 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         self.getQuestionJson();
       };
 
+      self.$scope.rangeReset = function(option) {
+        var $scp = self.$scope;
+        switch(option) {
+          case 'difficulty':
+          {
+            $scp.searchWith.difficulty= false;
+            $scp.searchWith.difficultyRange = {min:1, max:10}; 
+            break;
+          }
+          case 'wiki':
+          {
+            $scp.searchWith.wiki = false;
+            $scp.searchWith.wikiRange = {minRank:1, maxRank:10}; 
+            break;
+          }
+          case 'google':
+          {
+            $scp.searchWith.google = false;
+            $scp.searchWith.googleRange = {minRank:1, maxRank:10}; 
+            break;
+          }
+        }
+      }
+
+
       self.$scope.rangeSelected = function(option) {
         var $scp = self.$scope;
         switch(option) {
+          case 'difficulty':
+          {
+            var min = $scp.searchWith.difficultyRange.min;
+            var max = $scp.searchWith.difficultyRange.max;
+
+            if ((min == 1) && (max == 10)) {
+              $scp.searchWith.difficulty = false;
+            }
+            else {
+              $scp.searchWith.difficulty = true;
+            }
+            break;
+          }
           case 'wiki':
-            if ($scp.currentWikiLevel == 0) {
+          {
+            var minRank = $scp.searchWith.wikiRange.minRank;
+            var maxRank = $scp.searchWith.wikiRange.maxRank;
+
+            if ((minRank == 1) && (maxRank == 10)) {
               $scp.searchWith.wiki = false;
             }
             else {
               $scp.searchWith.wiki = true;
-              var minMaxArray = $scp.wikiRange[$scp.currentWikiLevel-1].replace(/k/g,"000").split("-");
-              $scp.searchWith.wikiRange.min = minMaxArray[0];
-              $scp.searchWith.wikiRange.max = minMaxArray[1];
+              var minArray = $scp.wikiRange[minRank-1].replace(/k/g,"000").split("-");
+              var maxArray = $scp.wikiRange[maxRank-1].replace(/k/g,"000").split("-");
+              $scp.searchWith.wikiRange.min = minArray[0];
+              $scp.searchWith.wikiRange.max = maxArray[1];
             }
             break;
+          }
           case 'google':
-            if ($scp.currentGoogleLevel == 0) {
+          {
+            var minRank = $scp.searchWith.googleRange.minRank;
+            var maxRank = $scp.searchWith.googleRange.maxRank;
+
+            if ((minRank == 1) && (maxRank == 10)) {
               $scp.searchWith.google = false;
             }
             else {
               $scp.searchWith.google = true;
-              var minMaxArray = $scp.googleRange[$scp.currentGoogleLevel-1].split("-");
-              $scp.searchWith.googleRange.min = minMaxArray[0];
-              $scp.searchWith.googleRange.max = minMaxArray[1];
+              var minArray = $scp.googleRange[minRank-1].split("-");
+              var maxArray = $scp.googleRange[maxRank-1].split("-");
+              $scp.searchWith.googleRange.min = minArray[0];
+              $scp.searchWith.googleRange.max = maxArray[1];
             }
             break;
+          }
         }
       }
 
