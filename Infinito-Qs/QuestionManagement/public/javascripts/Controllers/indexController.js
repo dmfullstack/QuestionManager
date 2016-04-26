@@ -1,6 +1,5 @@
-QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope','_','$sce', '$QuestionService',
+QuestionManagerApp.controller('index', ['$scope', '$uibModal', '$http', '$ajaxService','$window', '$patternService','$rootScope','_','$sce', '$QuestionService','$location',
 function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $rootScope,_,$sce,$QuestionService) {
-
   $scope = angular.extend($scope, {
     /* Dropdown options */
     noOfQuestions: [50, //first one default
@@ -40,7 +39,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     isPattern : false,
     isBasic : false,
     patternJson : $patternService.getPattern(),
-    qsetArray : $QuestionService.getSelectedQuestions(),
+    qsetArray : [],
     /*Changes for pattern search ends*/
     searchWith : {
       difficultyLevelValue : 0,
@@ -57,7 +56,8 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     difficultyLevelHelperHtml : "",
     wikiHelperHtml            : "",
     googleHelperHtml          : "",
-    questionPapers : []
+    questionPapers : [],
+    checkbox : []
   });
   var QuestionManager = {
 
@@ -79,15 +79,23 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         //intialize quesSelected variable to false;
         var $scp = self.$scope;
         var matched = [];
+        var existingQuestions = $QuestionService.getExistingQuestions();
+        $scp.qsetArray = $QuestionService.getAllSelectedQuestions();
         if(!_.isEmpty($scp.qsetArray)){
            matched = _.intersection($scp.qsetArray, _.pluck($scp.questions,'_id'));
            console.log(matched);
         }
+        $scp.checkbox[0] = true;
         for(var i=1,len = $scp.questions.length; i<=len; i++) {
-          if($scp.isPattern && matched.length>0){
-            if(_.contains(matched, $scp.questions[i-1]['_id'])){
-              $scope.quesSelected[i] = true;
-            }
+          var objectId = $scp.questions[i-1]['_id'];
+          if($scp.isPattern){
+            if(_.contains(existingQuestions, objectId))
+              $scp.checkbox[i] = true;
+            else
+              $scp.checkbox[i] = false;
+              
+            if(matched.length>0 && _.contains(matched, objectId))
+              $scp.quesSelected[i] = true;
             else
               $scp.quesSelected[i] = false;
           }else
@@ -284,7 +292,9 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         if(scp.isPattern){
           console.log(scp.qsetArray);
           console.log("count : "+ scp.qsetArray.length);
-          $QuestionService.setSelectedQuestions(scp.qsetArray);
+          var tempList = _.difference(scp.qsetArray, $QuestionService.getExistingQuestions());
+          $QuestionService.setUserSelectedQuestions(tempList);
+          console.log(tempList);
         }
         /*console.log({
           querydelete: scp.querydelete,
@@ -364,6 +374,10 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
   $rootScope.$on("filterQuestions", function () {
     $scope.onSearch();
   });
+  $rootScope.$on("initializeQuestions", function () {
+    $scope.intializeQuesSelect();
+  });
+
 
   QuestionManager.init({
     $scope: $scope,

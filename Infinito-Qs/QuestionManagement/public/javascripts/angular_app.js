@@ -222,10 +222,25 @@ QuestionManagerApp.service('$ajaxService', function($http){
     });
   };
 
+<<<<<<< HEAD
   this.getTopics = function(data,callback)
   {
     $http({
       url: '/TopicsRequestHandler',
+
+            data: data,
+            method: 'post'
+          }).then(function(results) {
+            callback(null, results);
+          }, function errorCall(data) {
+            callback(data,null);
+          });
+    };
+
+  this.createQuestionPaper = function(data,callback)
+  {
+    $http({
+      url: '/QuestionPaperRequestHandler',
       data: data,
       method: 'post'
     }).then(function(results) {
@@ -234,7 +249,6 @@ QuestionManagerApp.service('$ajaxService', function($http){
       callback(data,null);
     });
   };
-
 });
 
 QuestionManagerApp.service('signoutService', function ($window){
@@ -254,7 +268,7 @@ QuestionManagerApp.service('$patternService', function (){
     wikiRange : {min: 30000, max: 50000, options: {floor: 0, ceil: 100000, step: 1000, id: "wiki"}},
     googleRange : {min: 10, max: 70, options: {floor: 0,ceil: 100, step: 5, id: "google"}},
     usageRange : {min: 10, max: 6000, options: {floor: 0,ceil: 10000, step: 100, id: "usage"}},
-    correctRange : {min: 100, max: 700, options: {floor: 0,ceil: 1000, step: 50, id: "correct"}},
+    correctRange : {min: 0, max: 0.5, options: {floor: 0, ceil: 1, step: 0.1, precision:1, id: "correct"}},
     difficultyValue : {value:3, options: {floor: 0,ceil: 10, step: 1, showTicks: true, id: "difficulty"}},
     regexPatterns : []
   };
@@ -270,13 +284,25 @@ QuestionManagerApp.service('$patternService', function (){
 });
 
 QuestionManagerApp.service('$QuestionService', function () {
-  var selectedQuestions = [];
+  var userSelectedQuestions = [];
+  var existingQuestions = [];
+  var allSelectedQuestions = [];
   return{
-    getSelectedQuestions: function() {
-      return selectedQuestions;
+    getUserSelectedQuestions: function() {
+      return userSelectedQuestions;
     },
-    setSelectedQuestions: function(value) {
-      selectedQuestions = value;
-    }
+    setUserSelectedQuestions: function(value) {
+      userSelectedQuestions = value;
+    },
+    getExistingQuestions: function() {
+      return existingQuestions;
+    },
+    setExistingQuestions: function(value) {
+      existingQuestions = value;
+    },
+    getAllSelectedQuestions: function() {
+      allSelectedQuestions = _.union(userSelectedQuestions,existingQuestions);
+      return allSelectedQuestions;
+    },
   };
 });

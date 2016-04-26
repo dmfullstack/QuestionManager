@@ -488,17 +488,20 @@ var updateQueryWithMetaData = function(query, metadataObj) {
        blacklist = {};
 
    if (metadataObj.wiki || metadataObj.google || (metadataObj.difficultyLevel != 0)
-            || metadataObj.usage || metadataObj.correct || _.isDefined(metadataObj.regexPatterns)) {
+            || metadataObj.usage || metadataObj.correct || metadataObj.regex == true) {
    var result = [];
 
    result.push(query);
 
-   /*if(_.isDefined(metadataObj.regexPatterns)){
+   if(metadataObj.regex == true){
+     console.log('inside');
      _.each(metadataObj.regexPatterns, function (pattern) {
-       regex.push({question: {$regex: pattern}})
+       pattern = new RegExp(pattern);
+       regex.push(pattern);
      });
-     results.push(regex);
-   }*/
+     var regexAll = { question: { $in: regex} };
+     result.push(regexAll);
+   }
 
    if (metadataObj.wiki == true) {
      var min = parseInt(metadataObj.wikiRange.min),
@@ -533,7 +536,7 @@ var updateQueryWithMetaData = function(query, metadataObj) {
      result.push(usage);
    }
 
-   /*if (metadataObj.correct == true) {
+   if (metadataObj.correct == true) {
      var min = parseInt(metadataObj.correctRange.min),
          max = parseInt(metadataObj.correctRange.max);
 
@@ -542,7 +545,7 @@ var updateQueryWithMetaData = function(query, metadataObj) {
        correct = {correctRatio: {$gte:min, $lte:max}};
      }
      result.push(correct);
-   }*/
+   }
 
    if(metadataObj.difficultyLevelValue) {
       difficultyLevelChk = {difficultyLevel: (metadataObj.difficultyLevelValue)};

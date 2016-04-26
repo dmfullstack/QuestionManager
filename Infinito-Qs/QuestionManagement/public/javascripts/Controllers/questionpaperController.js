@@ -1,7 +1,9 @@
-QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService', function($scope,$http,$uibModal,$ajaxService) {
+QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope) {
 
   $scope = angular.extend($scope,{
-
+    selectedQuestions : $QuestionService.getUserSelectedQuestions(),
+    questionPaper : {},
+    qpSelect: "New Question Name"
   });
 
   $scope.getQSet = function(){
@@ -55,6 +57,35 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
         })
       })
     };
+    $scope.createQuestionPaper = function () {
+      var tempObj = JSON.parse($scope.qpSelect);
+      $ajaxService.createQuestionPaper({
+        requestType : 'getQuestionsForQuestionPaper',
+        questionPaperName : tempObj.name
+      },function(err,response){
+        if(err){
+          console.log(err);
+        }
+        $uibModal.open({
+          animation: $scope.animationsEnabled,
+          templateUrl: 'questionModal.html',
+          controller: 'EditQuestionPaperControl',
+          resolve: {
+            $mainControllerScope: function () {
+              return {
+                Questions : response.data,
+                QuestionPaper : tempObj
+                }
+              }
+            }
+          });
+        });
+      }
+      $scope.onQuestionPaperSelect = function () {
+        var tempObj = JSON.parse($scope.qpSelect);
+        $QuestionService.setExistingQuestions(tempObj.questions);
+        $rootScope.$emit("initializeQuestions",{});
+      }
   $scope.getQSet();
 }
 ]);
