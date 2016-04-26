@@ -42,7 +42,10 @@ router.post('/' , function(req,res,next){
       break;
 
     case 'saveQuestionPaper':
-      questionPaper.findByIdAndUpdate(req.body.qSetId, { $set: { questions : req.body.questions }}, function (err, qPaper) {
+      var questionPaperToSave = req.body.questionPaper;
+      questionPaper.findByIdAndUpdate(questionPaperToSave._id,
+                                          { $set: { questions : questionPaperToSave.Questions ,
+                                                    topics : req.body.topics}}, function (err, qPaper) {
         if (err) return handleError(err);
         res.send(qPaper);
       });

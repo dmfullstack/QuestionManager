@@ -41,14 +41,14 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       if(err){
         console.log(err);
       }
+      selectedQuestionPaper.Questions = response.data;
       $uibModal.open({
         animation: $scope.animationsEnabled,
-        templateUrl: 'questionModal.html',
+        templateUrl: 'questionPaperModal.html',
         controller: 'EditQuestionPaperControl',
         resolve: {
           $mainControllerScope: function () {
             return {
-              Questions : response.data,
               QuestionPaper : selectedQuestionPaper
               }
             }

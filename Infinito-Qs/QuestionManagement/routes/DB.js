@@ -404,6 +404,16 @@ module.exports.TopicDB = {
       callback(err,doc);
     });
   },
+  getTopics: function(Topic,query,callback)
+  {
+    Topic.find({_id : { $in  : query}})
+         .select('topicName')
+         .exec(function(err,doc){
+           if(err)
+                return err;
+            callback(err,doc)
+         });
+  },
   getCount: function(Topic, callback) {
     Topic.find({}).populate({
       path: 'topicCategory',

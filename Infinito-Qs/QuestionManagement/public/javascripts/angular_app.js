@@ -222,6 +222,20 @@ QuestionManagerApp.service('$ajaxService', function($http){
     });
   };
 
+  this.getTopics = function(data,callback)
+  {
+    $http({
+      url: '/TopicsRequestHandler',
+
+            data: data,
+            method: 'post'
+          }).then(function(results) {
+            callback(null, results);
+          }, function errorCall(data) {
+            callback(data,null);
+          });
+    };
+
   this.createQuestionPaper = function(data,callback)
   {
     $http({

@@ -1,5 +1,5 @@
-QuestionManagerApp.controller('EditQuestionPaperControl', ['$scope','$http','$mainControllerScope', '$uibModalInstance','$ajaxService', '$uibModal',
-function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$uibModal) {
+QuestionManagerApp.controller('EditQuestionPaperControl', ['$scope','$http','$mainControllerScope', '$uibModalInstance','$ajaxService', '$uibModal', '_',
+function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$uibModal,_) {
 
   angular.extend($scope,$mainControllerScope,{
     selectedQuestionIndices : []
@@ -18,24 +18,30 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
       };
 
       self.$scope.saveQuestionPaper = function(){
-        $ajaxService.saveQuestionPaper({
-          requestType : 'saveQuestionPaper',
-          qSetId : self.$scope.QuestionPaper._id,
-          questions : self.$scope.QuestionPaper.Questions
+        var topicIds = _.uniq(self.$scope.QuestionPaper.Questions.map(function(e) { return e.topicId.join(',') }))
+        $ajaxService.getTopics({
+          requestType : 'getTopics',
+          topicIds : topicIds
         },function(err,response){
           if(err){
             console.log(err);
           }
-          console.log(self.$scope.QuestionPaper._id);
-          console.log(self.$scope.Questions);
-          console.log("saved");
+          $ajaxService.saveQuestionPaper({
+            requestType : 'saveQuestionPaper',
+            questionPaper : self.$scope.QuestionPaper,
+            topics: response.data.map(function(e) {return e.topicName})
+          },function(err,response){
+            if(err){
+              console.log(err);
+            }
+            $scope.editQuestionClose();
+          })
         });
-      }
+      };
 
-      self.$scope.deleteQuestions = function(){//TO DO : change index to get array of indexes for multi delete
-        console.log($scope.selectedQuestionIndices);
+      self.$scope.deleteQuestions = function(){
         for (var i = 0; i < $scope.selectedQuestionIndices.length; i++) {
-          self.$scope.Questions.splice($scope.selectedQuestionIndices[i],1);
+          self.$scope.QuestionPaper.Questions.splice($scope.selectedQuestionIndices[i],1);
         }
         $scope.selectedQuestionIndices = [];
       };
