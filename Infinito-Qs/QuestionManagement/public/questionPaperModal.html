@@ -3,7 +3,11 @@
     <button type="button" class="close" ng-click="editQuestionClose()" aria-hidden="true">&times;</button>
     <h4 class="modal-title">{{QuestionPaper.name}}</h4>
     <div class="form-inline pull-right wrapper">
-      <label for="createdOn">{{Questions.Count}}</label>
+      <label for="createdOn">Created Dated:</label>
+      <label class='divider' name="createdOn"><em>{{dateFormater(QuestionPaper.createdDate) | date:'MM/dd/yyyy'}}</em></label>
+      <label for="lastEdited">Last Edited:</label>
+      <label><em>{{dateFormater(QuestionPaper.lastEditedDate) | date:'MM/dd/yyyy'}}</em></label>
+      <input type="hidden" id="lastEdited" name="lastEdited" value="{{selectedQuestion.lastEdited}}"/>
     </div>
   </div>
   <div class="modal-body">

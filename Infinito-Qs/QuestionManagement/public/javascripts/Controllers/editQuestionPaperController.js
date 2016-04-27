@@ -38,6 +38,7 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
             $QuestionService.setExistingQuestions(_.pluck(self.$scope.QuestionPaper.Questions,'_id'));
             $QuestionService.setUserSelectedQuestions([]);
             $rootScope.$emit("initializeQuestions",{});
+            $rootScope.$emit("refreshQSet",{});
             $scope.editQuestionClose();
           })
         });
