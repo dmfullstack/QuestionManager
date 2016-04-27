@@ -29,6 +29,7 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
           $ajaxService.saveQuestionPaper({
             requestType : 'saveQuestionPaper',
             questionPaper : self.$scope.QuestionPaper,
+            name : self.$scope.QuestionPaper.name,
             topics: response.data.map(function(e) {return e.topicName})
           },function(err,response){
             if(err){
