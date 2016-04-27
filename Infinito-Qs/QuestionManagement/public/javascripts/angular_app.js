@@ -157,7 +157,6 @@ QuestionManagerApp.service('$ajaxService', function($http){
     });
   };
   this.listPattern = function(data, callback) {
-    //console.log('call received');
     $http({
       url: '/PatternSearchHandler',
       data: data,
@@ -226,15 +225,14 @@ QuestionManagerApp.service('$ajaxService', function($http){
   {
     $http({
       url: '/TopicsRequestHandler',
-
-            data: data,
-            method: 'post'
-          }).then(function(results) {
-            callback(null, results);
-          }, function errorCall(data) {
-            callback(data,null);
-          });
-    };
+      data: data,
+      method: 'post'
+    }).then(function(results) {
+      callback(null, results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
 
   this.getQuestionsForQuestionPaper = function(data,callback)
   {
