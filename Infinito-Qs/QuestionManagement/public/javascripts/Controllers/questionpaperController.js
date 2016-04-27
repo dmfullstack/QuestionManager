@@ -34,7 +34,7 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
 
   $scope.editQuestionPaper = function(index){
     var selectedQuestionPaper = $scope.QuestionPapers[index];
-    $ajaxService.editQuestionPaper({
+    $ajaxService.getQuestionsForQuestionPaper({
       requestType : 'getQuestionsForQuestionPaper',
       questionPaperName : selectedQuestionPaper.name
     },function(err,response){
@@ -56,13 +56,14 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
         })
       })
     };
+
     $scope.createQuestionPaper = function () {
       var questionPaper = $scope.questionPaper;
       var promise = getUserSelectedQuestions();
       promise.then(function (userSelectedQuestions) {
         if($scope.qpSelect!=""){
           questionPaper = JSON.parse($scope.qpSelect);
-          $ajaxService.createQuestionPaper({
+          $ajaxService.getQuestionsForQuestionPaper({
             requestType : 'getQuestionsForQuestionPaper',
             questionPaperName : questionPaper.name
           },function(err,response){
@@ -85,16 +86,27 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
                   }
                 }
               }
-            });
           });
-      }
-      $scope.onQuestionPaperSelect = function () {
-        var tempObj = {};
-        if($scope.qpSelect!="")
-          tempObj = JSON.parse($scope.qpSelect);
-        $QuestionService.setExistingQuestions(tempObj.questions);
-        $rootScope.$emit("initializeQuestions",{});
-      }
+      });
+    }
+  $scope.onQuestionPaperSelect = function () {
+    var tempObj = {};
+    if($scope.qpSelect!=""){
+      tempObj = JSON.parse($scope.qpSelect);
+      $ajaxService.getQuestionsForQuestionPaper({
+        requestType : 'getQuestionsForQuestionPaper',
+        questionPaperName : tempObj.name
+      },function(err,response){
+        if(err)
+          console.log(err);
+          $QuestionService.setExistingQuestions(_.pluck(response.data,'_id'));
+          $rootScope.$emit("initializeQuestions",{});
+      });
+    }else {
+      $QuestionService.setExistingQuestions([]);
+      $rootScope.$emit("initializeQuestions",{});
+    }
+  }
   $scope.getQSet();
 
   function getUserSelectedQuestions() {
@@ -106,8 +118,8 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       },function(err,response){
         if(err)
           console.log(err);
-          resolve(response.data);
-        });
+        resolve(response.data);
+      });
     })
   }
 }

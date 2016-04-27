@@ -1,5 +1,5 @@
-QuestionManagerApp.controller('EditQuestionPaperControl', ['$scope','$http','$mainControllerScope', '$uibModalInstance','$ajaxService', '$uibModal', '_',
-function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$uibModal,_) {
+QuestionManagerApp.controller('EditQuestionPaperControl', ['$scope','$http','$mainControllerScope', '$uibModalInstance','$ajaxService', '$uibModal', '_', '$QuestionService', '$rootScope',
+function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$uibModal,_, $QuestionService,$rootScope) {
 
   angular.extend($scope,$mainControllerScope,{
     selectedQuestionIndices : []
@@ -34,6 +34,9 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
             if(err){
               console.log(err);
             }
+            $QuestionService.setExistingQuestions(_.pluck(self.$scope.QuestionPaper.Questions,'_id'));
+            $QuestionService.setUserSelectedQuestions([]);
+            $rootScope.$emit("initializeQuestions",{});
             $scope.editQuestionClose();
           })
         });
