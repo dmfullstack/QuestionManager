@@ -237,7 +237,7 @@
               <a href>{{x}}</a>
             </li>
           </ul>
-          <button type="button" ng-show="deleteIds.length > 0 || querydelete" ng-click="deleteSelected()" name="button" class="btn btn-warning"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+          <button type="button" ng-show="selectedQuestionsArray.length > 0 || querydelete" ng-click="deleteSelected()" name="button" class="btn btn-warning"><span class="glyphicon glyphicon-trash"></span> Delete</button>
         </div>
         <form class="col-sm-7 col-xs-7 checkbox">
           <label>
@@ -319,7 +319,7 @@
         <table id="questionList" ng-hide="!questions.length" class="table table-hover table-responsive nga-default nga-stagger nga-slide-up">
           <thead>
             <tr>
-              <th><input type="checkbox" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
+              <th><input type="checkbox" ng-disabled="checkbox[0]" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></th>
               <th>Question</th>
               <th>Topics</th>
               <th>Categories</th>

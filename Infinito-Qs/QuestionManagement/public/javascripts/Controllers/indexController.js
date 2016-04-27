@@ -13,7 +13,6 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
 
     /* checkbox intialization for selection */
     quesSelected : [],
-    deleteIds: [],
     querydelete: false,
 
     /* Intializing question table with empty obj Array */
@@ -39,9 +38,9 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     isPattern : false,
     isBasic : false,
     patternJson : $patternService.getPattern(),
-    qsetArray : [],
+    selectedQuestionsArray : [],
     /*Changes for pattern search ends*/
- 
+
     searchWith : {
       difficulty      : false,
       difficultyRange : {min:1, max:10},
@@ -49,8 +48,8 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
       wikiRange       : {minRank:1, maxRank:10, min:0, max:0},
       google          : false,
       googleRange     : {minRank:1, maxRank:10, min:0, max:0}
-    }, 
-    rangeOptions : {floor:1, 
+    },
+    rangeOptions : {floor:1,
       ceil: 10
     },
     wikiRange : ["1-100","100-500","500-2k","2k-5k","5k-10k","10k-20k","20k-30k","30k-40k","40k-50k","50k+"],
@@ -83,29 +82,24 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         var $scp = self.$scope;
         var matched = [];
         var existingQuestions = $QuestionService.getExistingQuestions();
-        $scp.qsetArray = $QuestionService.getAllSelectedQuestions();
-        if(!_.isEmpty($scp.qsetArray)){
-           matched = _.intersection($scp.qsetArray, _.pluck($scp.questions,'_id'));
-           console.log(matched);
+        $scp.selectedQuestionsArray = $QuestionService.getAllSelectedQuestions();
+        if(!_.isEmpty($scp.selectedQuestionsArray)){
+           matched = _.intersection($scp.selectedQuestionsArray, _.pluck($scp.questions,'_id'));
         }
-        $scp.checkbox[0] = true;
         for(var i=1,len = $scp.questions.length; i<=len; i++) {
           var objectId = $scp.questions[i-1]['_id'];
-          if($scp.isPattern){
-            if(_.contains(existingQuestions, objectId))
-              $scp.checkbox[i] = true;
-            else
-              $scp.checkbox[i] = false;
-              
-            if(matched.length>0 && _.contains(matched, objectId))
-              $scp.quesSelected[i] = true;
-            else
-              $scp.quesSelected[i] = false;
-          }else
+          if(_.contains(existingQuestions, objectId))
+            $scp.checkbox[i] = true;
+          else
+            $scp.checkbox[i] = false;
+
+          if(matched.length>0 && _.contains(matched, objectId))
+            $scp.quesSelected[i] = true;
+          else
             $scp.quesSelected[i] = false;
         }
+        $scp.checkbox[0] = false;
         $scope.quesSelected[0] = _.every(_.rest($scope.quesSelected));
-        $scp.deleteIds= [];
         $scp.querydelete= false;
       };
       self.$scope.helpContentForMetadata = function() {
@@ -131,7 +125,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         self.$scope.searchWith.difficulty = false;
         self.$scope.searchWith.wikiRange = {minRank: 1, maxRank: 10};
         self.$scope.searchWith.googleRange = {minRank: 1, maxRank :10};
-        self.$scope.searchWith.difficultyRange = {min:1, max:10}; 
+        self.$scope.searchWith.difficultyRange = {min:1, max:10};
         self.getQuestionJson();
       };
 
@@ -170,19 +164,19 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
           case 'difficulty':
           {
             $scp.searchWith.difficulty= false;
-            $scp.searchWith.difficultyRange = {min:1, max:10}; 
+            $scp.searchWith.difficultyRange = {min:1, max:10};
             break;
           }
           case 'wiki':
           {
             $scp.searchWith.wiki = false;
-            $scp.searchWith.wikiRange = {minRank:1, maxRank:10}; 
+            $scp.searchWith.wikiRange = {minRank:1, maxRank:10};
             break;
           }
           case 'google':
           {
             $scp.searchWith.google = false;
-            $scp.searchWith.googleRange = {minRank:1, maxRank:10}; 
+            $scp.searchWith.googleRange = {minRank:1, maxRank:10};
             break;
           }
         }
@@ -265,7 +259,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
       };
       self.$scope.onDeleteClick = function(index) {
         var selectedQuestion = self.$scope.questions[index];
-        self.onQuestionDelete(self,selectedQuestion.questionId);
+        self.onQuestionDelete(self,selectedQuestion._id);
       };
       self.$scope.onSortClick = function(x) {
         self.$scope.sortType = x;
@@ -289,7 +283,6 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
       };
       self.$scope.selectQuestion = function(isEnabled, index, questionId, objectId) {
         var scp = self.$scope;
-        var isPattern = scp.isPattern;
         /*  If all question is selected enable querydelete, check all the checkboxes and empty the deleteIds
           if all is unselected make querydelete to false and uncheck all the checkboxes
           If single question select push it questionSelected Array
@@ -299,63 +292,40 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
           case true:
             if(index==0) {
               for(var i=1;i<scp.quesSelected.length;i++) {
-                scp.quesSelected[i] = true;
+                if(scp.checkbox[i] == false)
+                  scp.quesSelected[i] = true;
               }
-              if(isPattern){
-                var newQuestions = [];
-                if(scp.qsetArray.length>0)
-                  newQuestions = _.difference(_.pluck(scp.questions,'_id'), scp.qsetArray);
-                else
-                  newQuestions = _.pluck(scp.questions,'_id');
-                scp.qsetArray = _.union(scp.qsetArray, newQuestions);
-              }
-              else{
-                scp.querydelete = true;
-                scp.deleteIds = [];
-              }
+              var newQuestions = [];
+              if(scp.selectedQuestionsArray.length>0)
+                newQuestions = _.difference(_.pluck(scp.questions,'_id'), scp.selectedQuestionsArray);
+              else
+                newQuestions = _.pluck(scp.questions,'_id');
+              scp.selectedQuestionsArray = _.union(scp.selectedQuestionsArray, newQuestions);
+              scp.querydelete = true;
             } else {
               scp.quesSelected[0] = false;
-              if(isPattern)
-                scp.qsetArray.push(objectId);
-              else {
-                scp.querydelete = false;
-                scp.deleteIds.push(questionId);
-              }
+              scp.selectedQuestionsArray.push(objectId);
+              scp.querydelete = false;
             }
             break;
           case false:
             if(index==0) {
               for(var i=1;i<scp.quesSelected.length;i++) {
-                scp.quesSelected[i] = false;
+                if(scp.checkbox[i] == false)
+                  scp.quesSelected[i] = false;
               }
-              if(isPattern)
-                scp.qsetArray = _.difference(scp.qsetArray, _.pluck(scp.questions,'_id'));
-              else
-                scp.querydelete = false;
+              scp.selectedQuestionsArray = _.difference(scp.selectedQuestionsArray, _.pluck(scp.questions,'_id'));
+              scp.querydelete = false;
             } else {
               scp.quesSelected[0] = false;
-              if(isPattern){
-                //scp.qsetArray.splice(scp.qsetArray.indexOf(questionId),1);
-                scp.qsetArray.splice(scp.qsetArray.indexOf(objectId),1);
-              }else{
-                scp.querydelete = false;
-                scp.deleteIds.splice(scp.deleteIds.indexOf(questionId),1);
-              }
+              scp.selectedQuestionsArray.splice(scp.selectedQuestionsArray.indexOf(objectId),1);
+              scp.querydelete = false;
             }
             break;
         }
-        if(scp.isPattern){
-          console.log(scp.qsetArray);
-          console.log("count : "+ scp.qsetArray.length);
-          var tempList = _.difference(scp.qsetArray, $QuestionService.getExistingQuestions());
-          $QuestionService.setUserSelectedQuestions(tempList);
-          console.log(tempList);
-        }
-        /*console.log({
-          querydelete: scp.querydelete,
-          quesSelected: scp.quesSelected,
-          deleteIds: scp.deleteIds
-        });*/
+        console.log("count : "+ scp.selectedQuestionsArray.length);
+        var tempList = _.difference(scp.selectedQuestionsArray, $QuestionService.getExistingQuestions());
+        $QuestionService.setUserSelectedQuestions(tempList);
       };
       self.$scope.deleteSelected =  function() {
         // create a post in service
@@ -368,7 +338,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
         self.$ajaxService.deleteSelectedQuestion({
           requestType: 'deleteSelected',
           query: query,
-          deleteIds: $scp.deleteIds,
+          deleteIds: $scp.selectedQuestionsArray,
           searchIn: $scp.searchIn,
           searchWith: $scp.searchWith
         }, function(err, results) {

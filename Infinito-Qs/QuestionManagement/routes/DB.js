@@ -241,7 +241,7 @@ module.exports.QuestionDB = {
     });
   },
   delete: function(Question,id,callback) {
-    Question.remove({ questionId : id }).exec(function(err,doc){
+    Question.remove({ _id : id }).exec(function(err,doc){
       if(err){
         //console.log(err);
         callback(err,null);
@@ -250,7 +250,7 @@ module.exports.QuestionDB = {
     });
   },
   deleteByIds: function(Question, deleteIds, callback ) {
-    Question.remove({questionId : {$in : deleteIds}}).exec(function(err,doc){
+    Question.remove({_id : {$in : deleteIds}}).exec(function(err,doc){
       if(err){
         console.log(err);
         callback(err,null);
