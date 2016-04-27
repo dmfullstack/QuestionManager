@@ -37,8 +37,8 @@
       <label>Questions :</label><br/>
       <table class="table table-hover table-responsive nga-default nga-stagger nga-slide-up" >
         <tbody class="table">
-          <tr ng-repeat="Question in QuestionPaper.Questions">
-            <td><input id="{{Question.questionId}}" type="checkbox" value="{{Question.questionId}}" ng-checked="selectedQuestionIndices.indexOf($index) > -1" align="left" ng-click="toggleSelection($index)"></td>
+          <tr id="{{Question.questionId}}" ng-repeat="Question in QuestionPaper.Questions" value="{{Question.questionId}}"  ng-checked="selectedQuestionIndices.indexOf($index) > -1" ng-click="toggleSelection($index)">
+            <td><input type="checkbox" align="left" ></td>
             <td>{{Question.question}}</td>
             <td>
               <button type="button" class="btn btn-xs btn-default command-edit"  ng-click ="onEditClick($index)" title="Edit Question Paper">

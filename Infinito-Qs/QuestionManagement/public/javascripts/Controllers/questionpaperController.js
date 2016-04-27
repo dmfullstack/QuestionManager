@@ -76,7 +76,7 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
           }
           $uibModal.open({
             animation: $scope.animationsEnabled,
-            templateUrl: 'questionModal.html',
+            templateUrl: 'questionPaperModal.html',
             controller: 'EditQuestionPaperControl',
             resolve: {
               $mainControllerScope: function () {
