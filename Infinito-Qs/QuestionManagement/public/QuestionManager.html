@@ -28,14 +28,15 @@
       </div><br>
       <div class="row nga-fast nga-stagger nga-fade" ng-show="!newPattern">
         <div class="col-sm-12">
-          <form class="form form-inline" action="">
+          <form class="form form-inline" ng-submit="getPattern()">
           <div class="form-group">
             <label for="patternSelect">Select a Pattern</label>
-            <select class="form-control" name="patternSelect">
-              <option ng-repeat="pattern in patternList.data" value="{{pattern.patternName}}">
+            <select class="form-control" ng-model="patternSelect">
+              <option ng-repeat="pattern in patternList.data" value="{{pattern._id}}">
                 {{pattern.patternName}}
               </option>
             </select>
+            <input type="submit" value="Load" class="btn btn-primary">
           </div>
           </form>
         </div>
@@ -147,7 +148,7 @@
             </form>
           </div>
           <div class="col-sm-6">
-            <h3>Your pattern setting:</h3>
+            <h3>{{patternJson.patternName||"Your"}} pattern setting:</h3>
             <div class="row">
               <div class="col-sm-6">
                 Include words: <span ng-if="patternJson.whitelist.length<1"><i>(All words)</i></span>
@@ -179,7 +180,7 @@
           </div>
         </span>
         <div ng-show="isRun" class="col-sm-12 nga-default nga-slide-left">
-          <h3>Your pattern setting:</h3>
+          <h3>{{patternJson.patternName||"Your"}} pattern setting:</h3>
           <div class="row">
             <div class="col-sm-6">
               Include words: <span ng-if="patternJson.whitelist.length<1"><i>(All words)</i></span>
@@ -308,7 +309,7 @@
             <form class="form-inline col-sm-4 col-xs-6">
               <select class="form-control" ng-model="qpSelect" ng-change="onQuestionPaperSelect()">
                 <option value="">New Question Paper</option>
-                <option ng-repeat="questionPaper in QuestionPapers" value="{{questionPaper}}">
+                <option ng-repeat="questionPaper in QuestionPapers" value="{{questionPaper.name}}">
                   {{questionPaper.name}}
                 </option>
               </select>

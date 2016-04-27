@@ -8,7 +8,8 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     patternJson : $patternService.getPattern(),
     regexFields : [{value:0}],//Array to dynamically create input boxes for regex
     isRun : false,
-    submitButton : "Run this!"
+    submitButton : "Run this!",
+    patternList : ""
   });
 
 
@@ -19,6 +20,19 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
           if(err)
             console.log(err);
           $scope.patternList = results;
+    });
+  }
+  $scope.getPattern = function(){
+    $ajaxService.getPattern({ //get the existing pattern
+        requestType: 'getPattern',
+        id: $scope.patternSelect
+      }, function(err, results) {
+          if(err)
+            console.log(err);
+          $scope.patternJson = results.data;
+          $patternService.setPattern($scope.patternJson);
+          $scope.newPattern = true;
+          $scope.isRun = false;
     });
   }
 

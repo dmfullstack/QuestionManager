@@ -8,7 +8,7 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
     questionPaper : {},
     qpSelect: ""
   });
-  
+
   $scope.getQSet = function(){
     $ajaxService.getQSet({
       requestType : 'getQuestionPapers'
@@ -90,16 +90,36 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
             }
           }
         }
-      });
-    });
+      })
+    })
   }
+
+    $scope.createQuestionPaper = function () {
+      var questionPaper = $scope.questionPaper;
+      var promise = getUserSelectedQuestions();
+      promise.then(function (userSelectedQuestions) {
+        if($scope.qpSelect!=""){
+          questionPaper.name = $scope.qpSelect;
+          $ajaxService.getQuestionsForQuestionPaper({
+            requestType : 'getQuestionsForQuestionPaper',
+            questionPaperName : questionPaper.name
+          },function(err,response){
+            if(err)
+              console.log(err);
+              questionPaper.Questions = _.union(response.data,userSelectedQuestions);
+            });
+          }else{
+            questionPaper = {};
+            questionPaper.Questions = userSelectedQuestions;
+          }
+        })
+      };
+
   $scope.onQuestionPaperSelect = function () {
-    var tempObj = {};
     if($scope.qpSelect!=""){
-      tempObj = JSON.parse($scope.qpSelect);
       $ajaxService.getQuestionsForQuestionPaper({
         requestType : 'getQuestionsForQuestionPaper',
-        questionPaperName : tempObj.name
+        questionPaperName : $scope.qpSelect
       },function(err,response){
         if(err)
         console.log(err);

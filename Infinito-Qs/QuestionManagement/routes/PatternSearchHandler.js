@@ -23,8 +23,16 @@ module.exports = function(wagner) {
           }
         });
       break;
+      case 'getPattern' :
+        wagner.invoke(db.QsetDB.getPatternById,{
+          id: req.body.id,
+          callback: function(err, doc) {
+            console.log(doc);
+            res.json(doc);
+          }
+        });
+      break;
       case 'savePattern' :
-        console.log(req.body.data);
         wagner.invoke(db.QsetDB.savePattern,{
           pattern: req.body.data,
           callback: function(err, doc) {

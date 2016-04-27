@@ -471,18 +471,29 @@ module.exports.CategoryDB = {
 module.exports.QsetDB = {
   listPattern: function (QsetPattern, callback) {
     QsetPattern.find({}, function(err,doc) {
+      if(err)
+        console.log(err);
+      callback(err, doc);
+    });
+  },
+  getPatternById: function (QsetPattern,id, callback) {
+    QsetPattern.findOne({_id:id}, function(err,doc) {
+      if(err)
+        console.log(err);
       callback(err, doc);
     });
   },
   savePattern: function (QsetPattern, pattern, callback) {
-    var newPattern = new QsetPattern(pattern);
-    newPattern.save(function (err,pattern) {
-      if(err)
+    var id = pattern._id;
+    id = id==null?mongoose.Types.ObjectId():id;
+    QsetPattern.findOneAndUpdate({_id:id},pattern,{upsert:true}, function(err, doc) {
+      if(err){
         console.log(err);
-      console.log(pattern);
-    })
-    console.log("Done");
-    callback(null,"Have this")
+        callback(err);
+      }
+      console.log("Done");
+      callback(null,"Saved Successfully")
+    });
   }
 }
 module.exports.init = module.exports.QuestionDB.init;
