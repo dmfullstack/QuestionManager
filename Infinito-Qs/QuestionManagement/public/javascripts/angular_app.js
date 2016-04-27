@@ -236,7 +236,7 @@ QuestionManagerApp.service('$ajaxService', function($http){
           });
     };
 
-  this.createQuestionPaper = function(data,callback)
+  this.getQuestionsForQuestionPaper = function(data,callback)
   {
     $http({
       url: '/QuestionPaperRequestHandler',
