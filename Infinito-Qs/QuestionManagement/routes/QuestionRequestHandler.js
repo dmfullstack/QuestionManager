@@ -63,7 +63,7 @@ module.exports = function(wagner) {
               google: patternSettings.googleFlag,
               usage: patternSettings.usageFlag,
               correct: patternSettings.correctFlag,
-              difficulty: patternSettings.correctFlag,
+              difficulty: patternSettings.difficultyFlag,
               wikiRange: patternSettings.wikiRange,
               googleRange: patternSettings.googleRange,
               usageRange: patternSettings.usageRange,

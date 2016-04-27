@@ -144,6 +144,18 @@ QuestionManagerApp.service('$ajaxService', function($http){
     });
   };
   /*Changes for Search Pattern starts*/
+  this.getPattern = function(data, callback) {
+    $http({
+      url: '/PatternSearchHandler',
+      data: data,
+      method: 'post'
+    }).then(function(results) {
+      //console.log(results);
+      callback(null, results);
+    }, function errorCall(data) {
+      callback(data,null);
+    });
+  };
   this.savePattern = function(data, callback) {
     $http({
       url: '/PatternSearchHandler',
@@ -274,6 +286,7 @@ QuestionManagerApp.service('$patternService', function (){
     usageFlag: false,
     correctFlag: false,
     difficultyFlag: false,
+    regexFlag: false,
     wikiRange : {min: 30000, max: 50000, options: {floor: 0, ceil: 100000, step: 1000, id: "wiki"}},
     googleRange : {min: 10, max: 70, options: {floor: 0,ceil: 100, step: 5, id: "google"}},
     usageRange : {min: 10, max: 6000, options: {floor: 0,ceil: 10000, step: 100, id: "usage"}},

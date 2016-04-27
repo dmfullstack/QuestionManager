@@ -19,11 +19,18 @@ var mongoose = require('mongoose'),
       whitelist: Array,
       blacklist: Array,
       regexPatterns: Array,
-      wikiRange: { min: Number, max: Number, options: { floor: Number, ceil: Number, step: Number } },
-      gTrendsRange: { min: Number, max: Number, options: { floor: Number, ceil: Number, step: Number } },
-      usageRange: { min: Number, max: Number, options: { floor: Number, ceil: Number, step: Number } },
-      correctRange: { min: Number, max: Number, options: { floor: Number, ceil: Number, step: Number } }
+      wikiFlag: Boolean,
+      googleFlag: Boolean,
+      usageFlag: Boolean,
+      correctFlag: Boolean,
+      difficultyFlag: Boolean,
+      regexFlag: Boolean,
+      wikiRange: { min: Number, max: Number, options: { floor: Number, ceil: Number, step: Number, id:String } },
+      googleRange: { min: Number, max: Number, options: { floor: Number, ceil: Number, step: Number, id:String } },
+      usageRange: { min: Number, max: Number, options: { floor: Number, ceil: Number, step: Number, id:String } },
+      correctRange: { min: Number, max: Number, options: { floor: Number, ceil: Number, precision: Number, step: Number, id:String } },
+      difficultyRange: { min: Number, max: Number, options: { floor: Number, ceil: Number, step: Number, id:String } }
     }),
-    QsetPattern = mongoose.model('QsetPattern', qsetPatternSchema, "qset_pattern_collection");
+    QsetPattern = mongoose.model('QsetPattern', qsetPatternSchema, 'qsetPatterns');
 
 module.exports = QsetPattern;

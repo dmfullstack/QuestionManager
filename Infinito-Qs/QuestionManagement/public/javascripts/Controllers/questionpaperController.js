@@ -62,7 +62,7 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       var promise = getUserSelectedQuestions();
       promise.then(function (userSelectedQuestions) {
         if($scope.qpSelect!=""){
-          questionPaper = JSON.parse($scope.qpSelect);
+          questionPaper.name = $scope.qpSelect;
           $ajaxService.getQuestionsForQuestionPaper({
             requestType : 'getQuestionsForQuestionPaper',
             questionPaperName : questionPaper.name
@@ -90,12 +90,10 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       });
     }
   $scope.onQuestionPaperSelect = function () {
-    var tempObj = {};
     if($scope.qpSelect!=""){
-      tempObj = JSON.parse($scope.qpSelect);
       $ajaxService.getQuestionsForQuestionPaper({
         requestType : 'getQuestionsForQuestionPaper',
-        questionPaperName : tempObj.name
+        questionPaperName : $scope.qpSelect
       },function(err,response){
         if(err)
           console.log(err);
