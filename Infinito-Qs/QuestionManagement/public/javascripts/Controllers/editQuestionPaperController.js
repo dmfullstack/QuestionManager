@@ -1,5 +1,5 @@
-QuestionManagerApp.controller('EditQuestionPaperControl', ['$scope','$http','$mainControllerScope', '$uibModalInstance','$ajaxService', '$uibModal', '_', '$QuestionService', '$rootScope',
-function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$uibModal,_, $QuestionService,$rootScope) {
+QuestionManagerApp.controller('EditQuestionPaperControl', ['$scope','$http','$mainControllerScope', '$uibModalInstance','$ajaxService', '$uibModal', '_', '$QuestionService', '$rootScope', 'ngNotify',
+function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$uibModal,_, $QuestionService,$rootScope,ngNotify) {
 
   angular.extend($scope,$mainControllerScope,{
     selectedQuestionIndices : []
@@ -33,15 +33,15 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
             topics: response.data.map(function(e) {return e.topicName})
           },function(err,response){
             if(err){
-              alert('Error while Saving Question Paper')
+              ngNotify.set("Error while Saving the Question Paper","error");
             }
             $QuestionService.setExistingQuestions(_.pluck(self.$scope.QuestionPaper.questions,'_id'));
             $QuestionService.setUserSelectedQuestions([]);
             $rootScope.$emit("initializeQuestions",{});
             $rootScope.$emit("refreshQSet",{});
-      //      alert('Question Paper Saved Successfully')
           })
-          setTimeout($scope.editQuestionClose() , 500);
+           $scope.editQuestionClose();
+           ngNotify.set("Question Paper Saved","success");
         });
       };
 

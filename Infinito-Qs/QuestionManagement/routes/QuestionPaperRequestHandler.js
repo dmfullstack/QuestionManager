@@ -10,6 +10,7 @@ var mongoose = require("mongoose")
 
 var _ = require("underscore")
 
+
 router.post('/' , function(req,res,next){
   switch(req.body.requestType)
   {
@@ -24,7 +25,6 @@ router.post('/' , function(req,res,next){
       break;
 
     case 'deleteQuestionPaper':
-    console.log('I\'m here');
       questionPaper.remove({"_id" : req.body.questionPaperId})
       .exec(function(err, questionPaperNames) {
         if (err) {
@@ -62,7 +62,7 @@ router.post('/' , function(req,res,next){
                                                            }
                                           },{upsert : true}, function (err, qPaper) {
         if (err) return console.log(err);
-        res.send("Questtion Paper Saved");
+        res.send("Question Paper Saved");
       });
   }
 })

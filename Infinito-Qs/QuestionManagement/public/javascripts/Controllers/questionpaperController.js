@@ -1,4 +1,4 @@
-QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q' ,'_', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q,_) {
+QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q' ,'_','ngNotify', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q,_ ,ngNotify) {
 
   $rootScope.$on("refreshQSet", function(){
     $scope.getQSet();
@@ -32,6 +32,7 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       if(err){
         console.log(err);
       }
+      ngNotify.set('Question Paper Deleted', 'error');
       $scope.getQSet();
     });
   },
@@ -97,7 +98,7 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       },function(err,response){
         if(err)
         console.log(err);
-        $QuestionService.setExistingQuestions(_.pluck(response.data,'_id'));
+        $QuestionService.setExistingQuestions(_.pluck(response.data.questions,'_id'));
         $rootScope.$emit("initializeQuestions",{});
       });
     }else {

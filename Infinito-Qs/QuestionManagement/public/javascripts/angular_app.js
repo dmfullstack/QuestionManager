@@ -4,7 +4,8 @@ var QuestionManagerApp = angular.module("QuestionManagerApp", [
   'ui.bootstrap',
   'ngAnimate',
   'rzModule',
-  'ngTagsInput'
+  'ngTagsInput',
+  'ngNotify'
 ])
 .config(function ($routeProvider, $locationProvider, $provide) {
   $routeProvider
