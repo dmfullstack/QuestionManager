@@ -29,8 +29,10 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
       }, function(err, results) {
           if(err)
             console.log(err);
+            console.log(results.data);
           $scope.patternJson = results.data;
           $patternService.setPattern($scope.patternJson);
+          console.log($scope.patternJson);
           $scope.newPattern = true;
           $scope.isRun = false;
     });

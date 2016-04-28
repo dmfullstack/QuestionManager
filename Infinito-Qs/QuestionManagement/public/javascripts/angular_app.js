@@ -300,7 +300,7 @@ QuestionManagerApp.service('$patternService', function (){
       return patternJson;
     },
     setPattern: function(value) {
-      patternJson = angular.toJson(value);
+      patternJson = value;
     }
   };
 });
