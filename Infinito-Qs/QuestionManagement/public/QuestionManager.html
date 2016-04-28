@@ -309,7 +309,7 @@
             <form class="form-inline col-sm-4 col-xs-6">
               <select class="form-control" ng-model="qpSelect" ng-change="onQuestionPaperSelect()">
                 <option value="">New Question Paper</option>
-                <option ng-repeat="questionPaper in QuestionPapers" value="{{questionPaper.name}}">
+                <option ng-repeat="questionPaper in QuestionPapers" value="{{questionPaper._id}}">
                   {{questionPaper.name}}
                 </option>
               </select>

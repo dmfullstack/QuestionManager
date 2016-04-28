@@ -18,7 +18,7 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
       };
 
       self.$scope.saveQuestionPaper = function(){
-        var topicIds = _.uniq(self.$scope.QuestionPaper.Questions.map(function(e) { return e.topicId.join(',') }))
+        var topicIds = _.uniq(self.$scope.QuestionPaper.questions.map(function(e) { return e.topicId.join(',') }))
         $ajaxService.getTopics({
           requestType : 'getTopics',
           topicIds : topicIds
@@ -33,20 +33,22 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
             topics: response.data.map(function(e) {return e.topicName})
           },function(err,response){
             if(err){
-              console.log(err);
+              alert('Error while Saving Question Paper')
             }
-            $QuestionService.setExistingQuestions(_.pluck(self.$scope.QuestionPaper.Questions,'_id'));
+            $QuestionService.setExistingQuestions(_.pluck(self.$scope.QuestionPaper.questions,'_id'));
             $QuestionService.setUserSelectedQuestions([]);
             $rootScope.$emit("initializeQuestions",{});
             $rootScope.$emit("refreshQSet",{});
-            $scope.editQuestionClose();
+      //      alert('Question Paper Saved Successfully')
           })
+          setTimeout($scope.editQuestionClose() , 500);
         });
       };
 
       self.$scope.deleteQuestions = function(){
+        console.log(self.$scope);
         for (var i = 0; i < $scope.selectedQuestionIndices.length; i++) {
-          self.$scope.QuestionPaper.Questions.splice($scope.selectedQuestionIndices[i],1);
+          self.$scope.QuestionPaper.questions.splice($scope.selectedQuestionIndices[i],1);
         }
         $scope.selectedQuestionIndices = [];
       };
@@ -88,7 +90,7 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
           resolve: {
             $mainControllerScope: function () {
               return {
-                selectedQuestion: angular.copy(self.$scope.Questions[index]),
+                selectedQuestion: angular.copy(self.$scope.QuestionPaper.questions[index]),
                 QuestionManager: self,
                 dateFormater:self.$scope.dateFormater
               }
@@ -99,7 +101,6 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
 
     }
   }
-
   EditModalManager.init({
     $scope: $scope,
     $mainControllerScope : $mainControllerScope,
