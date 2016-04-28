@@ -1,4 +1,4 @@
-QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q' ,'_','ngNotify', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q,_ ,ngNotify) {
+QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q' ,'_','ngNotify','ngToast', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q,_ ,ngNotify,ngToast) {
 
   $rootScope.$on("refreshQSet", function(){
     $scope.getQSet();
@@ -46,18 +46,8 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       if(err){
         console.log(err);
       }
-      $uibModal.open({
-        animation: $scope.animationsEnabled,
-        templateUrl: 'questionPaperModal.html',
-        controller: 'EditQuestionPaperControl',
-        resolve: {
-          $mainControllerScope: function () {
-            return {
-              QuestionPaper : response.data
-            }
-          }
-        }
-      })
+      selectedQuestionPaper.isCreateMode = false;
+      openModalWindow(response.data)
     })
   };
 
@@ -85,6 +75,7 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
         questionPaper.questions = userSelectedQuestions;
         openModalWindow(questionPaper);
       }
+      questionPaper.isCreateMode = true;
     });
 
 

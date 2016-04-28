@@ -61,7 +61,10 @@ router.post('/' , function(req,res,next){
                                                                 createdDate : new Date()
                                                            }
                                           },{upsert : true}, function (err, qPaper) {
-        if (err) return console.log(err);
+        if (err)
+        {
+            res.status(500).send({success:false})
+        }
         res.send("Question Paper Saved");
       });
   }

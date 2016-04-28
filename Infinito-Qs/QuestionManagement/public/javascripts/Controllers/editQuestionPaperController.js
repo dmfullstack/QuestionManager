@@ -1,5 +1,5 @@
-QuestionManagerApp.controller('EditQuestionPaperControl', ['$scope','$http','$mainControllerScope', '$uibModalInstance','$ajaxService', '$uibModal', '_', '$QuestionService', '$rootScope', 'ngNotify',
-function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$uibModal,_, $QuestionService,$rootScope,ngNotify) {
+QuestionManagerApp.controller('EditQuestionPaperControl', ['$scope','$http','$mainControllerScope', '$uibModalInstance','$ajaxService', '$uibModal', '_', '$QuestionService', '$rootScope', 'ngNotify', 'ngToast',
+function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$uibModal,_, $QuestionService,$rootScope,ngNotify,ngToast) {
 
   angular.extend($scope,$mainControllerScope,{
     selectedQuestionIndices : []
@@ -33,15 +33,21 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
             topics: response.data.map(function(e) {return e.topicName})
           },function(err,response){
             if(err){
-              ngNotify.set("Error while Saving the Question Paper","error");
+              ngToast.create({
+                            className: 'danger',
+                            content: 'Oh Snap ! Same Name Aready Exist'
+                            });
             }
-            $QuestionService.setExistingQuestions(_.pluck(self.$scope.QuestionPaper.questions,'_id'));
-            $QuestionService.setUserSelectedQuestions([]);
-            $rootScope.$emit("initializeQuestions",{});
-            $rootScope.$emit("refreshQSet",{});
+            else{
+              ngToast.create('a toast message...');
+              $QuestionService.setExistingQuestions(_.pluck(self.$scope.QuestionPaper.questions,'_id'));
+              $QuestionService.setUserSelectedQuestions([]);
+              $rootScope.$emit("initializeQuestions",{});
+              $rootScope.$emit("refreshQSet",{});
+              $scope.editQuestionClose();
+              ngNotify.set("Question Paper Saved","success");
+            }
           })
-           $scope.editQuestionClose();
-           ngNotify.set("Question Paper Saved","success");
         });
       };
 
