@@ -37,7 +37,6 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
     /*Changes for pattern search starts*/
     isPattern : false,
     isBasic : false,
-    patternJson : $patternService.getPattern(),
     selectedQuestionsArray : [],
     /*Changes for pattern search ends*/
 
@@ -362,7 +361,7 @@ function($scope, $uibModal, $http, $ajaxService, $window, $patternService, $root
 
       //Changes for pattern search starts
       if($scp.isPattern)
-        queryObj.searchWith = $scp.patternJson;
+        queryObj.searchWith = $patternService.getPattern();
       //Changes for pattern search ends
 
       self.$ajaxService.getQuestionJson(queryObj, function(err, results) {
