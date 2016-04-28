@@ -6,7 +6,8 @@ var QuestionManagerApp = angular.module("QuestionManagerApp", [
   'rzModule',
   'ngTagsInput',
   'ngNotify',
-  'ngToast'
+  'ngToast',
+  'ngMessages'
 ])
 .config(function ($routeProvider, $locationProvider, $provide) {
   $routeProvider

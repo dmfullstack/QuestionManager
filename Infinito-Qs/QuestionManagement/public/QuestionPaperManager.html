@@ -1,8 +1,11 @@
 <main class="container">
   <div id="well questionContainer" class="row">
-    <div>
-      <h1 ng-if="!QuestionPapers.length">Sorry :'(. No Question Papers to display!</h1>
-      <h1 ng-if="QuestionPapers.length">Question Papers</h1>
+    <div ng-if="!QuestionPapers.length">
+      <h1>Sorry :'(. No Question Papers to display!</h1>
+    </div>
+
+    <div ng-if="QuestionPapers.length">
+      <h1>Question Papers</h1>
     </div>
 
     <table id="questionList" class="table table-bordered table-responsive" ng-hide="!QuestionPapers.length">

@@ -151,10 +151,14 @@ h1 {
 .modal-dialog{
     overflow-y: initial !important
 }
-.modal-body{
+.modal-body#QuestionPaperModal{
     height: 575px;
     overflow-y: auto;
 }
 .ng-toast {
   z-index: 7000;
 }
+
+.submitted .ng-invalid{
+        border: 1px solid red;
+  }

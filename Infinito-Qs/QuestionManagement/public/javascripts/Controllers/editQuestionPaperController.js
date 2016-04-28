@@ -39,11 +39,11 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
                             });
             }
             else{
-              ngToast.create('a toast message...');
               $QuestionService.setExistingQuestions(_.pluck(self.$scope.QuestionPaper.questions,'_id'));
               $QuestionService.setUserSelectedQuestions([]);
               $rootScope.$emit("initializeQuestions",{});
               $rootScope.$emit("refreshQSet",{});
+              $rootScope.$emit("setCurrentQuestionPaper",{});
               $scope.editQuestionClose();
               ngNotify.set("Question Paper Saved","success");
             }
