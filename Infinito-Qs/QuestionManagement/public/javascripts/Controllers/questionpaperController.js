@@ -97,7 +97,8 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       },function(err,response){
         if(err)
         console.log(err);
-        $QuestionService.setExistingQuestions(_.pluck(response.data,'_id'));
+        console.log(response.data);
+        $QuestionService.setExistingQuestions(_.pluck(response.data.questions,'_id'));
         $rootScope.$emit("initializeQuestions",{});
       });
     }else {
