@@ -1,4 +1,8 @@
-QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q','_', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q, _) {
+QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q' ,'_', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q,_) {
+
+  $rootScope.$on("refreshQSet", function(){
+    $scope.getQSet();
+  });
 
   $scope = angular.extend($scope,{
     questionPaper : {},
@@ -23,7 +27,7 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
     var selectedQuestionPaper = $scope.QuestionPapers[index];
     $ajaxService.onQuestionPaperDelete({
       requestType : 'deleteQuestionPaper',
-      questionPaperName : selectedQuestionPaper.name
+      questionPaperId : selectedQuestionPaper._id
     },function(err,response){
       if(err){
         console.log(err);
@@ -36,12 +40,11 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
     var selectedQuestionPaper = $scope.QuestionPapers[index];
     $ajaxService.getQuestionsForQuestionPaper({
       requestType : 'getQuestionsForQuestionPaper',
-      questionPaperName : selectedQuestionPaper.name
+      questionPaperId : selectedQuestionPaper._id
     },function(err,response){
       if(err){
         console.log(err);
       }
-      selectedQuestionPaper.Questions = response.data;
       $uibModal.open({
         animation: $scope.animationsEnabled,
         templateUrl: 'questionPaperModal.html',
@@ -49,14 +52,44 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
         resolve: {
           $mainControllerScope: function () {
             return {
-              QuestionPaper : selectedQuestionPaper
-              }
+              QuestionPaper : response.data
             }
           }
-        })
+        }
       })
-    };
+    })
+  };
 
+  $scope.createQuestionPaper = function () {
+    var questionPaper = $scope.questionPaper;
+    var promise = getUserSelectedQuestions();
+    promise.then(function (userSelectedQuestions) {
+      if($scope.qpSelect!=""){
+        questionPaper._id = $scope.qpSelect;
+        $ajaxService.getQuestionsForQuestionPaper({
+          requestType : 'getQuestionsForQuestionPaper',
+          questionPaperId : questionPaper._id
+        },function(err,response){
+          if(err)
+          console.log(err);
+          questionPaper = response.data;
+          console.log(questionPaper);
+          Array.prototype.push.apply(questionPaper.questions,userSelectedQuestions);
+          openModalWindow(questionPaper);
+        });
+      }
+      else
+      {
+        questionPaper = {};
+        questionPaper.questions = userSelectedQuestions;
+        openModalWindow(questionPaper);
+      }
+    });
+
+
+  }
+
+<<<<<<< HEAD
     $scope.createQuestionPaper = function () {
       var questionPaper = $scope.questionPaper;
       var promise = getUserSelectedQuestions();
@@ -89,16 +122,18 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
           });
       });
     }
+=======
+>>>>>>> 492fa95afb49e35378ea6eee5f26df2314ec15b9
   $scope.onQuestionPaperSelect = function () {
     if($scope.qpSelect!=""){
       $ajaxService.getQuestionsForQuestionPaper({
         requestType : 'getQuestionsForQuestionPaper',
-        questionPaperName : $scope.qpSelect
+        questionPaperId : $scope.qpSelect
       },function(err,response){
         if(err)
-          console.log(err);
-          $QuestionService.setExistingQuestions(_.pluck(response.data,'_id'));
-          $rootScope.$emit("initializeQuestions",{});
+        console.log(err);
+        $QuestionService.setExistingQuestions(_.pluck(response.data,'_id'));
+        $rootScope.$emit("initializeQuestions",{});
       });
     }else {
       $QuestionService.setExistingQuestions([]);
@@ -106,6 +141,21 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
     }
   }
   $scope.getQSet();
+
+  function openModalWindow(questionPaper){
+    $uibModal.open({
+      animation: $scope.animationsEnabled,
+      templateUrl: 'questionPaperModal.html',
+      controller: 'EditQuestionPaperControl',
+      resolve: {
+        $mainControllerScope: function () {
+          return {
+            QuestionPaper : questionPaper
+          }
+        }
+      }
+    });
+  }
 
   function getUserSelectedQuestions() {
     return $q(function(resolve,reject){
@@ -115,7 +165,7 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
         questionIds : questionIds
       },function(err,response){
         if(err)
-          console.log(err);
+        console.log(err);
         resolve(response.data);
       });
     })
