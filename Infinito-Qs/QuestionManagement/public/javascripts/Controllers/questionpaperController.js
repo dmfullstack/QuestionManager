@@ -89,41 +89,6 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
 
   }
 
-<<<<<<< HEAD
-    $scope.createQuestionPaper = function () {
-      var questionPaper = $scope.questionPaper;
-      var promise = getUserSelectedQuestions();
-      promise.then(function (userSelectedQuestions) {
-        if($scope.qpSelect!=""){
-          questionPaper._id = $scope.qpSelect;
-          $ajaxService.getQuestionsForQuestionPaper({
-            requestType : 'getQuestionsForQuestionPaper',
-            questionPaperName : questionPaper._id
-          },function(err,response){
-            if(err)
-              console.log(err);
-              questionPaper.Questions = _.union(response.data,userSelectedQuestions);
-            });
-          }else{
-            questionPaper = {};
-            questionPaper.Questions = userSelectedQuestions;
-          }
-          $uibModal.open({
-            animation: $scope.animationsEnabled,
-            templateUrl: 'questionPaperModal.html',
-            controller: 'EditQuestionPaperControl',
-            resolve: {
-              $mainControllerScope: function () {
-                return {
-                  QuestionPaper : questionPaper
-                  }
-                }
-              }
-          });
-      });
-    }
-=======
->>>>>>> 492fa95afb49e35378ea6eee5f26df2314ec15b9
   $scope.onQuestionPaperSelect = function () {
     if($scope.qpSelect!=""){
       $ajaxService.getQuestionsForQuestionPaper({
