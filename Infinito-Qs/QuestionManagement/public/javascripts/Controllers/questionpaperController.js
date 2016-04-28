@@ -1,4 +1,4 @@
-QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q) {
+QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q','_', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q, _) {
 
   $scope = angular.extend($scope,{
     questionPaper : {},
@@ -62,10 +62,10 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       var promise = getUserSelectedQuestions();
       promise.then(function (userSelectedQuestions) {
         if($scope.qpSelect!=""){
-          questionPaper.name = $scope.qpSelect;
+          questionPaper._id = $scope.qpSelect;
           $ajaxService.getQuestionsForQuestionPaper({
             requestType : 'getQuestionsForQuestionPaper',
-            questionPaperName : questionPaper.name
+            questionPaperName : questionPaper._id
           },function(err,response){
             if(err)
               console.log(err);
