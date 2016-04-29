@@ -28,17 +28,19 @@
       </div><br>
       <div class="row nga-fast nga-stagger nga-fade" ng-show="!newPattern">
         <div class="col-sm-12">
-          <form class="form form-inline" ng-submit="getPattern()">
-          <div class="form-group">
-            <label for="patternSelect">Select a Pattern</label>
-            <select class="form-control" ng-model="patternSelect">
-              <option ng-repeat="pattern in patternList.data" value="{{pattern._id}}">
-                {{pattern.patternName}}
-              </option>
-            </select>
-            <input type="submit" value="Load" class="btn btn-primary">
-          </div>
+          <form ng-show="patternList.data.length>0" class="form form-inline" ng-submit="getPattern()">
+            <div class="form-group">
+              <label for="patternSelect">Select a Pattern</label>
+              <select class="form-control" ng-model="patternSelect">
+                <option value="" disabled>Select one</option>
+                <option ng-repeat="pattern in patternList.data" value="{{pattern._id}}">
+                  {{pattern.patternName}}
+                </option>
+              </select>
+              <input type="submit" value="Run" class="btn btn-success">
+            </div>
           </form>
+          <h3 ng-show="patternList.data.length==0">Sorry. No Saved Pattern available</h3>
         </div>
       </div>
       <div class="row nga-default nga-stagger nga-slide-left" ng-show="newPattern">
@@ -428,12 +430,15 @@
 
     <script type="text/ng-template" id="savePatternModal.html">
       <div class="modal-header">
-          <h3 class="modal-title">Give a name</h3>
+          <h3 class="modal-title">Save this pattern</h3>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <input type="text" ng-model="patternName"/>
-        </div>
+        <form class="form-inline">
+          <div class="form-group">
+            <label for="patterName">Name: </label>
+            <input type="text" class="form-control" ng-model="patternName" required/>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
           <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>

@@ -1,4 +1,4 @@
-QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q' ,'_','ngNotify','ngToast', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q,_ ,ngNotify,ngToast) {
+ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q' ,'_','ngNotify','ngToast', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q,_ ,ngNotify,ngToast) {
 
   $rootScope.$on("refreshQSet", function(){
     $scope.getQSet();
@@ -92,8 +92,6 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
         }
         questionPaper.isCreateMode = true;
       }});
-
-
     }
 
     $scope.onQuestionPaperSelect = function () {

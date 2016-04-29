@@ -1,4 +1,4 @@
-QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $ajaxService, $patternService, $rootScope){
+QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $ajaxService, $patternService, $rootScope,ngToast){
   /*Initialize variables for pattern search form*/
   $scope = angular.extend($scope, {
     newPattern : true,
@@ -9,7 +9,7 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     regexFields : [{value:0}],//Array to dynamically create input boxes for regex
     isRun : false,
     submitButton : "Run this!",
-    patternList : ""
+    patternSelect : ""
   });
 
 
@@ -23,18 +23,25 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     });
   }
   $scope.getPattern = function(){
+    console.log($scope.patternSelect);
+    if($scope.patternSelect=="")
+      ngToast.create({
+        className :"danger",
+        content : "Please select a pattern",
+        animation : 'slide'
+      })
+    else
     $ajaxService.getPattern({ //get the existing pattern
         requestType: 'getPattern',
         id: $scope.patternSelect
       }, function(err, results) {
           if(err)
             console.log(err);
-            console.log(results.data);
+          console.log(results.data);
           $scope.patternJson = results.data;
           $patternService.setPattern($scope.patternJson);
-          console.log($scope.patternJson);
           $scope.newPattern = true;
-          $scope.isRun = false;
+          $scope.performSearch();
     });
   }
 
