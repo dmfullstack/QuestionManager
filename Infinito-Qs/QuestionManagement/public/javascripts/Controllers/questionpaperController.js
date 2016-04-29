@@ -79,7 +79,14 @@
             if(err)
             console.log(err);
             questionPaper = response.data;
-            Array.prototype.push.apply(questionPaper.questions,userSelectedQuestions);
+            var existing = $QuestionService.getExistingQuestions();
+            var temp = _.reject(userSelectedQuestions,function (obj) {
+              if(_.contains(existing,obj._id))
+                return obj;
+            });
+            Array.prototype.push.apply(questionPaper.questions,temp);
+            //console.log(temp);
+            //Array.prototype.push.apply(questionPaper.questions,temp);
             openModalWindow(questionPaper);
           });
         }
