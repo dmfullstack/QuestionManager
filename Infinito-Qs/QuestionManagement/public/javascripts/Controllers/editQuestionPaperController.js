@@ -45,14 +45,13 @@ function($scope, $http, $mainControllerScope, $uibModalInstance,$ajaxService,$ui
               $rootScope.$emit("refreshQSet",{});
               $rootScope.$emit("setCurrentQuestionPaper",{});
               $scope.editQuestionClose();
-              ngNotify.set("Question Paper Saved","success");
+              ngNotify.set("Q-Set Saved","success");
             }
           })
         });
       };
 
       self.$scope.deleteQuestions = function(){
-        console.log(self.$scope);
         for (var i = 0; i < $scope.selectedQuestionIndices.length; i++) {
           self.$scope.QuestionPaper.questions.splice($scope.selectedQuestionIndices[i],1);
         }

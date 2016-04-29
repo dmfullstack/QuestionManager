@@ -4,34 +4,35 @@
       <h1>Sorry :'(. No Question Papers to display!</h1>
     </div>
 
-    <div ng-if="QuestionPapers.length">
-      <h1>Question Papers</h1>
+    <div class="well col-lg-12" ng-if="QuestionPapers.length">
+      <h1>Q-Set's</h1>
     </div>
 
-    <table id="questionList" class="table table-bordered table-responsive" ng-hide="!QuestionPapers.length">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Name</th>
-          <th>Topics</th>
-          <th>Edit/Delete Question Paper</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="questionPaper in QuestionPapers" ng-class="{pickedInTournament : questionPaper.IsPickedInTournament, notPickedInTournament : !questionPaper.IsPickedInTournament}">
-          <td><input type="checkbox" align="left" ng-model="quesSelected[0]" ng-click="selectQuestion(quesSelected[0], 0)"></td>
-          <td>{{questionPaper.name}}</td>
-          <td>{{questionPaper.topics.join(', ')}}</td>
-          <td width='9%'>
-            <button type="button" class="btn btn-xs btn-default command-edit"  ng-click ="editQuestionPaper($index)" title="Edit Question Paper">
-              <span class="glyphicon glyphicon-pencil"></span>
-            </button>
-            <button type="button" class="btn btn-xs btn-default command-delete" ng-click ="deleteQuestionPaper($index)" ng-disabled = "{{questionPaper.IsPickedInTournament}}" title="{{questionPaper.IsPickedInTournament ? 'Question Paper used in a Tournament cannot be deleted' : 'Delete Question Paper'}}">
-              <span class="glyphicon glyphicon-trash"></span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="col-lg-12">
+      <table id="questionList" class="table table-bordered table-responsive table-padding" ng-hide="!QuestionPapers.length">
+        <thead>
+          <tr>
+            <!-- <th></th> -->
+            <th>Name</th>
+            <th>Topics</th>
+            <th width="9%">Edit/Delete Question Paper</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="questionPaper in QuestionPapers" ng-class="{pickedInTournament : questionPaper.IsPickedInTournament, notPickedInTournament : !questionPaper.IsPickedInTournament}" ng-checked="selectedQuestionPaperIndice.indexOf($index) > -1" ng-click="toggleSelection($index)">
+            <td>{{questionPaper.name}}</td>
+            <td>{{questionPaper.topics.join(', ')}}</td>
+            <td width='11%'>
+              <button type="button" class="btn btn-xs btn-default command-edit"  ng-click ="editQuestionPaper($index)" title="Edit Question Paper">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </button>
+              <button type="button" class="btn btn-xs btn-default command-delete" ng-click ="deleteQuestionPaper($index)" ng-disabled = "{{questionPaper.IsPickedInTournament}}" title="{{questionPaper.IsPickedInTournament ? 'Question Paper used in a Tournament cannot be deleted' : 'Delete Question Paper'}}">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </main>
