@@ -1,21 +1,15 @@
 QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$ajaxService','$QuestionService','$rootScope', '$q' ,'_','ngNotify','ngToast', function($scope,$http,$uibModal,$ajaxService,$QuestionService, $rootScope, $q,_ ,ngNotify,ngToast) {
 
   $rootScope.$on("refreshQSet", function(){
-    $scope.getQSet();
-  });
-
-  $rootScope.$on("setCurrentQuestionPaper", function(){
-    $scope.qpSelect = _.values($scope.QuestionPapers[$scope.QuestionPapers.length-1]);
-    console.log(($scope.QuestionPapers));
-    console.log($scope.qpSelect);
+    $scope.getQSet(true)
   });
 
   $scope = angular.extend($scope,{
     questionPaper : {},
-    qpSelect: ""
+    qpSelect: "",
   });
 
-  $scope.getQSet = function(){
+  $scope.getQSet = function(canSetQSetInOption){
     $ajaxService.getQSet({
       requestType : 'getQuestionPapers'
     },function(err,response){
@@ -23,13 +17,16 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
         console.log(err);
       }
       $scope.QuestionPapers = response.data;//get only Question Paper Data
+      if(canSetQSetInOption)
+          $scope.qpSelect = response.data[response.data.length-1]['_id'];
       angular.forEach($scope.QuestionPapers , function(question){
         question.IsPickedInTournament = question.tournaments.length > 0 ? true : false
       });
     });
+
   },
 
-  $scope.deleteQuestionPaper = function(index){
+  $scope.deleteQuestionPaper = function(index,isMultiDelete){
     var selectedQuestionPaper = $scope.QuestionPapers[index];
     $ajaxService.onQuestionPaperDelete({
       requestType : 'deleteQuestionPaper',
@@ -38,7 +35,10 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
       if(err){
         console.log(err);
       }
-      ngNotify.set('Question Paper Deleted', 'error');
+      if(!isMultiDelete)
+      {
+        ngNotify.set('Q-Set Deleted', 'error');
+      }
       $scope.getQSet();
     });
   },
@@ -79,7 +79,6 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
             if(err)
             console.log(err);
             questionPaper = response.data;
-            console.log(questionPaper);
             Array.prototype.push.apply(questionPaper.questions,userSelectedQuestions);
             openModalWindow(questionPaper);
           });
@@ -92,8 +91,6 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
         }
         questionPaper.isCreateMode = true;
       }});
-
-
     }
 
     $scope.onQuestionPaperSelect = function () {
@@ -112,6 +109,26 @@ QuestionManagerApp.controller('questionPaper',  ['$scope','$http','$uibModal','$
         $rootScope.$emit("initializeQuestions",{});
       }
     }
+
+    $scope.selectedQuestionPaper = function(index){
+      $scope.selectedQuestionPaperIndices.push(index);
+      console.log('Came In');
+    }
+
+    $scope.toggleSelection = function toggleSelection(index) {
+      var idx = $scope.selectedQuestionPaperIndices.indexOf(index);
+
+      // is currently selected
+      if (idx > -1) {
+        $scope.selectedQuestionPaperIndices.splice(idx, 1);
+      }
+
+      // is newly selected
+      else {
+        $scope.selectedQuestionPaper(index)
+      }
+    };
+
     $scope.getQSet();
 
     function openModalWindow(questionPaper){

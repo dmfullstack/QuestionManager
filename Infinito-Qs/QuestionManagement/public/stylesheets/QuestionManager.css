@@ -162,3 +162,10 @@ h1 {
 .submitted .ng-invalid{
         border: 1px solid red;
   }
+
+.table-padding{
+  padding-left: 0px;
+  padding-right: 0px;
+  margin: 0px 0px !important;
+  position : relative;
+}
