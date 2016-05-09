@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var request = require('request');
 var underScore = require('underscore');
+var progressBar = require('progress');
 
 /* MongoDB Models */
 var questionPattern = require('./models/questionPattern');
@@ -23,6 +24,7 @@ var numOfVarsUpdated = [];
 numOfVarsUpdated[googleIndex] = 0;
 numOfVarsUpdated[wikiIndex] = 0;
 
+var progress = new progressBar ('Processing [:bar] :percent :etas' , {total : 500, width: 200});
 /*********************************************************/
 /* Try to Connect with MongoDB */
 /*********************************************************/
@@ -42,6 +44,7 @@ db.once('open', function() {
         .then(function(result) {
             if (result) {
                 printDebug("Cleared Variables Collection");
+                progress.tick();
             } else {
                 console.log("Error Clearing Variables Collection");
             }
@@ -61,6 +64,7 @@ db.once('open', function() {
     questionPattern.find({}, function(err, docs) {
         docs.map(function(pattern) {
             seq = seq.then(function() {
+                progress.tick();
                 return getVarsForPattern(pattern);
             });
         });
@@ -117,6 +121,8 @@ var getVarsForPattern = function(pattern) {
                                         } else {
                                             numOfVars = data;
                                             printDebug("Triggering Data-collection for Variables - (", numOfVars, ")");
+                                            progress.total = numOfVars/maxVarsProcessingLimit + (progress.curr/maxVarsProcessingLimit); 
+                                            progress.curr /= maxVarsProcessingLimit;
 
                                             var docsCount = (maxVarsProcessingLimit > numOfVars) ? numOfVars : maxVarsProcessingLimit;
                                             aRecursiveGetMetaDataApi(0, docsCount);
@@ -266,7 +272,7 @@ var getPageViews = function(obj) {
         obj.wikiPageView = 0;
         request(uri, function(err, res, body) {
             if (err || (res.statusCode != 200)) {
-                printDebug("[wiki] Recieved Error for :", obj.variable);
+                printDebug("[wiki] Recieved Error ("+ res.statusCode +") for :", obj.variable, body);
                 return resolve(obj);
             }
 
@@ -313,7 +319,7 @@ var getGoogleResultScores = function(obj) {
 *********************************************************/
 var deriveDifficultyLevelAndUpdateQuestions = function(varDocs) {
 
-    console.log("Going to Derive Difficulty Level For Each Question");
+    printDebug("Going to Derive Difficulty Level For Each Question");
 
     return new Promise(function(resolve, reject) {
         var varsUpdated = 0;
@@ -356,6 +362,7 @@ var deriveDifficultyLevelAndUpdateQuestions = function(varDocs) {
                             .then(function(result) {
                                 if ((++questionsUpdated == doc.questionIds.length) && (++varsUpdated == varDocs.length)) {
                                     printDebug("Updated (" + varDocs.length + ") Docs with Meta Data");
+                                    progress.tick();
                                     return resolve();
                                 }
                             })
