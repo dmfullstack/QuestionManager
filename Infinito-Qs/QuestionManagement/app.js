@@ -6,8 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var wagner = require('wagner-core');
 
-var cron = require('node-cron');
-
 
 var questionRequestHandler = require('./routes/QuestionRequestHandler');
 var topicsRequestHandler = require('./routes/TopicsRequestHandler');
@@ -84,9 +82,6 @@ app.use(function(req, res, next) {
 });
 // console.log('connectionURL');
 // error handlers
-
-cron.schedule('* * * * *', './QuestionAnalyzer/questionAnalyzer.js');
-
 
 // development error handler
 // will print stacktrace
