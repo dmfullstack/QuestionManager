@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
       variable     : String,
       questionIds  : Array,
       wikiPageView : Number,
-      googleTrend  : Number 
+      googleResultScore  : Number 
     });
 
 questionVarSchema.statics.getWikiRank = function getWikiRank(doc){

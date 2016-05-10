@@ -10,7 +10,7 @@
       <input type="hidden" id="lastEdited" name="lastEdited" value="{{selectedQuestion.lastEdited}}"/>
     </div>
   </div>
-  <div id="#QuestionPaperModal" class="modal-body">
+  <div id="QuestionPaperModal" class="modal-body">
       <div class="form-group">
         <label for="QuestionPaperName">Name: </label><strong class="required text-danger">*</strong>
         <input type="text" class="form-control" ng-model="QuestionPaper.name" value={{QuestionPaper.name}} oninvalid="this.setCustomValidity('Skadoosh! Name is Required')"  oninput="setCustomValidity('')" required>

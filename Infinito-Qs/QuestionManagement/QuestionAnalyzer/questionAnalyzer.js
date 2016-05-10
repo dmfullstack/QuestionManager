@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var request = require('request');
 var underScore = require('underscore');
+var progressBar = require('progress');
 
 /* MongoDB Models */
 var questionPattern = require('./models/questionPattern');
@@ -23,6 +24,7 @@ var numOfVarsUpdated = [];
 numOfVarsUpdated[googleIndex] = 0;
 numOfVarsUpdated[wikiIndex] = 0;
 
+var progress = new progressBar ('Processing [:bar] :percent :etas' , {total : 500, width: 200});
 /*********************************************************/
 /* Try to Connect with MongoDB */
 /*********************************************************/
@@ -42,10 +44,11 @@ db.once('open', function() {
         .then(function(result) {
             if (result) {
                 printDebug("Cleared Variables Collection");
+                progress.tick();
             } else {
                 console.log("Error Clearing Variables Collection");
             }
-        });
+    }); 
 
     /* Get the Number of Patterns to be Processed */
     questionBank.distinct('patternId', function(err, data) {
@@ -53,6 +56,11 @@ db.once('open', function() {
             console.log(err);
         }
         printDebug("Number of Patterns To be Processed:", data.length);
+        if (data.length == 0) { 
+            printDebug("No Patterns to Process .. Quitting");
+            mongoose.connection.close();
+            return;
+        }
         numOfPatterns = data.length;
     });
 
@@ -61,6 +69,7 @@ db.once('open', function() {
     questionPattern.find({}, function(err, docs) {
         docs.map(function(pattern) {
             seq = seq.then(function() {
+                progress.tick();
                 return getVarsForPattern(pattern);
             });
         });
@@ -78,14 +87,18 @@ var getVarsForPattern = function(pattern) {
     var numOfQuestions = 0;
     var numOfVarsUpdated = 0;
 
-    return questionBank.find({
+    return promise = new Promise(function(resolve, reject) { 
+    questionBank.find({
             'patternId': patternId
         })
         .then(function(data) {
 
             numOfQuestions = data.length;
 
+            var qvar = Promise.resolve();
             data.forEach(function(q) {
+       
+              qvar = qvar.then(function() {
                 /*Get Variable for the Question */
                 var reResult = re.exec(q.question);
                 var questionVar = reResult[1].replace(pattern.questionStub.post, "");
@@ -99,8 +112,9 @@ var getVarsForPattern = function(pattern) {
                     }
                 };
 
+
                 /*Update the Variable in collection */
-                questionVariables.update(id, update, {
+                return questionVariables.update(id, update, {
                         upsert: true
                     })
                     .then(function(docs) {
@@ -117,6 +131,8 @@ var getVarsForPattern = function(pattern) {
                                         } else {
                                             numOfVars = data;
                                             printDebug("Triggering Data-collection for Variables - (", numOfVars, ")");
+                                            progress.total = numOfVars/maxVarsProcessingLimit + (progress.curr/maxVarsProcessingLimit); 
+                                            progress.curr /= maxVarsProcessingLimit;
 
                                             var docsCount = (maxVarsProcessingLimit > numOfVars) ? numOfVars : maxVarsProcessingLimit;
                                             aRecursiveGetMetaDataApi(0, docsCount);
@@ -124,13 +140,16 @@ var getVarsForPattern = function(pattern) {
                                     });
                                 }
                             }
+                            return resolve();
                         }
                     });
+              });
             }); /* End of Question-Loop */
         })
         .catch(function(err) {
             console.log(err);
         });
+    });
 }
 
 /*********************************************************/
@@ -266,7 +285,7 @@ var getPageViews = function(obj) {
         obj.wikiPageView = 0;
         request(uri, function(err, res, body) {
             if (err || (res.statusCode != 200)) {
-                printDebug("[wiki] Recieved Error for :", obj.variable);
+                printDebug("[wiki] Recieved Error ("+ res.statusCode +") for :", obj.variable, body);
                 return resolve(obj);
             }
 
@@ -309,11 +328,11 @@ var getGoogleResultScores = function(obj) {
     });
 };
 /*********************************************************
- API to Derive Difficulty Level of the question 
+ API to Derive Difficulty Level of the question
 *********************************************************/
 var deriveDifficultyLevelAndUpdateQuestions = function(varDocs) {
 
-    console.log("Going to Derive Difficulty Level For Each Question");
+    printDebug("Going to Derive Difficulty Level For Each Question");
 
     return new Promise(function(resolve, reject) {
         var varsUpdated = 0;
@@ -356,6 +375,7 @@ var deriveDifficultyLevelAndUpdateQuestions = function(varDocs) {
                             .then(function(result) {
                                 if ((++questionsUpdated == doc.questionIds.length) && (++varsUpdated == varDocs.length)) {
                                     printDebug("Updated (" + varDocs.length + ") Docs with Meta Data");
+                                    progress.tick();
                                     return resolve();
                                 }
                             })

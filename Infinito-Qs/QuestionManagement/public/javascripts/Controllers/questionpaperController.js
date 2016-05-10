@@ -141,7 +141,7 @@
     function openModalWindow(questionPaper){
       $uibModal.open({
         animation: $scope.animationsEnabled,
-        templateUrl: 'questionPaperModal.html',
+        templateUrl: 'qSetModal.html',
         controller: 'EditQuestionPaperControl',
         resolve: {
           $mainControllerScope: function () {

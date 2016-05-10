@@ -59,7 +59,7 @@ wikiBaseURL = 'https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/e
 printDebug("url -->", wikiBaseURL);
 
 /* Google Knowledge Graph Constants */
-var apiKey = ['AIzaSyDRuO-9qqpNIRtJuT7cFalb2-jx8mQQGeY', 'AIzaSyCGQs8-JzXPdpCGNHc2UFpe8qTP-rdc5eU', 'AIzaSyCaeO0cT3Nsq1fiovUKK2oHTmB9v7TWal0', 'AIzaSyAeGuXzkIefQPcMFJr26V-Xi8UVhRAXaTE', 'AIzaSyBpmlMtrAYnEQLkD4Vy7dUZvGUxDy-BmDU'];
+var apiKey = ['AIzaSyDsSKdvFsxlLYdjDOWHiJXzy1o1xlOwJHs', 'AIzaSyAD45bIByb30cDtkRDXXmjqQNfrzQJISAc', 'AIzaSyDNPaM_iolYgmk5kkQwRqpR48YkjQX2dLw', 'AIzaSyA4TbDTDaxEoU610YnJBYf2CcvuQN6oNdo', 'AIzaSyAYK0V_mLdRg4hCyL23GpZp4hg_cbBFD0A'];
 googleKnowledgeGraphURL = 'https://kgsearch.googleapis.com/v1/entities:search' + '?query=/variable-Name/&limit=1&indent=true&key=' + apiKey[underScore.random(apiKey.length - 1)];
 
 };
