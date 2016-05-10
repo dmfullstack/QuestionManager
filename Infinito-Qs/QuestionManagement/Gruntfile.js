@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         },
         copy: {
             build: {
-                src: ['**','!node_modules/**/*','!target/**/*'],
+                src: ['**','!node_modules/**/*', '!target/**/*', '!QuestionAnalyzer/node_modules/**/*'],
                 dest: 'src',
                 expand: true
             }

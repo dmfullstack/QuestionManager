@@ -28,10 +28,12 @@
     "wagner-core": "^0.2.0"
   },
   "devDependencies": {
+    "grunt": "^1.0.1",
     "grunt-contrib-compress": "^1.2.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-express-server": "^0.5.3",
     "mocha": "^2.4.5",
     "sinon": "^1.17.3"
   }
