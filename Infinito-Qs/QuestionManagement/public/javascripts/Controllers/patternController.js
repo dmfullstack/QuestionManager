@@ -3,7 +3,7 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
   $scope = angular.extend($scope, {
     newPattern : true,
     patternList :[],
-    variableList : ['Denmark','Australia','Germany'],
+    variableList : [],
     //formFields : ['whitelist','blacklist','regexPatterns','wikiRange','googleRange','usageRange','correctRange','searchIn'],
     patternJson : $patternService.getPattern(),
     regexFields : [{value:0}],//Array to dynamically create input boxes for regex
@@ -23,7 +23,7 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
     });
   }
   $scope.getPattern = function(){
-    console.log($scope.patternSelect);
+    //console.log($scope.patternSelect);
     if($scope.patternSelect=="")
       ngToast.create({
         className :"danger",
@@ -37,7 +37,6 @@ QuestionManagerApp.controller('pattern', function($scope, $timeout, $uibModal, $
       }, function(err, results) {
           if(err)
             console.log(err);
-          console.log(results.data);
           $scope.patternJson = results.data;
           $patternService.setPattern($scope.patternJson);
           $scope.newPattern = true;

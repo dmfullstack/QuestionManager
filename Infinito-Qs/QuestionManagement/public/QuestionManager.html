@@ -72,7 +72,7 @@
                   <div class="form-group">
                     <div ng-repeat="item in regexFields">
                        <label>Pattern {{item.value}}</label>
-                       <input type="text" ng-model="patternJson.regexPatterns[item.value]" name="pattern{{item.value}}" ng-click="onChange('regex')"\>
+                       <input type="text" ng-model="patternJson.regexPatterns[item.value]" name="pattern{{item.value}}" ng-click="onChange('regex')"/>
                         <span ng-show="$last">
                           <a class="btn btn-primary btn-sm" ng-click="addField()"><b>+</b></a>
                         </span>
