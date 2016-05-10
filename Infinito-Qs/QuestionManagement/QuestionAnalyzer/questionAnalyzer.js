@@ -309,7 +309,7 @@ var getGoogleResultScores = function(obj) {
     });
 };
 /*********************************************************
- API to Derive Difficulty Level of the question 
+ API to Derive Difficulty Level of the question
 *********************************************************/
 var deriveDifficultyLevelAndUpdateQuestions = function(varDocs) {
 
