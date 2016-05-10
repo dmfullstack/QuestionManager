@@ -108,6 +108,7 @@ app.use(function(err, req, res, next) {
 });
 
 /*Schedule Jobs */
+/* Runs every Saturday morning 5:00 Hrs */
 schedule.scheduleJob('0 0 5 * * 6', function() {
   console.log("scheduling Analyzer");
   var path = 'cd '+__dirname + '/QuestionAnalyzer/ ;';
