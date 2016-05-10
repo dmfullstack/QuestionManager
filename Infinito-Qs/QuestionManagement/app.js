@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var wagner = require('wagner-core');
+var exec = require('child_process').exec;
+var schedule = require('node-schedule');
 
 
 var questionRequestHandler = require('./routes/QuestionRequestHandler');
@@ -15,8 +17,8 @@ var questionPaperRequestHandler = require('./routes/QuestionPaperRequestHandler'
 var db = require('./routes/DB.js');
 
 db.init(wagner, {
-  //connectionURL: 'mongodb://172.23.238.253/quizRT3'
-  connectionURL: 'mongodb://localhost/quizRT3'
+  connectionURL: 'mongodb://172.23.238.253/quizRT3'
+  //connectionURL: 'mongodb://localhost/quizRT3'
 });
 
 var app = express();
@@ -102,6 +104,20 @@ app.use(function(err, req, res, next) {
   res.render('error', {
     message: err.message,
     error: {}
+  });
+});
+
+/*Schedule Jobs */
+schedule.scheduleJob('0 0 5 * * 6', function() {
+  console.log("scheduling Analyzer");
+  var path = 'cd '+__dirname + '/QuestionAnalyzer/ ;';
+  var cmd = path+' npm start';
+  exec(cmd, function(err, stdout, stderr) { 
+     if (err) {
+         console.log("Error Scheduling Question Anlayzer");
+     }
+     console.log("Analyzer stdout:" + stdout);
+     console.log("Analyzer stderr:" + stderr);
   });
 });
 

@@ -48,7 +48,7 @@ db.once('open', function() {
             } else {
                 console.log("Error Clearing Variables Collection");
             }
-        });
+    }); 
 
     /* Get the Number of Patterns to be Processed */
     questionBank.distinct('patternId', function(err, data) {
@@ -56,6 +56,11 @@ db.once('open', function() {
             console.log(err);
         }
         printDebug("Number of Patterns To be Processed:", data.length);
+        if (data.length == 0) { 
+            printDebug("No Patterns to Process .. Quitting");
+            mongoose.connection.close();
+            return;
+        }
         numOfPatterns = data.length;
     });
 
@@ -82,14 +87,18 @@ var getVarsForPattern = function(pattern) {
     var numOfQuestions = 0;
     var numOfVarsUpdated = 0;
 
-    return questionBank.find({
+    return promise = new Promise(function(resolve, reject) { 
+    questionBank.find({
             'patternId': patternId
         })
         .then(function(data) {
 
             numOfQuestions = data.length;
 
+            var qvar = Promise.resolve();
             data.forEach(function(q) {
+       
+              qvar = qvar.then(function() {
                 /*Get Variable for the Question */
                 var reResult = re.exec(q.question);
                 var questionVar = reResult[1].replace(pattern.questionStub.post, "");
@@ -103,8 +112,9 @@ var getVarsForPattern = function(pattern) {
                     }
                 };
 
+
                 /*Update the Variable in collection */
-                questionVariables.update(id, update, {
+                return questionVariables.update(id, update, {
                         upsert: true
                     })
                     .then(function(docs) {
@@ -130,13 +140,16 @@ var getVarsForPattern = function(pattern) {
                                     });
                                 }
                             }
+                            return resolve();
                         }
                     });
+              });
             }); /* End of Question-Loop */
         })
         .catch(function(err) {
             console.log(err);
         });
+    });
 }
 
 /*********************************************************/
