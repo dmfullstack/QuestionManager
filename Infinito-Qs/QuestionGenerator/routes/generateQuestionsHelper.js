@@ -1,5 +1,5 @@
 var request = require('request');
-var Promise = require("Q");
+var Promise = require("q");
 var rp = require('request-promise');
 var MD5 = require('./MD5');
 var slug = require('slug');
@@ -10,8 +10,8 @@ var redis = require('redis');
 
 
 module.exports = function makeClaimAndPrepareArrayOfUris(req, res, next,tempFileDescForStore,tempFileDescForStore) {
-  var port='6379';
-  var host='172.23.238.253'
+  var port=process.env.REDIS_PORT || '6379';
+  var host= process.env.REDIS_HOST || '172.23.238.253';
   var client = redis.createClient(port,host); //creates a new client
   client.on("error", function (err) {
     console.log("Error " + err);

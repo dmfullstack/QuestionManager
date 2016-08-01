@@ -1,0 +1,25 @@
+version: '2'
+services:
+  questionGenerator:
+    build: ./Infinito-Qs/QuestionGenerator
+    image: quizrt/question-generator
+    environment:
+      PORT: 2000
+      MONGO_URL: mongodb://db:27017/QuizRTQuestions
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    expose:
+      - 2000
+    ports:
+      - 2000:2000
+    links:
+      - db
+      - redis
+  db:
+    image: mvertes/alpine-mongo
+    expose:
+      - 27017
+  redis:
+    image: smebberson/alpine-redis
+    expose:
+      - 6379
