@@ -17,7 +17,7 @@ var questionPaperRequestHandler = require('./routes/QuestionPaperRequestHandler'
 var db = require('./routes/DB.js');
 
 db.init(wagner, {
-  connectionURL: 'mongodb://172.23.238.253/quizRT3'
+  connectionURL: process.env.MONGO_URL || 'mongodb://172.23.238.253/quizRT3'
   //connectionURL: 'mongodb://localhost/quizRT3'
 });
 
@@ -113,7 +113,7 @@ schedule.scheduleJob('0 0 5 * * 6', function() {
   console.log("scheduling Analyzer");
   var path = 'cd '+__dirname + '/QuestionAnalyzer/ ;';
   var cmd = path+' npm start';
-  exec(cmd, function(err, stdout, stderr) { 
+  exec(cmd, function(err, stdout, stderr) {
      if (err) {
          console.log("Error Scheduling Question Anlayzer");
      }

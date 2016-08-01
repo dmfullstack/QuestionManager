@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "PORT=8000 node ./bin/www",
+    "start": "node ./bin/www",
     "test": "mocha"
   },
   "dependencies": {
